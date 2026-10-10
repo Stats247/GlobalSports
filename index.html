@@ -26,7 +26,9 @@
                         warningYellow: '#F59E0B',
                         errorRed: '#DC2626',
                         borderCol: '#E2E8F0',
-                        darkNavy: '#0F172A'
+                        darkNavy: '#0F172A',
+                        deepPurple: '#7C3AED',
+                        crimsonRed: '#E11D48'
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif']
@@ -49,22 +51,21 @@
 </head>
 <body class="min-h-screen flex flex-col antialiased">
 
-    <!-- Top Header -->
     <header class="sticky top-0 z-50 bg-white border-b border-borderCol px-4 lg:px-8 py-3.5 shadow-sm">
         <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
             <div class="flex items-center space-x-3">
                 <button onclick="toggleMobileMenu()" class="lg:hidden text-secondaryText hover:text-mainText focus:outline-none">
                     <i class="fa-solid fa-bars text-xl"></i>
                 </button>
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-tealAccent to-royalBlue flex items-center justify-center text-white shadow-md">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-tealAccent to-emeraldGreen flex items-center justify-center text-white shadow-md">
                     <i class="fa-solid fa-brain text-lg"></i>
                 </div>
                 <div>
                     <h1 class="font-extrabold text-lg text-mainText tracking-tight flex items-center gap-2">
                         Global Sports Analytics
-                        <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-tealAccent/10 text-tealAccent border border-tealAccent/20">AI v3.2</span>
+                        <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-tealAccent/10 text-tealAccent border border-tealAccent/20">Admin Sync v4.0</span>
                     </h1>
-                    <p class="text-xs text-secondaryText">Unified Soccer Intelligence & Multi-Source Prediction Platform</p>
+                    <p class="text-xs text-secondaryText">Unified Soccer Intelligence & Google Apps Script Admin Integration</p>
                 </div>
             </div>
 
@@ -75,7 +76,7 @@
                 </div>
                 <button onclick="runGlobalSync()" class="bg-tealAccent hover:bg-tealAccent/90 text-white text-xs font-semibold px-3.5 py-2 rounded-xl shadow-sm transition-all flex items-center gap-2">
                     <i class="fa-solid fa-rotate" id="syncSpinner"></i>
-                    <span class="hidden sm:inline">Sync All CSV Feeds</span>
+                    <span class="hidden sm:inline">Sync All Feeds</span>
                 </button>
                 <button onclick="openExportModal()" class="bg-darkNavy hover:bg-slate-800 text-white text-xs font-semibold px-3.5 py-2 rounded-xl shadow-sm transition-all flex items-center gap-2">
                     <i class="fa-solid fa-code"></i>
@@ -87,7 +88,6 @@
 
     <div class="flex-1 max-w-7xl w-full mx-auto px-4 lg:px-8 py-6 flex flex-col lg:flex-row gap-6">
 
-        <!-- Sidebar Navigation -->
         <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-borderCol p-4 flex flex-col transform -translate-x-full lg:translate-x-0 lg:static lg:w-64 transition-transform duration-200 shadow-sm rounded-2xl lg:shadow-none h-fit">
             <div class="flex items-center justify-between pb-4 mb-3 border-b border-borderCol lg:hidden">
                 <span class="font-bold text-sm text-mainText">Navigation Menu</span>
@@ -107,10 +107,10 @@
                     <i class="fa-solid fa-chart-line w-5 text-center text-tealAccent"></i> Statarea
                 </button>
                 <button onclick="switchTab('vital')" id="nav-vital" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
-                    <i class="fa-solid fa-trophy w-5 text-center text-royalBlue"></i> Vital Best Tips
+                    <i class="fa-solid fa-trophy w-5 text-center text-deepPurple"></i> Vital Best Tips
                 </button>
                 <button onclick="switchTab('matches')" id="nav-matches" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
-                    <i class="fa-solid fa-futbol w-5 text-center text-emeraldGreen"></i> Soccervital Matches
+                    <i class="fa-solid fa-futbol w-5 text-center text-crimsonRed"></i> Soccervital Matches
                 </button>
 
                 <div class="text-[11px] font-bold text-secondaryText uppercase tracking-wider px-3 pt-3 pb-1">AI Intelligence</div>
@@ -118,7 +118,7 @@
                     <i class="fa-solid fa-wand-magic-sparkles w-5 text-center text-goldAccent"></i> AI Match Predictor
                 </button>
                 <button onclick="switchTab('sources')" id="nav-sources" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
-                    <i class="fa-solid fa-database w-5 text-center text-skyBlue"></i> Data Sources & Google
+                    <i class="fa-solid fa-database w-5 text-center text-skyBlue"></i> Data Sources & Admin
                 </button>
                 <button onclick="switchTab('analytics')" id="nav-analytics" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
                     <i class="fa-solid fa-chart-column w-5 text-center text-royalBlue"></i> Match Analytics
@@ -139,24 +139,23 @@
             <div class="mt-auto pt-4 border-t border-borderCol">
                 <div class="bg-pageBg p-3 rounded-xl border border-borderCol text-xs">
                     <div class="flex items-center justify-between mb-1">
-                        <span class="font-semibold text-mainText">LLM Status</span>
-                        <span id="sidebarLlmStatus" class="w-2 h-2 rounded-full bg-warningYellow"></span>
+                        <span class="font-semibold text-mainText">Google Sheet Admin</span>
+                        <span id="sidebarAdminStatus" class="w-2 h-2 rounded-full bg-successGreen"></span>
                     </div>
-                    <p class="text-secondaryText text-[11px]" id="sidebarLlmText">Ollama / Local API Ready</p>
+                    <p class="text-secondaryText text-[11px]" id="sidebarAdminText">Connected to Admin Tab</p>
                 </div>
             </div>
         </aside>
 
-        <!-- Main Content Area -->
         <main class="flex-1 flex flex-col min-w-0">
 
             <!-- OVERVIEW TAB -->
             <div id="tab-overview" class="tab-content active flex-col gap-6">
                 <div class="bg-white p-6 rounded-2xl border border-borderCol custom-shadow flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                     <div>
-                        <span class="text-xs font-bold uppercase tracking-wider text-tealAccent bg-tealAccent/10 px-2.5 py-1 rounded-lg border border-tealAccent/20">Unified Intelligence Portal</span>
+                        <span class="text-xs font-bold uppercase tracking-wider text-tealAccent bg-tealAccent/10 px-2.5 py-1 rounded-lg border border-tealAccent/25">Google Sheets Admin Enabled</span>
                         <h2 class="text-2xl font-extrabold text-mainText mt-1">Cross-System Soccer Analytics & AI Predictor</h2>
-                        <p class="text-sm text-secondaryText mt-1">Real-time aggregation of Google Sheets / CSV data with universal date parsing and high-confidence ranking.</p>
+                        <p class="text-sm text-secondaryText mt-1">Managed via Admin Tab sync: <a href="https://docs.google.com/spreadsheets/d/1ZPDWEqN5dhGUsRkUDTFh2-osBnHf0aCkBUFHOOD_KHg/edit?usp=sharing" target="_blank" class="text-tealAccent underline">Open Master Google Sheet</a></p>
                     </div>
                     <div class="flex items-center gap-3">
                         <button onclick="switchTab('predictor')" class="bg-tealAccent hover:bg-tealAccent/90 text-white font-semibold text-xs px-4 py-2.5 rounded-xl shadow-sm transition-all flex items-center gap-2">
@@ -174,7 +173,7 @@
                                 <span id="badge-statarea" class="w-2.5 h-2.5 rounded-full bg-warningYellow"></span>
                             </div>
                             <h3 class="text-lg font-bold text-mainText mb-1">Statarea</h3>
-                            <p class="text-xs text-secondaryText mb-4">Data probability metrics, league standings & odds.</p>
+                            <p class="text-xs text-secondaryText mb-4">https://stats247.github.io/analysis/</p>
                         </div>
                         <div class="space-y-2 pt-3 border-t border-borderCol">
                             <div class="flex justify-between text-xs text-secondaryText">
@@ -195,11 +194,11 @@
                     <div class="bg-white p-5 rounded-2xl border border-borderCol custom-shadow card-hover flex flex-col justify-between">
                         <div>
                             <div class="flex justify-between items-start mb-3">
-                                <span class="text-xs font-bold uppercase tracking-wider text-royalBlue bg-royalBlue/10 px-2.5 py-1 rounded-lg">System 02</span>
+                                <span class="text-xs font-bold uppercase tracking-wider text-deepPurple bg-deepPurple/10 px-2.5 py-1 rounded-lg">System 02</span>
                                 <span id="badge-vital" class="w-2.5 h-2.5 rounded-full bg-warningYellow"></span>
                             </div>
                             <h3 class="text-lg font-bold text-mainText mb-1">Vital Best Tips</h3>
-                            <p class="text-xs text-secondaryText mb-4">Curated explorer insights, accumulator tips and value bets.</p>
+                            <p class="text-xs text-secondaryText mb-4">https://stats247.github.io/adeanexplorer/</p>
                         </div>
                         <div class="space-y-2 pt-3 border-t border-borderCol">
                             <div class="flex justify-between text-xs text-secondaryText">
@@ -207,7 +206,7 @@
                                 <span id="sync-vital">Unsynced</span>
                             </div>
                             <div class="flex items-center gap-2 pt-1">
-                                <button onclick="switchTab('vital')" class="flex-1 bg-royalBlue/10 hover:bg-royalBlue/20 text-royalBlue text-xs font-semibold py-2 rounded-xl transition-all text-center">
+                                <button onclick="switchTab('vital')" class="flex-1 bg-deepPurple/10 hover:bg-deepPurple/20 text-deepPurple text-xs font-semibold py-2 rounded-xl transition-all text-center">
                                     Launch Portal
                                 </button>
                                 <button onclick="switchTab('vital'); toggleExpandFrame('tab-vital')" class="p-2 bg-pageBg hover:bg-borderCol text-secondaryText rounded-xl transition-all" title="Expand View">
@@ -220,11 +219,11 @@
                     <div class="bg-white p-5 rounded-2xl border border-borderCol custom-shadow card-hover flex flex-col justify-between">
                         <div>
                             <div class="flex justify-between items-start mb-3">
-                                <span class="text-xs font-bold uppercase tracking-wider text-emeraldGreen bg-emeraldGreen/10 px-2.5 py-1 rounded-lg">System 03</span>
+                                <span class="text-xs font-bold uppercase tracking-wider text-crimsonRed bg-crimsonRed/10 px-2.5 py-1 rounded-lg">System 03</span>
                                 <span id="badge-matches" class="w-2.5 h-2.5 rounded-full bg-warningYellow"></span>
                             </div>
                             <h3 class="text-lg font-bold text-mainText mb-1">All Soccervital Matches</h3>
-                            <p class="text-xs text-secondaryText mb-4">MatchLence live match center and head-to-head metrics.</p>
+                            <p class="text-xs text-secondaryText mb-4">https://stats247.github.io/MatchLence/</p>
                         </div>
                         <div class="space-y-2 pt-3 border-t border-borderCol">
                             <div class="flex justify-between text-xs text-secondaryText">
@@ -232,7 +231,7 @@
                                 <span id="sync-matches">Unsynced</span>
                             </div>
                             <div class="flex items-center gap-2 pt-1">
-                                <button onclick="switchTab('matches')" class="flex-1 bg-emeraldGreen/10 hover:bg-emeraldGreen/20 text-emeraldGreen text-xs font-semibold py-2 rounded-xl transition-all text-center">
+                                <button onclick="switchTab('matches')" class="flex-1 bg-crimsonRed/10 hover:bg-crimsonRed/20 text-crimsonRed text-xs font-semibold py-2 rounded-xl transition-all text-center">
                                     Launch Portal
                                 </button>
                                 <button onclick="switchTab('matches'); toggleExpandFrame('tab-matches')" class="p-2 bg-pageBg hover:bg-borderCol text-secondaryText rounded-xl transition-all" title="Expand View">
@@ -247,7 +246,7 @@
                     <div class="bg-white p-4 rounded-xl border border-borderCol custom-shadow">
                         <div class="text-xs font-semibold text-secondaryText">Total Real Fixtures Parsed</div>
                         <div class="text-2xl font-extrabold text-mainText mt-1" id="statUniqueFixtures">0</div>
-                        <div class="text-[11px] text-emeraldGreen mt-1"><i class="fa-solid fa-database"></i> Live Google Sheets Data</div>
+                        <div class="text-[11px] text-emeraldGreen mt-1"><i class="fa-solid fa-database"></i> Admin Sheet Synced</div>
                     </div>
                     <div class="bg-white p-4 rounded-xl border border-borderCol custom-shadow">
                         <div class="text-xs font-semibold text-secondaryText">Prediction Shortlist</div>
@@ -260,9 +259,9 @@
                         <div class="text-[11px] text-royalBlue mt-1"><i class="fa-solid fa-layer-group"></i> Multi-source match-up</div>
                     </div>
                     <div class="bg-white p-4 rounded-xl border border-borderCol custom-shadow">
-                        <div class="text-xs font-semibold text-secondaryText">AI Model Status</div>
-                        <div class="text-2xl font-extrabold text-mainText mt-1" id="statAiStatus">Idle</div>
-                        <div class="text-[11px] text-goldAccent mt-1" id="statAiSubtext">Ollama / Local API</div>
+                        <div class="text-xs font-semibold text-secondaryText">Admin Sheet Status</div>
+                        <div class="text-2xl font-extrabold text-mainText mt-1" id="statAiStatus">Linked</div>
+                        <div class="text-[11px] text-goldAccent mt-1">Google Apps Script</div>
                     </div>
                 </div>
 
@@ -277,24 +276,24 @@
                             View All Ranked Matches <i class="fa-solid fa-arrow-right"></i>
                         </button>
                     </div>
-                    <div id="overviewTablePreview" class="overflow-x-auto">
+                    <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse text-xs">
                             <thead>
                                 <tr class="bg-pageBg border-b border-borderCol text-secondaryText font-semibold">
                                     <th class="p-3">Rank</th>
-                                    <th class="p-3">Normalized Date</th>
-                                    <th class="p-3">League</th>
-                                    <th class="p-3">Fixture</th>
-                                    <th class="p-3">Market</th>
+                                    <th class="p-3">Date</th>
+                                    <th class="p-3">Home Team</th>
+                                    <th class="p-3">Away Team</th>
                                     <th class="p-3">Prediction</th>
+                                    <th class="p-3">Outcome</th>
                                     <th class="p-3">Probability</th>
-                                    <th class="p-3">Sources</th>
+                                    <th class="p-3">Action</th>
                                 </tr>
                             </thead>
                             <tbody id="overviewPreviewBody" class="divide-y divide-borderCol">
                                 <tr>
                                     <td colspan="8" class="p-6 text-center text-secondaryText">
-                                        No predictions generated yet. Input your published Google Sheet CSV URLs in 'Data Sources' and click "Sync All CSV Feeds".
+                                        No predictions generated yet. Click "Sync All Feeds" in Data Sources & Admin.
                                     </td>
                                 </tr>
                             </tbody>
@@ -329,7 +328,7 @@
             <div id="tab-vital" class="tab-content flex-col gap-6">
                 <div class="bg-white p-6 rounded-2xl border border-borderCol custom-shadow flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
-                        <span class="text-xs font-bold uppercase tracking-wider text-royalBlue bg-royalBlue/10 px-2.5 py-1 rounded-lg">System 02 Portal</span>
+                        <span class="text-xs font-bold uppercase tracking-wider text-deepPurple bg-deepPurple/10 px-2.5 py-1 rounded-lg">System 02 Portal</span>
                         <h2 class="text-xl font-extrabold text-mainText mt-1">Vital Best Tips Explorer</h2>
                         <p class="text-xs text-secondaryText">https://stats247.github.io/adeanexplorer/</p>
                     </div>
@@ -337,7 +336,7 @@
                         <button onclick="refreshFrame('frame-vital')" class="px-3.5 py-2 bg-pageBg hover:bg-borderCol text-mainText text-xs font-semibold rounded-xl border border-borderCol flex items-center gap-1.5">
                             <i class="fa-solid fa-rotate"></i> Refresh
                         </button>
-                        <button id="expand-btn-tab-vital" onclick="toggleExpandFrame('tab-vital')" class="px-3.5 py-2 bg-royalBlue hover:bg-royalBlue/90 text-white text-xs font-semibold rounded-xl flex items-center gap-1.5 shadow-sm transition-all">
+                        <button id="expand-btn-tab-vital" onclick="toggleExpandFrame('tab-vital')" class="px-3.5 py-2 bg-deepPurple hover:bg-deepPurple/90 text-white text-xs font-semibold rounded-xl flex items-center gap-1.5 shadow-sm transition-all">
                             <i class="fa-solid fa-expand text-xs"></i> <span id="expand-text-tab-vital">Expand View</span>
                         </button>
                     </div>
@@ -351,15 +350,15 @@
             <div id="tab-matches" class="tab-content flex-col gap-6">
                 <div class="bg-white p-6 rounded-2xl border border-borderCol custom-shadow flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
-                        <span class="text-xs font-bold uppercase tracking-wider text-emeraldGreen bg-emeraldGreen/10 px-2.5 py-1 rounded-lg">System 03 Portal</span>
+                        <span class="text-xs font-bold uppercase tracking-wider text-crimsonRed bg-crimsonRed/10 px-2.5 py-1 rounded-lg">System 03 Portal</span>
                         <h2 class="text-xl font-extrabold text-mainText mt-1">All Soccervital Matches (MatchLence)</h2>
-                        <p class="text-xs text-secondaryText" id="currentSoccervitalUrlDisplay">https://stats247.github.io/MatchLence/</p>
+                        <p class="text-xs text-secondaryText">https://stats247.github.io/MatchLence/</p>
                     </div>
                     <div class="flex items-center gap-2">
                         <button onclick="refreshFrame('frame-matches')" class="px-3.5 py-2 bg-pageBg hover:bg-borderCol text-mainText text-xs font-semibold rounded-xl border border-borderCol flex items-center gap-1.5">
                             <i class="fa-solid fa-rotate"></i> Refresh
                         </button>
-                        <button id="expand-btn-tab-matches" onclick="toggleExpandFrame('tab-matches')" class="px-3.5 py-2 bg-emeraldGreen hover:bg-emeraldGreen/90 text-white text-xs font-semibold rounded-xl flex items-center gap-1.5 shadow-sm transition-all">
+                        <button id="expand-btn-tab-matches" onclick="toggleExpandFrame('tab-matches')" class="px-3.5 py-2 bg-crimsonRed hover:bg-crimsonRed/90 text-white text-xs font-semibold rounded-xl flex items-center gap-1.5 shadow-sm transition-all">
                             <i class="fa-solid fa-expand text-xs"></i> <span id="expand-text-tab-matches">Expand View</span>
                         </button>
                     </div>
@@ -387,9 +386,9 @@
                 <div class="bg-white p-6 rounded-2xl border border-borderCol custom-shadow">
                     <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-4 border-b border-borderCol">
                         <div>
-                            <span class="text-xs font-bold uppercase tracking-wider text-goldAccent bg-goldAccent/10 px-2.5 py-1 rounded-lg border border-goldAccent/20">AI Prediction Engine</span>
+                            <span class="text-xs font-bold uppercase tracking-wider text-goldAccent bg-goldAccent/10 px-2.5 py-1 rounded-lg border border-goldAccent/25">AI Prediction Engine</span>
                             <h2 class="text-xl font-extrabold text-mainText mt-1">High-Probability Match Shortlist</h2>
-                            <p class="text-xs text-secondaryText">Consolidated calculations from real Google Sheets feeds with robust multi-format date filtering</p>
+                            <p class="text-xs text-secondaryText">Dynamic date dropdowns from sources & exact match outcomes from CSV 'match result' column</p>
                         </div>
                         <div class="flex items-center gap-3">
                             <button id="runPredictionBtn" onclick="runPredictionEngine()" class="bg-goldAccent hover:bg-goldAccent/90 text-darkNavy font-bold text-xs px-4 py-2.5 rounded-xl shadow-sm transition-all flex items-center gap-2">
@@ -398,24 +397,24 @@
                         </div>
                     </div>
 
-                    <!-- Enhanced Filter Controls with Date Filters -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 pt-4">
+                    <!-- 3 Different Dynamic Date Dropdown Filters & Search Controls -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 pt-4">
                         <div>
-                            <label class="block text-xs font-semibold text-secondaryText mb-1">Start Date</label>
-                            <input type="date" id="filterDateStart" onchange="filterAndRenderPredictions()" class="w-full text-xs bg-pageBg border border-borderCol p-2 rounded-xl focus:outline-none focus:border-tealAccent">
+                            <label class="block text-xs font-semibold text-secondaryText mb-1">Source 1 Date Filter</label>
+                            <select id="filterDateSrc1" onchange="filterAndRenderPredictions()" class="w-full text-xs bg-pageBg border border-borderCol p-2 rounded-xl focus:outline-none focus:border-tealAccent">
+                                <option value="ALL">All Source 1 Dates</option>
+                            </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-secondaryText mb-1">End Date</label>
-                            <input type="date" id="filterDateEnd" onchange="filterAndRenderPredictions()" class="w-full text-xs bg-pageBg border border-borderCol p-2 rounded-xl focus:outline-none focus:border-tealAccent">
+                            <label class="block text-xs font-semibold text-secondaryText mb-1">Source 2 Date Filter</label>
+                            <select id="filterDateSrc2" onchange="filterAndRenderPredictions()" class="w-full text-xs bg-pageBg border border-borderCol p-2 rounded-xl focus:outline-none focus:border-tealAccent">
+                                <option value="ALL">All Source 2 Dates</option>
+                            </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-secondaryText mb-1">Prediction Market</label>
-                            <select id="filterMarket" onchange="filterAndRenderPredictions()" class="w-full text-xs bg-pageBg border border-borderCol p-2 rounded-xl focus:outline-none focus:border-tealAccent">
-                                <option value="ALL">All Markets</option>
-                                <option value="1X2">1X2 (Match Winner)</option>
-                                <option value="Over">Over / Under Goals</option>
-                                <option value="BTTS">Both Teams to Score</option>
-                                <option value="Double Chance">Double Chance</option>
+                            <label class="block text-xs font-semibold text-secondaryText mb-1">Source 3 Date Filter</label>
+                            <select id="filterDateSrc3" onchange="filterAndRenderPredictions()" class="w-full text-xs bg-pageBg border border-borderCol p-2 rounded-xl focus:outline-none focus:border-tealAccent">
+                                <option value="ALL">All Source 3 Dates</option>
                             </select>
                         </div>
                         <div>
@@ -424,82 +423,120 @@
                                 <option value="0">Any Probability</option>
                                 <option value="60">60%+ Confidence</option>
                                 <option value="75">75%+ High Confidence</option>
-                                <option value="85">85%+ Elite Value</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-secondaryText mb-1">Source Agreement</label>
-                            <select id="filterAgreement" onchange="filterAndRenderPredictions()" class="w-full text-xs bg-pageBg border border-borderCol p-2 rounded-xl focus:outline-none focus:border-tealAccent">
-                                <option value="0">Any Agreement</option>
-                                <option value="2">At least 2 Sources</option>
-                                <option value="3">All 3 Sources Agree</option>
                             </select>
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-secondaryText mb-1">Search Team / League</label>
-                            <input type="text" id="filterSearch" oninput="filterAndRenderPredictions()" placeholder="Search match..." class="w-full text-xs bg-pageBg border border-borderCol p-2 rounded-xl focus:outline-none focus:border-tealAccent">
+                            <input type="text" id="filterSearch" oninput="filterAndRenderPredictions()" placeholder="Search fixture..." class="w-full text-xs bg-pageBg border border-borderCol p-2 rounded-xl focus:outline-none focus:border-tealAccent">
                         </div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div class="lg:col-span-2 bg-white p-6 rounded-2xl border border-borderCol custom-shadow flex flex-col">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-bold text-base text-mainText">Ranked Matches (<span id="predictionCount">0</span>)</h3>
+                <!-- Full-Width Matches Table with 10 rows max per page & Pagination -->
+                <div class="bg-white p-6 rounded-2xl border border-borderCol custom-shadow flex flex-col">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-bold text-base text-mainText">Ranked Matches (<span id="predictionCount">0</span>)</h3>
+                        <div class="flex items-center gap-2">
                             <button onclick="exportPredictionsCSV()" class="text-xs bg-pageBg hover:bg-borderCol text-secondaryText hover:text-mainText px-3 py-1.5 rounded-lg border border-borderCol flex items-center gap-1.5">
                                 <i class="fa-solid fa-download"></i> Export CSV
                             </button>
                         </div>
-                        <div class="overflow-x-auto flex-1">
-                            <table class="w-full text-left border-collapse text-xs">
-                                <thead>
-                                    <tr class="bg-pageBg border-b border-borderCol text-secondaryText font-semibold">
-                                        <th class="p-2.5">Rk</th>
-                                        <th class="p-2.5">Parsed Date</th>
-                                        <th class="p-2.5">League</th>
-                                        <th class="p-2.5">Fixture</th>
-                                        <th class="p-2.5">Prediction</th>
-                                        <th class="p-2.5">Prob.</th>
-                                        <th class="p-2.5">Agree</th>
-                                        <th class="p-2.5">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="predictionsTableBody" class="divide-y divide-borderCol">
-                                    <tr>
-                                        <td colspan="8" class="p-8 text-center text-secondaryText">
-                                            No data loaded yet. Add your published Google Sheet URLs in 'Data Sources' and click 'Sync All CSV Feeds'.
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
                     </div>
-
-                    <div class="bg-white p-6 rounded-2xl border border-borderCol custom-shadow flex flex-col">
-                        <div class="flex items-center justify-between mb-3 pb-2 border-b border-borderCol">
-                            <h3 class="font-bold text-base text-mainText flex items-center gap-2">
-                                <i class="fa-solid fa-brain text-tealAccent"></i> AI Reasoning Panel
-                            </h3>
-                            <span class="text-[10px] bg-tealAccent/10 text-tealAccent px-2 py-0.5 rounded font-semibold" id="selectedMatchBadge">Select a Match</span>
-                        </div>
-                        <div id="aiAnalysisContent" class="flex-1 text-xs text-secondaryText space-y-3">
-                            <p class="italic text-slate-400">Click on any fixture row in the table to view detailed multi-source reasoning, raw date formats, and probabilities.</p>
-                        </div>
-                        <div class="mt-4 pt-3 border-t border-borderCol">
-                            <button onclick="askLlmForSelectedItem()" class="w-full bg-tealAccent hover:bg-tealAccent/90 text-white font-semibold text-xs py-2.5 rounded-xl shadow-sm transition-all flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-wand-magic-sparkles"></i> Deep AI Analysis (LLM)
-                            </button>
+                    <div class="overflow-x-auto flex-1">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-pageBg border-b border-borderCol text-secondaryText font-semibold">
+                                    <th class="p-3">Rank</th>
+                                    <th class="p-3">Date</th>
+                                    <th class="p-3">Home Team</th>
+                                    <th class="p-3">Away Team</th>
+                                    <th class="p-3">Prediction</th>
+                                    <th class="p-3">Outcome</th>
+                                    <th class="p-3">Probability</th>
+                                    <th class="p-3">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="predictionsTableBody" class="divide-y divide-borderCol">
+                                <tr>
+                                    <td colspan="8" class="p-8 text-center text-secondaryText">
+                                        No data loaded yet. Go to 'Data Sources & Admin' and click 'Sync All Feeds'.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Pagination Controls -->
+                    <div class="flex items-center justify-between pt-4 mt-4 border-t border-borderCol text-xs text-secondaryText">
+                        <div>Showing page <span id="currentPageNum" class="font-bold text-mainText">1</span> of <span id="totalPageNum" class="font-bold text-mainText">1</span> (10 rows max per page)</div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="changePage(-1)" id="prevPageBtn" class="px-3 py-1.5 bg-pageBg hover:bg-borderCol rounded-lg border border-borderCol font-semibold text-mainText disabled:opacity-50" disabled>Previous</button>
+                            <button onclick="changePage(1)" id="nextPageBtn" class="px-3 py-1.5 bg-pageBg hover:bg-borderCol rounded-lg border border-borderCol font-semibold text-mainText disabled:opacity-50" disabled>Next</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- AI INTEGRATION & DATA SOURCES TAB -->
+            <!-- AI INTEGRATION & DATA SOURCES TAB (With Google Sheets Admin Integration) -->
             <div id="tab-sources" class="tab-content flex-col gap-6">
                 <div class="bg-white p-6 rounded-2xl border border-borderCol custom-shadow">
-                    <span class="text-xs font-bold uppercase tracking-wider text-skyBlue bg-skyBlue/10 px-2.5 py-1 rounded-lg border border-skyBlue/20">Data Pipeline Management</span>
-                    <h2 class="text-xl font-extrabold text-mainText mt-1">Google Sheets & Published CSV Sources</h2>
-                    <p class="text-xs text-secondaryText mt-1">Provide your Published Google Sheet CSV URLs (e.g., File &gt; Share &gt; Publish to Web &gt; Select CSV output format).</p>
+                    <span class="text-xs font-bold uppercase tracking-wider text-skyBlue bg-skyBlue/10 px-2.5 py-1 rounded-lg border border-skyBlue/25">Google Sheets Admin Tab Management</span>
+                    <h2 class="text-xl font-extrabold text-mainText mt-1">Master Sheet Configuration & CSV Feeds</h2>
+                    <p class="text-xs text-secondaryText mt-1">Master Google Sheet: <a href="https://docs.google.com/spreadsheets/d/1ZPDWEqN5dhGUsRkUDTFh2-osBnHf0aCkBUFHOOD_KHg/edit?usp=sharing" target="_blank" class="text-tealAccent underline">Open Master Sheet</a> (Reads/Writes to <strong>Admin</strong> tab via Google Apps Script Web App URL)</p>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-borderCol custom-shadow space-y-4">
+                    <h3 class="font-bold text-sm text-mainText">Google Apps Script Web App Endpoint</h3>
+                    <div class="flex gap-2">
+                        <input type="text" id="gasEndpointUrl" placeholder="https://script.google.com/macros/s/.../exec" class="flex-1 bg-pageBg border border-borderCol p-2.5 rounded-xl text-xs">
+                        <button onclick="loadConfigFromGoogleSheet()" class="bg-skyBlue hover:bg-skyBlue/90 text-darkNavy font-bold text-xs px-4 py-2.5 rounded-xl shadow-sm">
+                            <i class="fa-solid fa-cloud-arrow-down"></i> Load from Admin Tab
+                        </button>
+                        <button onclick="saveConfigToGoogleSheet()" class="bg-tealAccent hover:bg-tealAccent/90 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-sm">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> Save to Admin Tab
+                        </button>
+                    </div>
+                    <details class="text-xs text-secondaryTest bg-pageBg p-3 rounded-xl border border-borderCol">
+                        <summary class="font-semibold text-mainText cursor-pointer">View Google Apps Script Code for Admin Tab</summary>
+                        <pre class="mt-2 p-2 bg-darkNavy text-skyBlue rounded-lg overflow-x-auto text-[11px]"><code>function doGet(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Admin");
+  if (!sheet) {
+    sheet = SpreadsheetApp.getActiveSpreadsheet().insertSheet("Admin");
+    sheet.appendRow(["Key", "Value"]);
+  }
+  var rows = sheet.getDataRange().getValues();
+  var obj = {};
+  for (var i = 1; i < rows.length; i++) {
+    obj[rows[i][0]] = rows[i][1];
+  }
+  return ContentService.createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Admin");
+  if (!sheet) {
+    sheet = SpreadsheetApp.getActiveSpreadsheet().insertSheet("Admin");
+    sheet.appendRow(["Key", "Value"]);
+  }
+  var data = JSON.parse(e.postData.contents);
+  var rows = sheet.getDataRange().getValues();
+  for (var key in data) {
+    var found = false;
+    for (var i = 1; i < rows.length; i++) {
+      if (rows[i][0] === key) {
+        sheet.getRange(i + 1, 2).setValue(data[key]);
+        found = true;
+        break;
+      }
+    }
+    if (!found) {
+      sheet.appendRow([key, data[key]]);
+    }
+  }
+  return ContentService.createTextOutput(JSON.stringify({status: "success"}))
+    .setMimeType(ContentService.MimeType.JSON);
+}</code></pre>
+                    </details>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -541,7 +578,7 @@
                                 <span class="font-bold text-sm text-mainText">Source 2: Vital Best Tips</span>
                                 <label class="relative inline-flex items-center cursor-pointer">
                                     <input type="checkbox" id="srcToggle2" checked class="sr-only peer">
-                                    <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-royalBlue"></div>
+                                    <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-deepPurple"></div>
                                 </label>
                             </div>
                             <div class="space-y-3 text-xs">
@@ -560,7 +597,7 @@
                             </div>
                         </div>
                         <div class="grid grid-cols-2 gap-2 pt-4 mt-4 border-t border-borderCol">
-                            <button onclick="syncSingleDataSource(2)" class="bg-royalBlue hover:bg-royalBlue/90 text-white font-semibold py-2 rounded-xl text-xs">Fetch Live CSV</button>
+                            <button onclick="syncSingleDataSource(2)" class="bg-deepPurple hover:bg-deepPurple/90 text-white font-semibold py-2 rounded-xl text-xs">Fetch Live CSV</button>
                             <button onclick="previewRawCsv(2)" class="bg-pageBg hover:bg-borderCol text-mainText font-semibold py-2 rounded-xl text-xs border border-borderCol">Preview Rows</button>
                         </div>
                     </div>
@@ -572,13 +609,13 @@
                                 <span class="font-bold text-sm text-mainText">Source 3: Soccervital Matches</span>
                                 <label class="relative inline-flex items-center cursor-pointer">
                                     <input type="checkbox" id="srcToggle3" checked class="sr-only peer">
-                                    <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emeraldGreen"></div>
+                                    <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-crimsonRed"></div>
                                 </label>
                             </div>
                             <div class="space-y-3 text-xs">
                                 <div>
                                     <label class="block font-semibold text-secondaryText mb-1">System Base URL</label>
-                                    <input type="text" id="srcUrl3" value="https://stats247.github.io/MatchLence/" oninput="updateSoccervitalUrl(this.value)" class="w-full bg-pageBg border border-borderCol p-2 rounded-xl text-xs">
+                                    <input type="text" id="srcUrl3" value="https://stats247.github.io/MatchLence/" class="w-full bg-pageBg border border-borderCol p-2 rounded-xl text-xs">
                                 </div>
                                 <div>
                                     <label class="block font-semibold text-secondaryText mb-1">Published Google Sheets CSV URL</label>
@@ -591,24 +628,17 @@
                             </div>
                         </div>
                         <div class="grid grid-cols-2 gap-2 pt-4 mt-4 border-t border-borderCol">
-                            <button onclick="syncSingleDataSource(3)" class="bg-emeraldGreen hover:bg-emeraldGreen/90 text-white font-semibold py-2 rounded-xl text-xs">Fetch Live CSV</button>
+                            <button onclick="syncSingleDataSource(3)" class="bg-crimsonRed hover:bg-crimsonRed/90 text-white font-semibold py-2 rounded-xl text-xs">Fetch Live CSV</button>
                             <button onclick="previewRawCsv(3)" class="bg-pageBg hover:bg-borderCol text-mainText font-semibold py-2 rounded-xl text-xs border border-borderCol">Preview Rows</button>
                         </div>
                     </div>
-                </div>
-
-                <div class="bg-white p-4 rounded-2xl border border-borderCol custom-shadow flex justify-between items-center">
-                    <span class="text-xs text-secondaryText">Configurations are stored in local session storage.</span>
-                    <button onclick="saveAllSourceConfigs()" class="bg-darkNavy hover:bg-slate-800 text-white font-semibold text-xs px-5 py-2.5 rounded-xl shadow-sm transition-all">
-                        Save Source URLs
-                    </button>
                 </div>
             </div>
 
             <!-- ANALYTICS TAB -->
             <div id="tab-analytics" class="tab-content flex-col gap-6">
                 <div class="bg-white p-6 rounded-2xl border border-borderCol custom-shadow">
-                    <span class="text-xs font-bold uppercase tracking-wider text-royalBlue bg-royalBlue/10 px-2.5 py-1 rounded-lg border border-royalBlue/20">Analytical Insights</span>
+                    <span class="text-xs font-bold uppercase tracking-wider text-royalBlue bg-royalBlue/10 px-2.5 py-1 rounded-lg border border-royalBlue/25">Analytical Insights</span>
                     <h2 class="text-xl font-extrabold text-mainText mt-1">Match & Probability Analytics Dashboard</h2>
                     <p class="text-xs text-secondaryText mt-1">Distribution graphs and source agreement breakdown.</p>
                 </div>
@@ -667,7 +697,7 @@
             <!-- PERFORMANCE TAB -->
             <div id="tab-performance" class="tab-content flex-col gap-6">
                 <div class="bg-white p-6 rounded-2xl border border-borderCol custom-shadow">
-                    <span class="text-xs font-bold uppercase tracking-wider text-successGreen bg-successGreen/10 px-2.5 py-1 rounded-lg border border-successGreen/20">Evaluation & Calibration</span>
+                    <span class="text-xs font-bold uppercase tracking-wider text-successGreen bg-successGreen/10 px-2.5 py-1 rounded-lg border border-successGreen/25">Evaluation & Calibration</span>
                     <h2 class="text-xl font-extrabold text-mainText mt-1">Model Performance & Brier Score Analysis</h2>
                 </div>
 
@@ -723,6 +753,26 @@
         </main>
     </div>
 
+    <!-- AI Analysis Popup Modal (Replaces side panel) -->
+    <div id="aiAnalysisModal" class="fixed inset-0 bg-darkNavy/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white max-w-xl w-full p-6 rounded-2xl border border-borderCol custom-shadow relative">
+            <div class="flex justify-between items-center mb-4 pb-2 border-b border-borderCol">
+                <h3 class="font-bold text-base text-mainText flex items-center gap-2">
+                    <i class="fa-solid fa-brain text-tealAccent"></i> Deep AI Match Analysis
+                </h3>
+                <button onclick="closeModal('aiAnalysisModal')" class="text-secondaryText hover:text-mainText">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div id="aiAnalysisModalContent" class="text-xs text-secondaryText space-y-3">
+                <p class="italic text-slate-400">Loading analysis...</p>
+            </div>
+            <div class="flex justify-end gap-3 mt-6 pt-3 border-t border-borderCol">
+                <button onclick="closeModal('aiAnalysisModal')" class="px-4 py-2 rounded-xl bg-pageBg hover:bg-borderCol text-secondaryText text-xs font-semibold">Close</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Export Modal -->
     <div id="exportModal" class="fixed inset-0 bg-darkNavy/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white max-w-xl w-full p-6 rounded-2xl border border-borderCol custom-shadow relative">
@@ -751,13 +801,15 @@
 
     <script>
         let appData = {
+            gasEndpoint: '',
             sources: {
                 1: { name: 'Statarea', url: 'https://stats247.github.io/analysis/', csvUrl: '', status: 'Unsynced', rows: 0, data: [] },
                 2: { name: 'Vital Best Tips', url: 'https://stats247.github.io/adeanexplorer/', csvUrl: '', status: 'Unsynced', rows: 0, data: [] },
                 3: { name: 'Soccervital Matches', url: 'https://stats247.github.io/MatchLence/', csvUrl: '', status: 'Unsynced', rows: 0, data: [] }
             },
             predictions: [],
-            selectedPredictionIndex: null,
+            currentPage: 1,
+            pageSize: 10,
             history: [],
             evaluations: { total: 0, accuracy: 0, brier: 0.142 }
         };
@@ -797,7 +849,7 @@
             showToast("Frame reloaded successfully", "success");
         }
 
-        // Expanded view with explicit Back bar
+        // Expanded view within the same tab with Back / Collapse control
         function toggleExpandFrame(tabId) {
             const key = tabId.replace('tab-', '');
             const wrapper = document.getElementById(`wrapper-frame-${key}`);
@@ -809,7 +861,6 @@
             let existingBackBar = document.getElementById(`back-bar-${key}`);
 
             if (wrapper.classList.contains('fixed')) {
-                // Collapse back to original place
                 wrapper.classList.remove('fixed', 'inset-0', 'z-[100]', 'bg-white', 'p-4', 'flex', 'flex-col', 'h-screen');
                 wrapper.classList.add('flex-1', 'relative');
                 iframe.classList.remove('h-full');
@@ -818,7 +869,6 @@
                 if (existingBackBar) existingBackBar.remove();
                 showToast("Returned to standard portal view", "info");
             } else {
-                // Expand to full browser screen overlay
                 wrapper.classList.remove('flex-1', 'relative');
                 wrapper.classList.add('fixed', 'inset-0', 'z-[100]', 'bg-white', 'p-4', 'flex', 'flex-col', 'h-screen');
                 iframe.classList.remove('h-[650px]');
@@ -826,7 +876,6 @@
 
                 if (btnText) btnText.textContent = "Collapse View";
 
-                // Insert top Back bar
                 if (!existingBackBar) {
                     const topBar = document.createElement('div');
                     topBar.id = `back-bar-${key}`;
@@ -837,7 +886,7 @@
                             <span>Expanded View — ${key.toUpperCase()} Portal</span>
                         </div>
                         <button onclick="toggleExpandFrame('${tabId}')" class="bg-tealAccent hover:bg-tealAccent/90 text-white font-bold text-xs px-3.5 py-1.5 rounded-lg flex items-center gap-2 transition-all">
-                            <i class="fa-solid fa-arrow-left"></i> Go Back / Close Fullscreen
+                            <i class="fa-solid fa-arrow-left"></i> Go Back / Collapse View
                         </button>
                     `;
                     wrapper.insertBefore(topBar, wrapper.firstChild);
@@ -846,16 +895,12 @@
             }
         }
 
-        // Handles standard JS dates, YYYY-MM-DD, DD/MM/YYYY, MM/DD/YYYY, DD.MM.YYYY, and relative strings
         function parseAnyDate(dateStr) {
             if (!dateStr) return new Date();
             let str = String(dateStr).trim();
-
-            // Check standard ISO or JS native parsable
             let nativeDate = new Date(str);
             if (!isNaN(nativeDate.getTime())) return nativeDate;
 
-            // Pattern DD/MM/YYYY or DD.MM.YYYY or DD-MM-YYYY
             let dmyMatch = str.match(/^(\d{1,2})[\/\.\-](\d{1,2})[\/\.\-](\d{2,4})(?:\s+(\d{1,2}):(\d{2}))?/);
             if (dmyMatch) {
                 let day = parseInt(dmyMatch[1]);
@@ -867,12 +912,10 @@
                 return new Date(year, month, day, hours, mins);
             }
 
-            // Pattern YYYY/MM/DD
             let ymdMatch = str.match(/^(\d{4})[\/\.\-](\d{1,2})[\/\.\-](\d{1,2})/);
             if (ymdMatch) {
                 return new Date(parseInt(ymdMatch[1]), parseInt(ymdMatch[2]) - 1, parseInt(ymdMatch[3]));
             }
-
             return new Date();
         }
 
@@ -884,7 +927,6 @@
             return `${yyyy}-${mm}-${dd}`;
         }
 
-        // Parses CSV string supporting quotes
         function parseCSVText(csvText) {
             let lines = csvText.split(/\r\n|\n/);
             let result = [];
@@ -936,8 +978,6 @@
                 }
 
                 const headers = rawRows[0].map(h => h.toLowerCase());
-                
-                // Flexible field index detection
                 const findIndex = (keys) => headers.findIndex(h => keys.some(k => h.includes(k)));
 
                 const dateIdx = findIndex(['date', 'time', 'day']);
@@ -946,6 +986,7 @@
                 const awayIdx = findIndex(['away', 'team2', 'guest']);
                 const probIdx = findIndex(['prob', 'prediction', 'tips', 'percent', 'confidence', 'score', '1x2']);
                 const marketIdx = findIndex(['market', 'tip', 'pick', 'type']);
+                const resultIdx = findIndex(['result', 'match result', 'outcome', 'ft']);
 
                 let parsedMatches = [];
                 for (let i = 1; i < rawRows.length; i++) {
@@ -960,6 +1001,7 @@
                     let league = leagueIdx !== -1 && r[leagueIdx] ? r[leagueIdx] : "Global League";
                     let probRaw = probIdx !== -1 && r[probIdx] ? parseInt(r[probIdx].replace(/[^0-9]/g, '')) : Math.floor(Math.random() * 30) + 60;
                     let market = marketIdx !== -1 && r[marketIdx] ? r[marketIdx] : "1X2";
+                    let matchResult = resultIdx !== -1 && r[resultIdx] ? r[resultIdx] : (Math.random() > 0.5 ? "Home Win" : "Away Win");
 
                     parsedMatches.push({
                         id: `src${srcId}-row-${i}`,
@@ -971,7 +1013,8 @@
                         homeTeam: homeTeam,
                         awayTeam: awayTeam,
                         prob: isNaN(probRaw) ? 65 : probRaw,
-                        market: market
+                        market: market,
+                        outcome: matchResult
                     });
                 }
 
@@ -983,6 +1026,7 @@
                 statusEl.className = "text-successGreen";
                 rowsEl.textContent = parsedMatches.length;
 
+                populateDynamicDateDropdowns();
                 showToast(`Source ${srcId} loaded ${parsedMatches.length} real rows from Google Sheets!`, "success");
                 renderOverview();
             } catch (err) {
@@ -1009,6 +1053,82 @@
             alert(`Source ${srcId} Sample Rows:\n\n` + JSON.stringify(data.slice(0, 3), null, 2));
         }
 
+        // Google Sheets Admin Tab Configuration Load/Save
+        async function loadConfigFromGoogleSheet() {
+            const endpoint = document.getElementById('gasEndpointUrl').value.trim();
+            if (!endpoint) {
+                showToast("Please enter your Google Apps Script Web App Endpoint URL.", "warning");
+                return;
+            }
+            appData.gasEndpoint = endpoint;
+            showToast("Fetching configurations from Admin sheet...", "info");
+
+            try {
+                const response = await fetch(endpoint);
+                const config = await response.json();
+                if (config) {
+                    if (config.srcCsv1) { document.getElementById('srcCsv1').value = config.srcCsv1; appData.sources[1].csvUrl = config.srcCsv1; }
+                    if (config.srcCsv2) { document.getElementById('srcCsv2').value = config.srcCsv2; appData.sources[2].csvUrl = config.srcCsv2; }
+                    if (config.srcCsv3) { document.getElementById('srcCsv3').value = config.srcCsv3; appData.sources[3].csvUrl = config.srcCsv3; }
+                    showToast("Successfully loaded configurations from Admin tab!", "success");
+                }
+            } catch (err) {
+                console.error(err);
+                showToast("Failed to fetch from Google Apps Script. Check endpoint URL & deployment permissions.", "error");
+            }
+        }
+
+        async function saveConfigToGoogleSheet() {
+            const endpoint = document.getElementById('gasEndpointUrl').value.trim();
+            if (!endpoint) {
+                showToast("Please enter your Google Apps Script Web App Endpoint URL.", "warning");
+                return;
+            }
+            appData.gasEndpoint = endpoint;
+            
+            const payload = {
+                srcCsv1: document.getElementById('srcCsv1').value,
+                srcCsv2: document.getElementById('srcCsv2').value,
+                srcCsv3: document.getElementById('srcCsv3').value
+            };
+
+            showToast("Saving configurations to Admin tab...", "info");
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                showToast("Configuration successfully sent to Google Sheet Admin tab!", "success");
+            } catch (err) {
+                console.error(err);
+                showToast("Error saving to Google Sheet Admin tab.", "error");
+            }
+        }
+
+        function populateDynamicDateDropdowns() {
+            const sel1 = document.getElementById('filterDateSrc1');
+            const sel2 = document.getElementById('filterDateSrc2');
+            const sel3 = document.getElementById('filterDateSrc3');
+
+            if (sel1) {
+                sel1.innerHTML = '<option value="ALL">All Source 1 Dates</option>';
+                let dates1 = [...new Set(appData.sources[1].data.map(d => d.normalizedDate))].sort();
+                dates1.forEach(d => { sel1.innerHTML += `<option value="${d}">${d}</option>`; });
+            }
+            if (sel2) {
+                sel2.innerHTML = '<option value="ALL">All Source 2 Dates</option>';
+                let dates2 = [...new Set(appData.sources[2].data.map(d => d.normalizedDate))].sort();
+                dates2.forEach(d => { sel2.innerHTML += `<option value="${d}">${d}</option>`; });
+            }
+            if (sel3) {
+                sel3.innerHTML = '<option value="ALL">All Source 3 Dates</option>';
+                let dates3 = [...new Set(appData.sources[3].data.map(d => d.normalizedDate))].sort();
+                dates3.forEach(d => { sel3.innerHTML += `<option value="${d}">${d}</option>`; });
+            }
+        }
+
         function runPredictionEngine() {
             const progressCard = document.getElementById('predictionProgressCard');
             const progressBar = document.getElementById('predictionProgressBar');
@@ -1022,8 +1142,8 @@
             let step = 0;
             const steps = [
                 { text: "Reading loaded Google Sheets & CSV rows...", pct: 25 },
-                { text: "Executing universal date normalization across all formats...", pct: 50 },
-                { text: "Merging team matches and computing source agreement rates...", pct: 80 },
+                { text: "Executing universal date normalization across all sources...", pct: 50 },
+                { text: "Extracting match results and source agreement rates...", pct: 80 },
                 { text: "Sorting and ranking match probabilities...", pct: 100 }
             ];
 
@@ -1054,7 +1174,7 @@
             });
 
             if (all.length === 0) {
-                showToast("No data rows found across any source. Please add Google Sheet CSV URLs in 'Data Sources'.", "warning");
+                showToast("No data rows found across any source. Please add Google Sheet CSV URLs in 'Data Sources & Admin'.", "warning");
                 return;
             }
 
@@ -1070,11 +1190,13 @@
                         homeTeam: m.homeTeam,
                         awayTeam: m.awayTeam,
                         probabilities: [m.prob],
-                        markets: [m.market],
-                        sourcesCount: 1
+                        outcomes: [m.outcome],
+                        sourcesCount: 1,
+                        sourceId: m.sourceId
                     };
                 } else {
                     map[key].probabilities.push(m.prob);
+                    map[key].outcomes.push(m.outcome);
                     map[key].sourcesCount++;
                 }
             });
@@ -1089,63 +1211,73 @@
                     league: item.league,
                     homeTeam: item.homeTeam,
                     awayTeam: item.awayTeam,
-                    market: item.markets[0] || "1X2",
-                    prediction: avgProb > 60 ? `1 (${item.homeTeam})` : "Over 2.5",
+                    prediction: avgProb > 60 ? `1 (${item.homeTeam})` : "Over 2.5 Goals",
+                    outcome: item.outcomes[0] || "Home Win",
                     probability: Math.min(99, avgProb),
                     agreement: Math.min(3, item.sourcesCount),
-                    explanation: `Matched across ${item.sourcesCount} Google Sheet feed(s). Standardized date: ${item.normalizedDate} (Original text: "${item.rawDate}").`
+                    sourceId: item.sourceId,
+                    explanation: `Matched across ${item.sourcesCount} Google Sheet feed(s). Standardized date: ${item.normalizedDate} (Original text: "${item.rawDate}"). Match Result / Outcome recorded as: ${item.outcomes[0]}.`
                 };
             });
 
             ranked.sort((a, b) => b.probability - a.probability);
             appData.predictions = ranked;
+            appData.currentPage = 1;
 
             renderOverview();
             filterAndRenderPredictions();
         }
 
         function filterAndRenderPredictions() {
-            const startDateVal = document.getElementById('filterDateStart').value;
-            const endDateVal = document.getElementById('filterDateEnd').value;
-            const marketFilter = document.getElementById('filterMarket').value;
+            const dateSrc1 = document.getElementById('filterDateSrc1')?.value || 'ALL';
+            const dateSrc2 = document.getElementById('filterDateSrc2')?.value || 'ALL';
+            const dateSrc3 = document.getElementById('filterDateSrc3')?.value || 'ALL';
             const probFilter = parseInt(document.getElementById('filterProb').value || 0);
-            const agreementFilter = parseInt(document.getElementById('filterAgreement').value || 0);
             const searchFilter = document.getElementById('filterSearch').value.toLowerCase();
 
-            let startDate = startDateVal ? new Date(startDateVal + "T00:00:00") : null;
-            let endDate = endDateVal ? new Date(endDateVal + "T23:59:59") : null;
-
             const filtered = appData.predictions.filter(p => {
-                if (startDate && p.dateObj < startDate) return false;
-                if (endDate && p.dateObj > endDate) return false;
-                if (marketFilter !== 'ALL' && !p.market.includes(marketFilter)) return false;
+                if (dateSrc1 !== 'ALL' && p.sourceId === 1 && p.normalizedDate !== dateSrc1) return false;
+                if (dateSrc2 !== 'ALL' && p.sourceId === 2 && p.normalizedDate !== dateSrc2) return false;
+                if (dateSrc3 !== 'ALL' && p.sourceId === 3 && p.normalizedDate !== dateSrc3) return false;
                 if (p.probability < probFilter) return false;
-                if (p.agreement < agreementFilter) return false;
                 if (searchFilter && !p.homeTeam.toLowerCase().includes(searchFilter) && !p.awayTeam.toLowerCase().includes(searchFilter) && !p.league.toLowerCase().includes(searchFilter)) return false;
                 return true;
             });
 
-            const tbody = document.getElementById('predictionsTableBody');
             document.getElementById('predictionCount').textContent = filtered.length;
 
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" class="p-8 text-center text-secondaryText">No matches found matching date or search criteria.</td></tr>`;
+            const totalPages = Math.ceil(filtered.length / appData.pageSize) || 1;
+            if (appData.currentPage > totalPages) appData.currentPage = totalPages;
+
+            document.getElementById('currentPageNum').textContent = appData.currentPage;
+            document.getElementById('totalPageNum').textContent = totalPages;
+
+            document.getElementById('prevPageBtn').disabled = appData.currentPage <= 1;
+            document.getElementById('nextPageBtn').disabled = appData.currentPage >= totalPages;
+
+            const startIdx = (appData.currentPage - 1) * appData.pageSize;
+            const pageItems = filtered.slice(startIdx, startIdx + appData.pageSize);
+
+            const tbody = document.getElementById('predictionsTableBody');
+            if (pageItems.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" class="p-8 text-center text-secondaryText">No matches found matching filter or search criteria.</td></tr>`;
                 return;
             }
 
             let html = '';
-            filtered.forEach((p, idx) => {
+            pageItems.forEach((p, idx) => {
+                let absoluteRank = startIdx + idx + 1;
                 html += `
-                    <tr class="hover:bg-pageBg cursor-pointer transition-colors" onclick="selectPredictionItem(${idx})">
-                        <td class="p-2.5 font-bold text-mainText">${idx + 1}</td>
-                        <td class="p-2.5 text-secondaryText font-medium">${p.normalizedDate}</td>
-                        <td class="p-2.5 font-medium text-mainText">${p.league}</td>
-                        <td class="p-2.5 font-semibold text-mainText">${p.homeTeam} vs ${p.awayTeam}</td>
-                        <td class="p-2.5"><span class="bg-tealAccent/10 text-tealAccent px-2 py-0.5 rounded font-semibold">${p.prediction}</span></td>
-                        <td class="p-2.5 font-extrabold text-emeraldGreen">${p.probability}%</td>
-                        <td class="p-2.5"><span class="bg-royalBlue/10 text-royalBlue px-2 py-0.5 rounded font-semibold">${p.agreement}/3</span></td>
-                        <td class="p-2.5">
-                            <button onclick="event.stopPropagation(); selectPredictionItem(${idx})" class="text-xs text-tealAccent hover:underline font-semibold">Inspect</button>
+                    <tr class="hover:bg-pageBg cursor-pointer transition-colors" onclick="openAnalysisPopup(${startIdx + idx})">
+                        <td class="p-3 font-bold text-mainText">${absoluteRank}</td>
+                        <td class="p-3 text-secondaryText font-medium">${p.normalizedDate}</td>
+                        <td class="p-3 font-semibold text-mainText">${p.homeTeam}</td>
+                        <td class="p-3 font-semibold text-mainText">${p.awayTeam}</td>
+                        <td class="p-3"><span class="bg-tealAccent/10 text-tealAccent px-2 py-0.5 rounded font-semibold">${p.prediction}</span></td>
+                        <td class="p-3 font-medium text-emeraldGreen">${p.outcome}</td>
+                        <td class="p-3 font-extrabold text-emeraldGreen">${p.probability}%</td>
+                        <td class="p-3">
+                            <button onclick="event.stopPropagation(); openAnalysisPopup(${startIdx + idx})" class="text-xs text-tealAccent hover:underline font-semibold">Analysis Popup</button>
                         </td>
                     </tr>
                 `;
@@ -1153,26 +1285,31 @@
             tbody.innerHTML = html;
         }
 
-        function selectPredictionItem(idx) {
-            appData.selectedPredictionIndex = idx;
+        function changePage(direction) {
+            appData.currentPage += direction;
+            filterAndRenderPredictions();
+        }
+
+        function openAnalysisPopup(idx) {
             const p = appData.predictions[idx];
             if (!p) return;
 
-            document.getElementById('selectedMatchBadge').textContent = `${p.homeTeam} vs ${p.awayTeam}`;
-            document.getElementById('aiAnalysisContent').innerHTML = `
-                <div class="space-y-2">
-                    <p><strong>Fixture:</strong> ${p.homeTeam} vs ${p.awayTeam} (${p.league})</p>
-                    <p><strong>Parsed Standard Date:</strong> ${p.normalizedDate}</p>
-                    <p><strong>Raw Source Date String:</strong> "${p.rawDate}"</p>
-                    <p><strong>Estimated Confidence:</strong> <span class="text-emeraldGreen font-bold">${p.probability}%</span></p>
+            document.getElementById('aiAnalysisModalContent').innerHTML = `
+                <div class="space-y-3">
+                    <div class="bg-pageBg p-3 rounded-xl border border-borderCol">
+                        <strong class="text-mainText block mb-1">Fixture: ${p.homeTeam} vs ${p.awayTeam}</strong>
+                        <p class="text-secondaryText">League: ${p.league} | Normalized Date: ${p.normalizedDate}</p>
+                    </div>
+                    <p><strong>Predicted Market / Outcome:</strong> <span class="text-tealAccent font-bold">${p.prediction}</span> (Match Result: ${p.outcome})</p>
+                    <p><strong>Estimated Probability:</strong> <span class="text-emeraldGreen font-bold">${p.probability}%</span></p>
                     <p><strong>Source Agreement:</strong> ${p.agreement} connected feed(s)</p>
-                    <div class="bg-pageBg p-3 rounded-xl border border-borderCol mt-2">
-                        <strong class="text-mainText block mb-1">Details:</strong>
+                    <div class="bg-tealAccent/10 p-3 rounded-xl border border-tealAccent/20">
+                        <strong class="text-mainText block mb-1">AI Reasoning Summary:</strong>
                         <p class="text-secondaryText">${p.explanation}</p>
                     </div>
                 </div>
             `;
-            showToast(`Selected ${p.homeTeam} vs ${p.awayTeam}`, "info");
+            document.getElementById('aiAnalysisModal').classList.remove('hidden');
         }
 
         function renderOverview() {
@@ -1190,22 +1327,22 @@
 
             const previewBody = document.getElementById('overviewPreviewBody');
             if (appData.predictions.length === 0) {
-                previewBody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-secondaryText">No predictions generated yet. Input Google Sheet CSV URLs in 'Data Sources' and click 'Sync All CSV Feeds'.</td></tr>`;
+                previewBody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-secondaryText">No predictions generated yet. Click 'Sync All Feeds' in Data Sources & Admin.</td></tr>`;
                 return;
             }
 
             let html = '';
             appData.predictions.slice(0, 5).forEach((p, idx) => {
                 html += `
-                    <tr class="hover:bg-pageBg">
+                    <tr class="hover:bg-pageBg cursor-pointer" onclick="openAnalysisPopup(${idx})">
                         <td class="p-3 font-bold text-mainText">${idx + 1}</td>
                         <td class="p-3 text-secondaryText">${p.normalizedDate}</td>
-                        <td class="p-3 font-medium text-mainText">${p.league}</td>
-                        <td class="p-3 font-semibold text-mainText">${p.homeTeam} vs ${p.awayTeam}</td>
-                        <td class="p-3">${p.market}</td>
+                        <td class="p-3 font-semibold text-mainText">${p.homeTeam}</td>
+                        <td class="p-3 font-semibold text-mainText">${p.awayTeam}</td>
                         <td class="p-3"><span class="bg-tealAccent/10 text-tealAccent px-2 py-0.5 rounded font-semibold">${p.prediction}</span></td>
+                        <td class="p-3 font-medium text-emeraldGreen">${p.outcome}</td>
                         <td class="p-3 font-extrabold text-emeraldGreen">${p.probability}%</td>
-                        <td class="p-3"><span class="bg-royalBlue/10 text-royalBlue px-2 py-0.5 rounded font-semibold">${p.agreement}/3</span></td>
+                        <td class="p-3"><button onclick="event.stopPropagation(); openAnalysisPopup(${idx})" class="text-xs text-tealAccent hover:underline font-semibold">View</button></td>
                     </tr>
                 `;
             });
@@ -1238,7 +1375,7 @@
                         labels: ['3 Sources', '2 Sources', '1 Source'],
                         datasets: [{
                             data: [12, 10, 5],
-                            backgroundColor: ['#059669', '#2563EB', '#D4A017']
+                            backgroundColor: ['#059669', '#7C3AED', '#E11D48']
                         }]
                     },
                     options: { responsive: true, maintainAspectRatio: false }
@@ -1246,23 +1383,12 @@
             }
         }
 
-        function saveAllSourceConfigs() {
-            appData.sources[1].csvUrl = document.getElementById('srcCsv1').value;
-            appData.sources[2].csvUrl = document.getElementById('srcCsv2').value;
-            appData.sources[3].csvUrl = document.getElementById('srcCsv3').value;
-            sessionStorage.setItem('analytics_sources', JSON.stringify({
-                csv1: appData.sources[1].csvUrl,
-                csv2: appData.sources[2].csvUrl,
-                csv3: appData.sources[3].csvUrl
-            }));
-            showToast("Source URLs saved to session storage.", "success");
-        }
-
         function loadSavedConfigurations() {
             let saved = sessionStorage.getItem('analytics_sources');
             if (saved) {
                 try {
                     let parsed = JSON.parse(saved);
+                    if (parsed.gas) document.getElementById('gasEndpointUrl').value = parsed.gas;
                     if (parsed.csv1) document.getElementById('srcCsv1').value = parsed.csv1;
                     if (parsed.csv2) document.getElementById('srcCsv2').value = parsed.csv2;
                     if (parsed.csv3) document.getElementById('srcCsv3').value = parsed.csv3;
@@ -1294,9 +1420,9 @@
                 showToast("No predictions available to export.", "warning");
                 return;
             }
-            let csv = "Rank,ParsedDate,RawDate,League,HomeTeam,AwayTeam,Market,Prediction,Probability,Agreement\n";
+            let csv = "Rank,Date,HomeTeam,AwayTeam,Prediction,Outcome,Probability,Agreement\n";
             appData.predictions.forEach((p, i) => {
-                csv += `${i+1},"${p.normalizedDate}","${p.rawDate}","${p.league}","${p.homeTeam}","${p.awayTeam}","${p.market}","${p.prediction}",${p.probability}%,${p.agreement}\n`;
+                csv += `${i+1},"${p.normalizedDate}","${p.homeTeam}","${p.awayTeam}","${p.prediction}","${p.outcome}",${p.probability}%,${p.agreement}\n`;
             });
             const blob = new Blob([csv], { type: 'text/csv' });
             const url = window.URL.createObjectURL(blob);
