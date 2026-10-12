@@ -194,7 +194,7 @@
                                 <button onclick="switchTab('statarea')" class="flex-1 bg-tealAccent/10 hover:bg-tealAccent/20 text-tealAccent text-xs font-semibold py-2 rounded-xl transition-all text-center">
                                     Launch Portal
                                 </button>
-                                <button onclick="switchTab('statarea'); toggleExpandFrame('tab-statarea')" class="p-2 bg-pageBg hover:bg-borderCol text-secondaryText rounded-xl transition-all" title="Expand View">
+                                <button onclick="switchTab('statarea')" class="p-2 bg-pageBg hover:bg-borderCol text-secondaryText rounded-xl transition-all" title="Expand View">
                                     <i class="fa-solid fa-expand text-xs"></i>
                                 </button>
                             </div>
@@ -219,7 +219,7 @@
                                 <button onclick="switchTab('vital')" class="flex-1 bg-deepPurple/10 hover:bg-deepPurple/20 text-deepPurple text-xs font-semibold py-2 rounded-xl transition-all text-center">
                                     Launch Portal
                                 </button>
-                                <button onclick="switchTab('vital'); toggleExpandFrame('tab-vital')" class="p-2 bg-pageBg hover:bg-borderCol text-secondaryText rounded-xl transition-all" title="Expand View">
+                                <button onclick="switchTab('vital')" class="p-2 bg-pageBg hover:bg-borderCol text-secondaryText rounded-xl transition-all" title="Expand View">
                                     <i class="fa-solid fa-expand text-xs"></i>
                                 </button>
                             </div>
@@ -244,7 +244,7 @@
                                 <button onclick="switchTab('matches')" class="flex-1 bg-crimsonRed/10 hover:bg-crimsonRed/20 text-crimsonRed text-xs font-semibold py-2 rounded-xl transition-all text-center">
                                     Launch Portal
                                 </button>
-                                <button onclick="switchTab('matches'); toggleExpandFrame('tab-matches')" class="p-2 bg-pageBg hover:bg-borderCol text-secondaryText rounded-xl transition-all" title="Expand View">
+                                <button onclick="switchTab('matches')" class="p-2 bg-pageBg hover:bg-borderCol text-secondaryText rounded-xl transition-all" title="Expand View">
                                     <i class="fa-solid fa-expand text-xs"></i>
                                 </button>
                             </div>
@@ -709,7 +709,27 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            
+                <section class="bg-white p-6 rounded-2xl border border-borderCol custom-shadow space-y-4">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-wider text-tealAccent">External web research</span>
+                        <h3 class="text-lg font-extrabold text-mainText mt-1"><i class="fa-solid fa-globe mr-2 text-tealAccent"></i>Web Search for Match Analysis</h3>
+                        <p class="text-xs text-secondaryText mt-1">Search current web information and use it alongside the loaded match data. Live search requires a configured external search/AI endpoint; this page does not fabricate search results.</p>
+                    </div>
+                    <form id="webSearchForm" class="flex flex-col sm:flex-row gap-2" onsubmit="runPredictorWebSearch(event)">
+                        <input id="webSearchQuery" required type="search" class="flex-1 min-w-0 bg-pageBg border border-borderCol rounded-xl px-4 py-3 text-sm text-mainText focus:outline-none focus:border-tealAccent" placeholder="Ask about a fixture, injuries, team form, results, league stats…">
+                        <button id="webSearchButton" type="submit" class="bg-tealAccent hover:bg-emeraldGreen text-white font-bold text-sm px-5 py-3 rounded-xl"><i class="fa-solid fa-magnifying-glass mr-2"></i>Search</button>
+                    </form>
+                    <details class="text-xs text-secondaryText">
+                        <summary class="cursor-pointer font-semibold">Configure web-search service</summary>
+                        <label for="webSearchEndpoint" class="block mt-3 mb-1 font-semibold">HTTPS API endpoint</label>
+                        <input id="webSearchEndpoint" type="url" placeholder="https://your-server.example/api/search" class="w-full bg-pageBg border border-borderCol rounded-xl px-3 py-2 text-xs">
+                        <p class="mt-2">Expected response JSON: <code>{ "answer": "...", "results": [{ "title": "...", "url": "https://…", "snippet": "...", "source": "…" }] }</code>. Endpoint must allow this site's CORS origin. Do not put secret API keys in public GitHub Pages code; use a serverless/backend proxy to hold credentials.</p>
+                    </details>
+                    <div id="webSearchStatus" class="text-sm text-secondaryText" role="status">Web search is not configured. Add an endpoint above to enable live searches.</div>
+                    <div id="webSearchResults" class="space-y-3"></div>
+                </section>
+</div>
 
             <!-- Sources & Admin Tab -->
             <div id="tab-sources" class="tab-content flex-col gap-6">
@@ -816,66 +836,32 @@
 
             <!-- Portals & Analytics Tabs -->
             <div id="tab-statarea" class="tab-content flex-col gap-6">
-                <div class="bg-white p-6 rounded-2xl border border-borderCol custom-shadow flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <div>
-                        <span class="text-xs font-bold uppercase tracking-wider text-tealAccent bg-tealAccent/10 px-2.5 py-1 rounded-lg">System 01 Portal</span>
-                        <h2 class="text-xl font-extrabold text-mainText mt-1">Statarea Intelligence Center</h2>
-                        <p class="text-xs text-secondaryText">https://stats247.github.io/analysis/</p>
+                <section class="bg-white p-5 rounded-2xl border border-borderCol custom-shadow">
+                    <div class="flex items-center justify-between gap-3 flex-wrap">
+                        <div><h2 class="text-xl font-extrabold text-mainText">Statarea Match Intelligence</h2><p class="text-sm text-secondaryText">Native module loaded from statarea.html — no iframe.</p></div>
+                        <button onclick="loadStatareaModule(true)" class="bg-tealAccent text-white text-xs font-semibold px-4 py-2.5 rounded-xl"><i class="fa-solid fa-rotate mr-1"></i> Reload module</button>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <button onclick="refreshFrame('frame-statarea')" class="px-3.5 py-2 bg-pageBg hover:bg-borderCol text-mainText text-xs font-semibold rounded-xl border border-borderCol flex items-center gap-1.5">
-                            <i class="fa-solid fa-rotate"></i> Refresh
-                        </button>
-                        <button id="expand-btn-tab-statarea" onclick="toggleExpandFrame('tab-statarea')" class="px-3.5 py-2 bg-tealAccent hover:bg-tealAccent/90 text-white text-xs font-semibold rounded-xl flex items-center gap-1.5 shadow-sm transition-all">
-                            <i class="fa-solid fa-expand text-xs"></i> <span id="expand-text-tab-statarea">Expand View</span>
-                        </button>
-                    </div>
-                </div>
-                <div id="wrapper-frame-statarea" class="bg-white rounded-2xl border border-borderCol custom-shadow overflow-hidden flex-1 min-h-[600px] relative transition-all duration-300">
-                    <iframe id="frame-statarea" src="https://stats247.github.io/analysis/" class="w-full h-[650px] border-0 transition-all duration-300" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
-                </div>
+                    <div id="statareaModuleStatus" class="text-sm text-secondaryText mt-3" role="status">Loading Statarea module…</div>
+                </section>
+                <div id="statareaNativeMount" class="min-w-0"></div>
             </div>
 
             <div id="tab-vital" class="tab-content flex-col gap-6">
-                <div class="bg-white p-6 rounded-2xl border border-borderCol custom-shadow flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <div>
-                        <span class="text-xs font-bold uppercase tracking-wider text-deepPurple bg-deepPurple/10 px-2.5 py-1 rounded-lg">System 02 Portal</span>
-                        <h2 class="text-xl font-extrabold text-mainText mt-1">Vital Best Tips Explorer</h2>
-                        <p class="text-xs text-secondaryText">https://stats247.github.io/adeanexplorer/</p>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <button onclick="refreshFrame('frame-vital')" class="px-3.5 py-2 bg-pageBg hover:bg-borderCol text-mainText text-xs font-semibold rounded-xl border border-borderCol flex items-center gap-1.5">
-                            <i class="fa-solid fa-rotate"></i> Refresh
-                        </button>
-                        <button id="expand-btn-tab-vital" onclick="toggleExpandFrame('tab-vital')" class="px-3.5 py-2 bg-deepPurple hover:bg-deepPurple/90 text-white text-xs font-semibold rounded-xl flex items-center gap-1.5 shadow-sm transition-all">
-                            <i class="fa-solid fa-expand text-xs"></i> <span id="expand-text-tab-vital">Expand View</span>
-                        </button>
-                    </div>
-                </div>
-                <div id="wrapper-frame-vital" class="bg-white rounded-2xl border border-borderCol custom-shadow overflow-hidden flex-1 min-h-[600px] relative transition-all duration-300">
-                    <iframe id="frame-vital" src="https://stats247.github.io/adeanexplorer/" class="w-full h-[650px] border-0 transition-all duration-300" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
-                </div>
+                <section class="bg-white p-6 rounded-2xl border border-borderCol custom-shadow">
+                    <span class="text-xs font-bold uppercase tracking-wider text-deepPurple">Integration placeholder</span>
+                    <h2 class="text-xl font-extrabold text-mainText mt-2">Vital Best Tips</h2>
+                    <p class="text-sm text-secondaryText mt-2">The source HTML has not yet been provided. This reserved module slot will load a separately maintained Vital Best Tips HTML module when available. No prediction functionality is fabricated here.</p>
+                    <p class="text-xs text-secondaryText mt-3">Planned module file: <code>vital-best-tips.html</code></p>
+                </section>
             </div>
 
             <div id="tab-matches" class="tab-content flex-col gap-6">
-                <div class="bg-white p-6 rounded-2xl border border-borderCol custom-shadow flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <div>
-                        <span class="text-xs font-bold uppercase tracking-wider text-crimsonRed bg-crimsonRed/10 px-2.5 py-1 rounded-lg">System 03 Portal</span>
-                        <h2 class="text-xl font-extrabold text-mainText mt-1">All Soccervital Matches (MatchLence)</h2>
-                        <p class="text-xs text-secondaryText">https://stats247.github.io/MatchLence/</p>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <button onclick="refreshFrame('frame-matches')" class="px-3.5 py-2 bg-pageBg hover:bg-borderCol text-mainText text-xs font-semibold rounded-xl border border-borderCol flex items-center gap-1.5">
-                            <i class="fa-solid fa-rotate"></i> Refresh
-                        </button>
-                        <button id="expand-btn-tab-matches" onclick="toggleExpandFrame('tab-matches')" class="px-3.5 py-2 bg-crimsonRed hover:bg-crimsonRed/90 text-white text-xs font-semibold rounded-xl flex items-center gap-1.5 shadow-sm transition-all">
-                            <i class="fa-solid fa-expand text-xs"></i> <span id="expand-text-tab-matches">Expand View</span>
-                        </button>
-                    </div>
-                </div>
-                <div id="wrapper-frame-matches" class="bg-white rounded-2xl border border-borderCol custom-shadow overflow-hidden flex-1 min-h-[600px] relative transition-all duration-300">
-                    <iframe id="frame-matches" src="https://stats247.github.io/MatchLence/" class="w-full h-[650px] border-0 transition-all duration-300" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
-                </div>
+                <section class="bg-white p-6 rounded-2xl border border-borderCol custom-shadow">
+                    <span class="text-xs font-bold uppercase tracking-wider text-crimsonRed">Integration placeholder</span>
+                    <h2 class="text-xl font-extrabold text-mainText mt-2">Soccervital Matches</h2>
+                    <p class="text-sm text-secondaryText mt-2">The source HTML has not yet been provided. This reserved module slot will load a separately maintained Soccervital Matches HTML module when available. No prediction functionality is fabricated here.</p>
+                    <p class="text-xs text-secondaryText mt-3">Planned module file: <code>soccervital-matches.html</code></p>
+                </section>
             </div>
 
             <div id="tab-analytics" class="tab-content flex-col gap-6">
@@ -1020,6 +1006,7 @@
             });
 
             const targetTab = document.getElementById(`tab-${tabId}`);
+            if (tabId === 'statarea') loadStatareaModule();
             const targetNav = document.getElementById(`nav-${tabId}`);
             if (targetTab) targetTab.classList.add('active');
             if (targetNav) {
@@ -2072,6 +2059,139 @@
                 });
             }
         }
-    </script>
+    
+        // Native standalone module loader: fetches the sibling HTML and executes its own
+        // inline application script in this document (no iframe). Module markup remains separately maintained.
+        let statareaModuleLoaded = false;
+        let statareaModuleLoading = false;
+        async function loadStatareaModule(forceReload = false) {
+            const mount = document.getElementById('statareaNativeMount');
+            const status = document.getElementById('statareaModuleStatus');
+            if (!mount || statareaModuleLoading || (statareaModuleLoaded && !forceReload)) return;
+            statareaModuleLoading = true;
+            status.textContent = 'Loading standalone statarea.html…';
+            try {
+                const response = await fetch(new URL('statarea.html', window.location.href), { cache: forceReload ? 'reload' : 'default' });
+                if (!response.ok) throw new Error(`HTTP ${response.status} loading statarea.html`);
+                const html = await response.text();
+                const parsed = new DOMParser().parseFromString(html, 'text/html');
+                const sourceMain = parsed.querySelector('main');
+                if (!sourceMain) throw new Error('The standalone Statarea file has no main content.');
+                mount.replaceChildren();
+                const moduleWrap = document.createElement('div');
+                moduleWrap.id = 'statareaModuleRoot';
+                moduleWrap.innerHTML = sourceMain.innerHTML;
+                mount.appendChild(moduleWrap);
+                // Preserve module dialogs located outside its main element.
+                parsed.querySelectorAll('body > div[id$="Modal"], body > div[id*="Modal"]').forEach(node => {
+                    if (node.id && !document.getElementById(node.id)) mount.appendChild(document.importNode(node, true));
+                });
+                // Execute only inline application scripts; the shared Tailwind CDN is already loaded.
+                parsed.querySelectorAll('body script:not([src])').forEach(oldScript => {
+                    if (!oldScript.textContent.trim()) return;
+                    const newScript = document.createElement('script');
+                    newScript.textContent = oldScript.textContent;
+                    mount.appendChild(newScript);
+                });
+                // window.onload does not fire for a module injected after the portal loaded.
+                if (typeof loadCSVData === 'function') {
+                    const csvInput = document.getElementById('customCsvUrl');
+                    if (csvInput && typeof CSV_URL !== 'undefined') csvInput.value = CSV_URL;
+                    loadCSVData();
+                }
+                statareaModuleLoaded = true;
+                status.textContent = 'Statarea module loaded. Its Google Sheet/CSV feed will load using the configured source.';
+            } catch (error) {
+                status.textContent = `Unable to load Statarea module: ${error.message}. Ensure statarea.html is in the same GitHub Pages directory and reload.`;
+                status.className = 'text-sm text-rose-700';
+            } finally { statareaModuleLoading = false; }
+        }
+
+        // Web search is real only when a user-configured backend/API endpoint is supplied.
+        async function runPredictorWebSearch(event) {
+            event.preventDefault();
+            const queryEl = document.getElementById('webSearchQuery');
+            const endpointEl = document.getElementById('webSearchEndpoint');
+            const status = document.getElementById('webSearchStatus');
+            const resultsEl = document.getElementById('webSearchResults');
+            const button = document.getElementById('webSearchButton');
+            const endpoint = endpointEl.value.trim();
+            const query = queryEl.value.trim();
+            resultsEl.replaceChildren();
+            if (!endpoint) {
+                status.textContent = 'Search service unavailable: configure an HTTPS web-search/AI endpoint first. No live search has been performed.';
+                status.className = 'text-sm text-amber-700';
+                endpointEl.focus();
+                return;
+            }
+            if (!/^https:\/\/.+/i.test(endpoint)) {
+                status.textContent = 'For security, configure an HTTPS endpoint.';
+                status.className = 'text-sm text-rose-700';
+                return;
+            }
+            button.disabled = true;
+            button.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Searching…';
+            status.textContent = 'Contacting configured web-search service…';
+            status.className = 'text-sm text-secondaryText';
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({ query, context: getWebSearchMatchContext() })
+                });
+                if (!response.ok) throw new Error(`Search service returned HTTP ${response.status}`);
+                const data = await response.json();
+                status.textContent = data.answer ? String(data.answer) : `Search completed. ${Array.isArray(data.results) ? data.results.length : 0} results returned.`;
+                const results = Array.isArray(data.results) ? data.results : [];
+                if (!results.length) {
+                    const note = document.createElement('p');
+                    note.className = 'text-sm text-secondaryText';
+                    note.textContent = 'The service returned no results. Check its response format or try another question.';
+                    resultsEl.appendChild(note);
+                }
+                results.slice(0, 20).forEach(item => {
+                    const card = document.createElement('article');
+                    card.className = 'border border-borderCol rounded-xl p-4';
+                    const title = document.createElement('h4');
+                    title.className = 'font-bold text-sm text-mainText';
+                    title.textContent = item.title || item.source || 'Search result';
+                    card.appendChild(title);
+                    if (item.snippet || item.description) {
+                        const p = document.createElement('p'); p.className = 'text-sm text-secondaryText mt-1';
+                        p.textContent = item.snippet || item.description; card.appendChild(p);
+                    }
+                    if (item.url && /^https?:\/\//i.test(item.url)) {
+                        const a = document.createElement('a'); a.href = item.url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+                        a.className = 'inline-block text-xs text-tealAccent font-semibold mt-2 underline';
+                        a.textContent = `Open source${item.source ? ' · ' + item.source : ''}`; card.appendChild(a);
+                    } else if (item.source) {
+                        const p = document.createElement('p'); p.className = 'text-xs text-secondaryText mt-2'; p.textContent = `Source: ${item.source}`; card.appendChild(p);
+                    }
+                    resultsEl.appendChild(card);
+                });
+            } catch (error) {
+                status.textContent = `Web search failed: ${error.message}. Check endpoint availability, CORS, network access, and the expected JSON response.`;
+                status.className = 'text-sm text-rose-700';
+            } finally {
+                button.disabled = false;
+                button.innerHTML = '<i class="fa-solid fa-magnifying-glass mr-2"></i>Search';
+            }
+        }
+        function getWebSearchMatchContext() {
+            const context = { source: 'Global Sports Analytics', note: 'Use only the following loaded fixture data as context; do not treat it as current web evidence.' };
+            try {
+                if (typeof rawFeeds !== 'undefined' && rawFeeds) {
+                    context.loadedFixtures = Object.values(rawFeeds).flat().slice(0, 100).map(row => ({
+                        date: row.date || row['match date'] || row.matchdate || '',
+                        home: row.host || row.home || row['home team'] || '',
+                        away: row.guest || row.away || row['away team'] || '',
+                        prediction: row['1x2'] || row.prediction || row.tip || ''
+                    }));
+                }
+            } catch (_) {}
+            return context;
+        }
+
+</script>
 </body>
 </html>
