@@ -119,6 +119,10 @@
                 <button onclick="switchTab('matches')" id="nav-matches" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
                     <i class="fa-solid fa-futbol w-5 text-center text-crimsonRed"></i> Soccervital Matches
                 </button>
+                <button onclick="switchTab('match-controls')" id="nav-match-controls" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
+                    <i class="fa-solid fa-flag w-5 text-center text-rose-600"></i> Match Controls
+                    <span id="blacklistNavCount" class="ml-auto text-[10px] font-bold bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full">0</span>
+                </button>
 
                 <div class="text-[11px] font-bold text-secondaryText uppercase tracking-wider px-3 pt-3 pb-1">AI Intelligence</div>
                 <button onclick="switchTab('preferred')" id="nav-preferred" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
@@ -720,11 +724,25 @@
                         <input id="webSearchQuery" required type="search" class="flex-1 min-w-0 bg-pageBg border border-borderCol rounded-xl px-4 py-3 text-sm text-mainText focus:outline-none focus:border-tealAccent" placeholder="Ask about a fixture, injuries, team form, results, league stats…">
                         <button id="webSearchButton" type="submit" class="bg-tealAccent hover:bg-emeraldGreen text-white font-bold text-sm px-5 py-3 rounded-xl"><i class="fa-solid fa-magnifying-glass mr-2"></i>Search</button>
                     </form>
-                    <details class="text-xs text-secondaryText">
-                        <summary class="cursor-pointer font-semibold">Configure web-search service</summary>
-                        <label for="webSearchEndpoint" class="block mt-3 mb-1 font-semibold">HTTPS API endpoint</label>
-                        <input id="webSearchEndpoint" type="url" placeholder="https://your-server.example/api/search" class="w-full bg-pageBg border border-borderCol rounded-xl px-3 py-2 text-xs">
-                        <p class="mt-2">Expected response JSON: <code>{ "answer": "...", "results": [{ "title": "...", "url": "https://…", "snippet": "...", "source": "…" }] }</code>. Endpoint must allow this site's CORS origin. Do not put secret API keys in public GitHub Pages code; use a serverless/backend proxy to hold credentials.</p>
+                    <details class="text-xs text-secondaryText" open>
+                        <summary class="cursor-pointer font-semibold text-mainText">Connect AI and data sources</summary>
+                        <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div class="md:col-span-2">
+                                <label for="webSearchEndpoint" class="block mb-1 font-semibold">AI / web-search API endpoint (HTTPS)</label>
+                                <input id="webSearchEndpoint" type="url" placeholder="https://your-server.example/api/search" class="w-full bg-pageBg border border-borderCol rounded-xl px-3 py-2 text-xs">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label for="aiDataSourceUrl" class="block mb-1 font-semibold">Data source URL for AI context (CSV or JSON)</label>
+                                <input id="aiDataSourceUrl" type="url" placeholder="https://example.com/fixtures.csv or .../data.json" class="w-full bg-pageBg border border-borderCol rounded-xl px-3 py-2 text-xs">
+                                <p class="mt-1">Use a publicly readable CSV/JSON URL or a CORS-enabled endpoint. Its contents will be fetched and sent as context with your AI search request.</p>
+                            </div>
+                        </div>
+                        <div class="mt-3 flex flex-wrap gap-2">
+                            <button type="button" onclick="connectAiDataSource()" id="connectAiDataSourceButton" class="bg-darkNavy hover:bg-tealAccent text-white font-semibold px-4 py-2 rounded-xl"><i class="fa-solid fa-link mr-2"></i>Test & Connect Data</button>
+                            <button type="button" onclick="saveAiConnectionSettings()" class="bg-pageBg hover:bg-borderCol text-mainText font-semibold px-4 py-2 rounded-xl border border-borderCol"><i class="fa-solid fa-floppy-disk mr-2"></i>Save Settings</button>
+                            <span id="aiDataSourceStatus" class="self-center text-xs" role="status">No additional AI data source connected.</span>
+                        </div>
+                        <p class="mt-3">Expected AI API response JSON: <code>{ "answer": "...", "results": [{ "title": "...", "url": "https://…", "snippet": "...", "source": "…" }] }</code>. Both endpoints must allow this site's CORS origin. Never put secret API keys in public GitHub Pages code; use a backend/serverless proxy to hold credentials.</p>
                     </details>
                     <div id="webSearchStatus" class="text-sm text-secondaryText" role="status">Web search is not configured. Add an endpoint above to enable live searches.</div>
                     <div id="webSearchResults" class="space-y-3"></div>
@@ -894,6 +912,118 @@
                 <div class="bg-white p-6 rounded-2xl border border-borderCol custom-shadow">
                     <h2 class="text-xl font-extrabold text-mainText">Model Performance & Brier Score</h2>
                 </div>
+            </div>
+
+            <div id="tab-match-controls" class="tab-content flex-col gap-6">
+                <section class="bg-white p-6 md:p-7 rounded-2xl border border-borderCol custom-shadow">
+                    <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                        <div>
+                            <div class="inline-flex items-center gap-2 bg-rose-50 text-rose-700 text-xs font-bold px-3 py-1.5 rounded-full"><i class="fa-solid fa-shield-halved"></i> Integrity controls</div>
+                            <h2 class="text-2xl font-extrabold text-mainText mt-3">Match Controls & Team Blacklist</h2>
+                            <p class="text-sm text-secondaryText mt-2 max-w-3xl">Flag teams across Global Sports tabs. Once flagged, a team is marked with a red flag wherever its name appears, and the blacklist is synced with the Google Sheets <strong>blacklist</strong> tab when Apps Script is configured.</p>
+                        </div>
+                        <div class="bg-rose-50 border border-rose-100 rounded-2xl p-4 min-w-[130px]">
+                            <div class="text-xs text-rose-700 font-semibold">Flagged teams</div>
+                            <div id="blacklistSummaryCount" class="text-3xl font-extrabold text-rose-700 mt-1">0</div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-5 gap-3 mt-6">
+                        <div class="lg:col-span-2">
+                            <label for="blacklistTeamInput" class="block text-xs font-bold text-secondaryText mb-1.5">Team name</label>
+                            <input id="blacklistTeamInput" list="knownTeamsList" type="text" maxlength="120" placeholder="e.g. Example FC" class="w-full bg-white border border-borderCol rounded-xl px-4 py-3 text-sm">
+                            <datalist id="knownTeamsList"></datalist>
+                        </div>
+                        <div class="lg:col-span-2">
+                            <label for="blacklistReasonInput" class="block text-xs font-bold text-secondaryText mb-1.5">Reason / note (optional)</label>
+                            <input id="blacklistReasonInput" type="text" maxlength="300" placeholder="Why should this team be flagged?" class="w-full bg-white border border-borderCol rounded-xl px-4 py-3 text-sm">
+                        </div>
+                        <div class="flex items-end">
+                            <button id="addBlacklistTeamButton" onclick="addBlacklistedTeam()" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold px-4 py-3 rounded-xl transition-colors"><i class="fa-solid fa-flag mr-2"></i>Flag team</button>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex flex-wrap items-center gap-2">
+                        <button onclick="syncBlacklistFromGoogleSheet()" class="bg-darkNavy hover:bg-slate-700 text-white font-semibold text-xs px-4 py-2.5 rounded-xl"><i class="fa-solid fa-cloud-arrow-down mr-2"></i>Sync from Google Sheets</button>
+                        <button onclick="pushBlacklistToGoogleSheet()" class="bg-tealAccent hover:bg-tealAccent/90 text-white font-semibold text-xs px-4 py-2.5 rounded-xl"><i class="fa-solid fa-cloud-arrow-up mr-2"></i>Save to Google Sheets</button>
+                        <span id="blacklistConnectionStatus" role="status" class="text-xs text-secondaryText">Using this browser until a Google Apps Script URL is connected.</span>
+                    </div>
+                </section>
+
+                <section class="bg-white p-5 md:p-6 rounded-2xl border border-borderCol custom-shadow">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+                        <div>
+                            <h3 class="text-lg font-extrabold text-mainText">Flagged teams</h3>
+                            <p class="text-xs text-secondaryText mt-1">Red flag markers are added to matching team names across visible tabs.</p>
+                        </div>
+                        <input id="blacklistFilterInput" oninput="renderBlacklistTable()" type="search" placeholder="Search flagged teams…" class="w-full md:w-64 bg-white border border-borderCol rounded-xl px-3 py-2 text-sm">
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left">
+                            <thead><tr class="border-b border-borderCol text-xs uppercase tracking-wide text-secondaryText"><th class="py-3 pr-4">Team</th><th class="py-3 pr-4">Reason</th><th class="py-3 pr-4">Added</th><th class="py-3 text-right">Action</th></tr></thead>
+                            <tbody id="blacklistTableBody"><tr><td colspan="4" class="py-8 text-center text-secondaryText">No teams flagged yet.</td></tr></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <details class="bg-white p-5 rounded-2xl border border-borderCol custom-shadow">
+                    <summary class="cursor-pointer font-bold text-mainText">Google Sheets setup (Apps Script)</summary>
+                    <ol class="list-decimal pl-5 mt-3 space-y-2 text-xs text-secondaryText">
+                        <li>Create a Google Sheet and add a worksheet named <code>blacklist</code>.</li>
+                        <li>Open Extensions → Apps Script, paste the sample code below, then deploy as a Web app. Set access to the audience allowed by your use case and copy the deployed URL ending in <code>/exec</code>.</li>
+                        <li>Paste the URL into the Apps Script URL field under this panel and select Save URL. Test with Sync from Google Sheets.</li>
+                    </ol>
+                    <label for="blacklistAppsScriptUrl" class="block text-xs font-bold text-secondaryText mt-4 mb-1.5">Google Apps Script Web App URL</label>
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <input id="blacklistAppsScriptUrl" type="url" placeholder="https://script.google.com/macros/s/…/exec" class="flex-1 bg-white border border-borderCol rounded-xl px-3 py-2.5 text-sm">
+                        <button onclick="saveBlacklistAppsScriptUrl()" class="bg-darkNavy hover:bg-slate-700 text-white font-semibold text-xs px-4 py-2.5 rounded-xl">Save URL</button>
+                    </div>
+                    <p class="text-xs text-secondaryText mt-2">Use an appropriately permissioned deployment. Anyone with the URL may be able to read or alter data if you deploy it publicly, so do not store sensitive information in this sheet.</p>
+                    <pre class="mt-4 p-4 bg-slate-950 text-slate-100 rounded-xl overflow-x-auto text-[11px] leading-relaxed"><code>const SHEET_NAME = 'blacklist';
+function doGet(e) {
+  const action = (e.parameter.action || 'read').toLowerCase();
+  const sheet = getSheet_();
+  if (action === 'read') {
+    const values = sheet.getDataRange().getValues();
+    const rows = values.slice(1).filter(r => r[0]).map(r => ({
+      team: String(r[0]), reason: String(r[1] || ''),
+      addedAt: String(r[2] || ''), active: String(r[3]).toLowerCase() !== 'false'
+    }));
+    return json_({ ok: true, teams: rows });
+  }
+  return json_({ ok: false, error: 'Unknown action' });
+}
+function doPost(e) {
+  const body = JSON.parse((e.postData && e.postData.contents) || '{}');
+  const sheet = getSheet_();
+  const team = String(body.team || '').trim();
+  if (body.action === 'write' && team) {
+    const rows = sheet.getDataRange().getValues();
+    const match = rows.findIndex((r, i) => i > 0 && String(r[0]).toLowerCase() === team.toLowerCase());
+    const record = [team, String(body.reason || ''), new Date().toISOString(), body.active !== false];
+    if (match > 0) sheet.getRange(match + 1, 1, 1, 4).setValues([record]);
+    else sheet.appendRow(record);
+    return json_({ ok: true });
+  }
+  if (body.action === 'delete' && team) {
+    const rows = sheet.getDataRange().getValues();
+    const match = rows.findIndex((r, i) => i > 0 && String(r[0]).toLowerCase() === team.toLowerCase());
+    if (match > 0) sheet.deleteRow(match + 1);
+    return json_({ ok: true });
+  }
+  return json_({ ok: false, error: 'Invalid action or missing team' });
+}
+function getSheet_() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sh = ss.getSheetByName(SHEET_NAME);
+  if (!sh) sh = ss.insertSheet(SHEET_NAME);
+  if (sh.getLastRow() === 0) sh.appendRow(['team', 'reason', 'addedAt', 'active']);
+  return sh;
+}
+function json_(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}</code></pre>
+                    <button onclick="GenUI_placeholder_copyBlacklistScript()" class="hidden">Copy</button>
+                </details>
             </div>
 
             <div id="tab-settings" class="tab-content flex-col gap-6">
@@ -2107,6 +2237,63 @@
             } finally { statareaModuleLoading = false; }
         }
 
+        // Optional external data source connection used as grounded context by the AI/web-search endpoint.
+        let aiConnectedDataSource = { url: '', content: '', connected: false };
+        function saveAiConnectionSettings() {
+            const endpoint = document.getElementById('webSearchEndpoint').value.trim();
+            const sourceUrl = document.getElementById('aiDataSourceUrl').value.trim();
+            try {
+                localStorage.setItem('globalSportsAiEndpoint', endpoint);
+                localStorage.setItem('globalSportsAiDataSourceUrl', sourceUrl);
+                const status = document.getElementById('aiDataSourceStatus');
+                status.textContent = 'Connection settings saved in this browser.';
+                status.className = 'self-center text-xs text-emeraldGreen';
+            } catch (_) {
+                document.getElementById('aiDataSourceStatus').textContent = 'Browser storage is unavailable; settings are not saved.';
+            }
+        }
+        async function connectAiDataSource() {
+            const urlInput = document.getElementById('aiDataSourceUrl');
+            const status = document.getElementById('aiDataSourceStatus');
+            const button = document.getElementById('connectAiDataSourceButton');
+            const url = urlInput.value.trim();
+            if (!url || !url.startsWith('https://')) {
+                status.textContent = 'Enter a valid HTTPS CSV/JSON data source URL.';
+                status.className = 'self-center text-xs text-rose-700';
+                return;
+            }
+            button.disabled = true;
+            button.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Connecting…';
+            status.textContent = 'Fetching data source and checking access…';
+            status.className = 'self-center text-xs text-secondaryText';
+            try {
+                const response = await fetch(url, { headers: { 'Accept': 'application/json, text/csv, text/plain' }, cache: 'no-store' });
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                const content = await response.text();
+                if (!content.trim()) throw new Error('The source returned an empty response.');
+                aiConnectedDataSource = { url, content: content.slice(0, 60000), connected: true };
+                saveAiConnectionSettings();
+                status.textContent = 'Connected successfully (' + Math.min(content.length, 60000).toLocaleString() + ' characters available to AI).';
+                status.className = 'self-center text-xs text-emeraldGreen';
+            } catch (error) {
+                aiConnectedDataSource = { url: '', content: '', connected: false };
+                status.textContent = 'Could not connect: ' + error.message + '. Check the URL, permissions, and CORS settings.';
+                status.className = 'self-center text-xs text-rose-700';
+            } finally {
+                button.disabled = false;
+                button.innerHTML = '<i class="fa-solid fa-link mr-2"></i>Test & Connect Data';
+            }
+        }
+        function restoreAiConnectionSettings() {
+            try {
+                const endpoint = localStorage.getItem('globalSportsAiEndpoint') || '';
+                const sourceUrl = localStorage.getItem('globalSportsAiDataSourceUrl') || '';
+                if (endpoint) document.getElementById('webSearchEndpoint').value = endpoint;
+                if (sourceUrl) document.getElementById('aiDataSourceUrl').value = sourceUrl;
+            } catch (_) {}
+        }
+        restoreAiConnectionSettings();
+
         // Web search is real only when a user-configured backend/API endpoint is supplied.
         async function runPredictorWebSearch(event) {
             event.preventDefault();
@@ -2137,7 +2324,7 @@
                 const response = await fetch(endpoint, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify({ query, context: getWebSearchMatchContext() })
+                    body: JSON.stringify({ query, context: getWebSearchMatchContext(), connectedDataSource: aiConnectedDataSource.connected ? { url: aiConnectedDataSource.url, content: aiConnectedDataSource.content } : null })
                 });
                 if (!response.ok) throw new Error(`Search service returned HTTP ${response.status}`);
                 const data = await response.json();
@@ -2193,5 +2380,229 @@
         }
 
 </script>
+
+<script>
+(() => {
+    const BLACKLIST_STORAGE_KEY = 'globalSportsTeamBlacklistV1';
+    const BLACKLIST_URL_KEY = 'globalSportsBlacklistAppsScriptUrl';
+    let blacklistedTeams = [];
+    let blacklistObserver = null;
+    const normTeam = value => String(value || '').trim().replace(/\s+/g, ' ').toLocaleLowerCase();
+
+    function escapeHtml(value) {
+        return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+    function loadBlacklistLocal() {
+        try { blacklistedTeams = JSON.parse(localStorage.getItem(BLACKLIST_STORAGE_KEY) || '[]'); }
+        catch (_) { blacklistedTeams = []; }
+        if (!Array.isArray(blacklistedTeams)) blacklistedTeams = [];
+        blacklistedTeams = blacklistedTeams.filter(x => x && x.team && x.active !== false);
+        renderBlacklistTable();
+        updateKnownTeamsList();
+        applyBlacklistFlags();
+    }
+    function saveBlacklistLocal() {
+        try { localStorage.setItem(BLACKLIST_STORAGE_KEY, JSON.stringify(blacklistedTeams)); } catch (_) {}
+        renderBlacklistTable();
+        updateKnownTeamsList();
+        applyBlacklistFlags();
+    }
+    function getAppsScriptUrl() {
+        const field = document.getElementById('blacklistAppsScriptUrl');
+        return (field && field.value.trim()) || localStorage.getItem(BLACKLIST_URL_KEY) || '';
+    }
+    window.saveBlacklistAppsScriptUrl = function() {
+        const field = document.getElementById('blacklistAppsScriptUrl');
+        const url = field.value.trim();
+        if (url && !/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec(?:\?.*)?$/i.test(url)) {
+            setBlacklistStatus('Please use the deployed Google Apps Script URL ending in /exec.', true); return;
+        }
+        try { localStorage.setItem(BLACKLIST_URL_KEY, url); } catch (_) {}
+        setBlacklistStatus(url ? 'Apps Script URL saved in this browser.' : 'Apps Script URL cleared.');
+    };
+    function setBlacklistStatus(message, error=false) {
+        const el = document.getElementById('blacklistConnectionStatus');
+        if (el) { el.textContent = message; el.className = 'text-xs ' + (error ? 'text-rose-700' : 'text-secondaryText'); }
+    }
+    function getBlacklistUrlOrWarn() {
+        const url = getAppsScriptUrl();
+        if (!url) { setBlacklistStatus('Add and save your Google Apps Script /exec URL in the setup panel first.', true); return ''; }
+        return url;
+    }
+    window.addBlacklistedTeam = async function() {
+        const teamField = document.getElementById('blacklistTeamInput');
+        const reasonField = document.getElementById('blacklistReasonInput');
+        const team = teamField.value.trim().replace(/\s+/g, ' ');
+        const reason = reasonField.value.trim();
+        if (!team) { teamField.focus(); setBlacklistStatus('Enter a team name to flag.', true); return; }
+        const existing = blacklistedTeams.find(x => normTeam(x.team) === normTeam(team));
+        const record = { team, reason: reason || (existing && existing.reason) || '', addedAt: new Date().toISOString(), active: true };
+        blacklistedTeams = [record, ...blacklistedTeams.filter(x => normTeam(x.team) !== normTeam(team))];
+        saveBlacklistLocal();
+        teamField.value = ''; reasonField.value = '';
+        setBlacklistStatus('Team flagged locally. Sync to Google Sheets to share it across devices.');
+        const url = getAppsScriptUrl();
+        if (url) await writeBlacklistRecord(record, 'write');
+    };
+    async function writeBlacklistRecord(record, action) {
+        const url = getAppsScriptUrl();
+        if (!url) return;
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({ action, team: record.team, reason: record.reason || '', active: record.active !== false })
+            });
+            const result = await response.json();
+            if (!response.ok || result.ok === false) throw new Error(result.error || ('HTTP ' + response.status));
+            setBlacklistStatus('Google Sheets updated: ' + record.team);
+        } catch (error) {
+            setBlacklistStatus('Saved locally, but Google Sheets write failed: ' + error.message + '. Check deployment access and CORS.', true);
+        }
+    }
+    window.syncBlacklistFromGoogleSheet = async function() {
+        const url = getBlacklistUrlOrWarn(); if (!url) return;
+        setBlacklistStatus('Reading blacklist tab from Google Sheets…');
+        try {
+            const response = await fetch(url + (url.includes('?') ? '&' : '?') + 'action=read&t=' + Date.now(), { cache: 'no-store' });
+            if (!response.ok) throw new Error('HTTP ' + response.status);
+            const data = await response.json();
+            if (data.ok === false) throw new Error(data.error || 'Apps Script reported an error');
+            const incoming = Array.isArray(data.teams) ? data.teams : (Array.isArray(data.blacklist) ? data.blacklist : []);
+            const merged = new Map(blacklistedTeams.map(x => [normTeam(x.team), x]));
+            incoming.filter(x => x && x.team && x.active !== false).forEach(x => merged.set(normTeam(x.team), { team: String(x.team), reason: String(x.reason || ''), addedAt: x.addedAt || '', active: true }));
+            blacklistedTeams = Array.from(merged.values());
+            saveBlacklistLocal();
+            setBlacklistStatus('Synced ' + incoming.length + ' record(s) from Google Sheets. Local-only records are retained; use Save to Google Sheets to upload them.');
+        } catch (error) {
+            setBlacklistStatus('Could not read Google Sheets: ' + error.message + '. Check the /exec URL, deployment access and CORS.', true);
+        }
+    };
+    window.pushBlacklistToGoogleSheet = async function() {
+        if (!getBlacklistUrlOrWarn()) return;
+        if (!blacklistedTeams.length) { setBlacklistStatus('There are no active teams to upload.'); return; }
+        setBlacklistStatus('Uploading ' + blacklistedTeams.length + ' team(s) to Google Sheets…');
+        for (const record of blacklistedTeams) await writeBlacklistRecord(record, 'write');
+    };
+    window.removeBlacklistedTeam = async function(team) {
+        const record = blacklistedTeams.find(x => normTeam(x.team) === normTeam(team));
+        blacklistedTeams = blacklistedTeams.filter(x => normTeam(x.team) !== normTeam(team));
+        saveBlacklistLocal();
+        const url = getAppsScriptUrl();
+        if (url && record) {
+            try {
+                const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'delete', team: record.team }) });
+                const data = await response.json();
+                if (!response.ok || data.ok === false) throw new Error(data.error || 'Delete failed');
+                setBlacklistStatus('Removed ' + record.team + ' from local storage and Google Sheets.');
+            } catch (error) { setBlacklistStatus('Removed locally; Google Sheets deletion failed: ' + error.message, true); }
+        }
+    };
+    window.renderBlacklistTable = function() {
+        const body = document.getElementById('blacklistTableBody');
+        if (!body) return;
+        const query = normTeam(document.getElementById('blacklistFilterInput')?.value || '');
+        const list = blacklistedTeams.filter(x => !query || normTeam(x.team).includes(query));
+        const count = document.getElementById('blacklistSummaryCount');
+        const navCount = document.getElementById('blacklistNavCount');
+        if (count) count.textContent = blacklistedTeams.length;
+        if (navCount) navCount.textContent = blacklistedTeams.length;
+        body.innerHTML = list.length ? list.map(x => `<tr class="border-b border-borderCol/70 hover:bg-rose-50/60"><td class="py-3 pr-4 font-bold text-mainText"><span class="inline-flex items-center gap-2"><i class="fa-solid fa-flag text-rose-600"></i>${escapeHtml(x.team)}</span></td><td class="py-3 pr-4 text-secondaryText">${escapeHtml(x.reason || '—')}</td><td class="py-3 pr-4 text-secondaryText text-xs">${escapeHtml(x.addedAt ? String(x.addedAt).slice(0,10) : '—')}</td><td class="py-3 text-right"><button onclick="removeBlacklistedTeam(${JSON.stringify(x.team).replace(/</g,'\\u003c')})" class="text-rose-700 hover:text-rose-900 text-xs font-bold px-2 py-1.5 rounded-lg hover:bg-rose-100"><i class="fa-solid fa-trash mr-1"></i>Remove</button></td></tr>`).join('') : '<tr><td colspan="4" class="py-8 text-center text-secondaryText">No teams flagged yet.</td></tr>';
+    };
+    function updateKnownTeamsList() {
+        const list = document.getElementById('knownTeamsList'); if (!list) return;
+        const teams = new Set();
+        document.querySelectorAll('main td, main th, main .match-team, main [data-team], main strong, main h3, main h4, main span').forEach(el => {
+            if (el.children.length === 0) {
+                const t = (el.textContent || '').trim();
+                if (t.length > 1 && t.length < 90 && !/^(home team|away team|pending|prediction|probability|team)$/i.test(t)) teams.add(t);
+            }
+        });
+        if (typeof rawFeeds !== 'undefined' && Array.isArray(rawFeeds)) {
+            rawFeeds.forEach(feed => {
+                if (!Array.isArray(feed)) return;
+                feed.forEach(row => {
+                    const home = row.host || row.home || row.hometeam || row['home team'] || row.home_team;
+                    const away = row.guest || row.away || row.awayteam || row['away team'] || row.away_team;
+                    if (home) teams.add(String(home).trim());
+                    if (away) teams.add(String(away).trim());
+                });
+            });
+        }
+        if (Array.isArray(window.epreferredFixtures)) window.epreferredFixtures.forEach(f => { if (f.home) teams.add(f.home); if (f.away) teams.add(f.away); });
+        blacklistedTeams.forEach(x => teams.add(x.team));
+        const html = Array.from(teams).filter(t => t && t.length < 120).sort().map(t => `<option value="${escapeHtml(t)}"></option>`).join('');
+        if (list.innerHTML !== html) list.innerHTML = html;
+    }
+    function applyBlacklistFlags() {
+        if (!blacklistedTeams.length) return;
+        const names = blacklistedTeams.map(x => x.team).sort((a,b) => b.length - a.length);
+        const nameLookup = new Map(names.map(n => [normTeam(n), n]));
+        const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+            acceptNode(node) {
+                const parent = node.parentElement;
+                if (!parent || parent.closest('script,style,textarea,input,select,option,button,.blacklist-team-flag,.blacklist-flagged-name,pre,code')) return NodeFilter.FILTER_REJECT;
+                if (parent.dataset.blacklistScanned === '1') return NodeFilter.FILTER_REJECT;
+                return NodeFilter.FILTER_ACCEPT;
+            }
+        });
+        const nodes = [];
+        while (walker.nextNode()) nodes.push(walker.currentNode);
+        if (!names.length) return;
+        const pattern = new RegExp(names.map(n => n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'gi');
+        nodes.forEach(node => {
+            const value = node.nodeValue || '';
+            if (!pattern.test(value)) { pattern.lastIndex = 0; return; }
+            pattern.lastIndex = 0;
+            const parent = node.parentNode;
+            if (!parent) return;
+            const frag = document.createDocumentFragment();
+            let last = 0, match;
+            while ((match = pattern.exec(value)) !== null) {
+                const canonical = nameLookup.get(normTeam(match[0]));
+                if (!canonical) continue;
+                frag.appendChild(document.createTextNode(value.slice(last, match.index)));
+                const span = document.createElement('span');
+                span.className = 'blacklist-flagged-name';
+                span.dataset.blacklistScanned = '1';
+                span.title = 'This team is on the Global Sports blacklist';
+                span.style.cssText = 'display:inline-flex;align-items:center;gap:4px;color:#be123c;font-weight:800;';
+                span.appendChild(document.createTextNode(match[0]));
+                const flag = document.createElement('span');
+                flag.className = 'blacklist-team-flag';
+                flag.setAttribute('aria-label', 'Blacklisted team');
+                flag.title = 'Blacklisted team';
+                flag.style.cssText = 'display:inline-flex;align-items:center;justify-content:center;background:#ffe4e6;color:#be123c;border:1px solid #fecdd3;border-radius:999px;padding:1px 5px;font-size:10px;line-height:1.5;margin-left:2px;vertical-align:middle;';
+                flag.innerHTML = '<i class="fa-solid fa-flag"></i>';
+                span.appendChild(flag);
+                frag.appendChild(span);
+                last = match.index + match[0].length;
+            }
+            frag.appendChild(document.createTextNode(value.slice(last)));
+            parent.replaceChild(frag, node);
+        });
+    }
+    function watchForRenderedTeams() {
+        if (blacklistObserver) blacklistObserver.disconnect();
+        blacklistObserver = new MutationObserver(() => {
+            if (window.__blacklistScanPending) return;
+            window.__blacklistScanPending = true;
+            requestAnimationFrame(() => {
+                window.__blacklistScanPending = false;
+                applyBlacklistFlags();
+            });
+        });
+        blacklistObserver.observe(document.body, { childList: true, subtree: true, characterData: true });
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+        const urlField = document.getElementById('blacklistAppsScriptUrl');
+        try { if (urlField) urlField.value = localStorage.getItem(BLACKLIST_URL_KEY) || ''; } catch (_) {}
+        loadBlacklistLocal();
+        watchForRenderedTeams();
+        setTimeout(() => { updateKnownTeamsList(); applyBlacklistFlags(); }, 1200);
+    });
+})();
+</script>
+
 </body>
 </html>
