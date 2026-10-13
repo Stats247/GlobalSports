@@ -1155,15 +1155,69 @@ function json_(obj) {
             sidebar.classList.toggle('-translate-x-full');
         }
 
-        // Additive bridge for the standalone AI Analytics module; does not change feed loading.
-        function sendMatchDataToAiFrame() {
+        // Lightweight bridge for AI Analytics. Keep the original feeds untouched and send
+        // only the small set of fields AI needs, avoiding large structured-clone operations
+        // whenever users switch tabs.
+        let lastAiFeedSignature = '';
+        let aiFrameHasReceivedData = false;
+        function sendMatchDataToAiFrame(force = false) {
             const frame = document.getElementById('aiAnalyticsFrame');
             if (!frame || !frame.contentWindow) return;
+
+            const signature = [1, 2, 3].map(id => {
+                const rows = Array.isArray(rawFeeds[id]) ? rawFeeds[id] : [];
+                const sample = rows.length ? rows[0] : {};
+                const tail = rows.length ? rows[rows.length - 1] : {};
+                const identity = row => row ? [row.date, row.host, row.guest, row['home team'], row['away team'], row.prediction, row['1x2']].join('|') : '';
+                return `${id}:${rows.length}:${identity(sample)}:${identity(tail)}`;
+            }).join('||');
+            if (!force && aiFrameHasReceivedData && signature === lastAiFeedSignature) return;
+
+            const pick = (row, aliases) => {
+                if (!row || typeof row !== 'object') return '';
+                const keys = Object.keys(row);
+                for (const alias of aliases) {
+                    const key = keys.find(k => k.toLowerCase() === alias.toLowerCase());
+                    if (key && row[key] !== undefined && row[key] !== null && String(row[key]).trim() !== '') return String(row[key]).trim();
+                }
+                return '';
+            };
+            const compactFeeds = {};
+            [1, 2, 3].forEach(id => {
+                const rows = Array.isArray(rawFeeds[id]) ? rawFeeds[id] : [];
+                compactFeeds[id] = rows.map(row => {
+                    let probability = pick(row, ['probability', 'home probability', 'prediction confidence', 'confidence %', 'confidence', 'match forecast probability']);
+                    if (id === 1) {
+                        const probs = ['home probability', 'draw probability', 'away probability'].map(k => parseFloat(pick(row, [k]).replace('%', ''))).filter(n => Number.isFinite(n));
+                        if (probs.length) probability = `${Math.max(...probs)}%`;
+                    }
+                    return {
+                        date: pick(row, ['date', 'match date', 'matchdate']),
+                        home: pick(row, ['home', 'host', 'home team', 'hometeam', 'home_team']),
+                        away: pick(row, ['away', 'guest', 'away team', 'awayteam', 'away_team']),
+                        tip: pick(row, ['1x2', 'prediction', 'tip', 'score tip', 'match prediction', 'match forecast']),
+                        probability,
+                        result: pick(row, ['match result', 'result']),
+                        source: id === 1 ? 'Statarea' : id === 2 ? 'Vital' : 'Soccervital'
+                    };
+                }).filter(row => row.home && row.away);
+            });
+            lastAiFeedSignature = signature;
             try {
-                frame.contentWindow.postMessage({ type: 'GSA_MATCH_DATA', feeds: rawFeeds }, window.location.origin);
+                frame.contentWindow.postMessage({ type: 'GSA_MATCH_DATA', feeds: compactFeeds }, window.location.origin);
+                aiFrameHasReceivedData = true;
             } catch (err) {
                 console.warn('AI Analytics data handoff was not available:', err);
             }
+        }
+        const aiAnalyticsFrame = document.getElementById('aiAnalyticsFrame');
+        if (aiAnalyticsFrame) {
+            aiAnalyticsFrame.addEventListener('load', () => {
+                // A newly loaded iframe has no copy of the current data yet.
+                aiFrameHasReceivedData = false;
+                lastAiFeedSignature = '';
+                sendMatchDataToAiFrame(true);
+            });
         }
         window.addEventListener('message', function(event) {
             if (event.origin !== window.location.origin || event.source !== document.getElementById('aiAnalyticsFrame')?.contentWindow) return;
@@ -1444,7 +1498,7 @@ function json_(obj) {
             return num;
         }
 
-        async function syncSingleDataSource(sourceId) {
+        async function syncSingleDataSource(sourceId, suppressAiUpdate = false) {
             const urlInput = document.getElementById(`srcCsv${sourceId}`).value.trim();
             const statusEl = document.getElementById(`srcStatus${sourceId}`);
             const rowsEl = document.getElementById(`srcRows${sourceId}`);
@@ -1473,6 +1527,7 @@ function json_(obj) {
             updateHeaderSyncCount();
             showToast(`Source ${sourceId} synchronized (${count} rows).`);
             processEpreferredModel();
+            if (!suppressAiUpdate) sendMatchDataToAiFrame(true);
         }
 
         function getMockFeed(sourceId) {
@@ -1509,14 +1564,16 @@ function json_(obj) {
 
         async function runGlobalSync() {
             const spinner = document.getElementById('syncSpinner');
-            if(spinner) spinner.classList.add('fa-spin');
-            
-            await syncSingleDataSource(1);
-            await syncSingleDataSource(2);
-            await syncSingleDataSource(3);
-
-            if(spinner) spinner.classList.remove('fa-spin');
-            showToast('All 3 data feeds synchronized successfully!');
+            if (spinner) spinner.classList.add('fa-spin');
+            try {
+                await syncSingleDataSource(1, true);
+                await syncSingleDataSource(2, true);
+                await syncSingleDataSource(3, true);
+                sendMatchDataToAiFrame(true);
+                showToast('All 3 data feeds synchronized successfully!');
+            } finally {
+                if (spinner) spinner.classList.remove('fa-spin');
+            }
         }
 
         function updateHeaderSyncCount() {
