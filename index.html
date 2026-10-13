@@ -138,6 +138,15 @@
                     <i class="fa-solid fa-chart-column w-5 text-center text-royalBlue"></i> Match Analytics
                 </button>
 
+                <!-- Added standalone modules; existing navigation and logic remain unchanged -->
+                <div class="text-[11px] font-bold text-secondaryText uppercase tracking-wider px-3 pt-3 pb-1">Additional Modules</div>
+                <button onclick="switchTab('ai-analytics')" id="nav-ai-analytics" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
+                    <i class="fa-solid fa-brain w-5 text-center text-emeraldGreen"></i> AI Analytics
+                </button>
+                <button onclick="switchTab('admin')" id="nav-admin" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
+                    <i class="fa-solid fa-user-shield w-5 text-center text-royalBlue"></i> Admin
+                </button>
+
                 <div class="text-[11px] font-bold text-secondaryText uppercase tracking-wider px-3 pt-3 pb-1">Model & Config</div>
                 <button onclick="switchTab('history')" id="nav-history" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
                     <i class="fa-solid fa-clock-rotate-left w-5 text-center text-secondaryText"></i> Prediction History
@@ -749,6 +758,24 @@
                 </section>
 </div>
 
+            <!-- Added standalone AI Analytics module. Existing tabs and logic are not replaced. -->
+            <div id="tab-ai-analytics" class="tab-content flex-col gap-6">
+                <div class="bg-white p-4 rounded-2xl border border-borderCol custom-shadow">
+                    <h2 class="text-lg font-extrabold text-mainText">AI Analytics</h2>
+                    <p class="text-xs text-secondaryText mt-1">Standalone AI module. It receives the three source feeds after they are loaded by this original portal.</p>
+                </div>
+                <iframe id="aiAnalyticsFrame" src="ai.html" title="AI Analytics" class="w-full rounded-2xl border border-borderCol bg-white" style="height: calc(100vh - 190px); min-height: 650px;"></iframe>
+            </div>
+
+            <!-- Added standalone Admin module. Existing Data Sources & Admin tab is preserved. -->
+            <div id="tab-admin" class="tab-content flex-col gap-6">
+                <div class="bg-white p-4 rounded-2xl border border-borderCol custom-shadow">
+                    <h2 class="text-lg font-extrabold text-mainText">Admin</h2>
+                    <p class="text-xs text-secondaryText mt-1">Standalone user access management module.</p>
+                </div>
+                <iframe id="adminModuleFrame" src="admin.html" title="Admin user access management" class="w-full rounded-2xl border border-borderCol bg-white" style="height: calc(100vh - 190px); min-height: 650px;"></iframe>
+            </div>
+
             <!-- Sources & Admin Tab -->
             <div id="tab-sources" class="tab-content flex-col gap-6">
                 <div class="bg-white p-6 rounded-2xl border border-borderCol custom-shadow">
@@ -1128,6 +1155,21 @@ function json_(obj) {
             sidebar.classList.toggle('-translate-x-full');
         }
 
+        // Additive bridge for the standalone AI Analytics module; does not change feed loading.
+        function sendMatchDataToAiFrame() {
+            const frame = document.getElementById('aiAnalyticsFrame');
+            if (!frame || !frame.contentWindow) return;
+            try {
+                frame.contentWindow.postMessage({ type: 'GSA_MATCH_DATA', feeds: rawFeeds }, window.location.origin);
+            } catch (err) {
+                console.warn('AI Analytics data handoff was not available:', err);
+            }
+        }
+        window.addEventListener('message', function(event) {
+            if (event.origin !== window.location.origin || event.source !== document.getElementById('aiAnalyticsFrame')?.contentWindow) return;
+            if (event.data && event.data.type === 'GSA_REQUEST_MATCH_DATA') sendMatchDataToAiFrame();
+        });
+
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(el => {
@@ -1137,6 +1179,12 @@ function json_(obj) {
 
             const targetTab = document.getElementById(`tab-${tabId}`);
             if (tabId === 'statarea') loadStatareaModule();
+            if (tabId === 'ai-analytics') {
+                const aiFrame = document.getElementById('aiAnalyticsFrame');
+                if (aiFrame && aiFrame.contentWindow) {
+                    aiFrame.contentWindow.postMessage({ type: 'GSA_MATCH_DATA', feeds: rawFeeds }, window.location.origin);
+                }
+            }
             const targetNav = document.getElementById(`nav-${tabId}`);
             if (targetTab) targetTab.classList.add('active');
             if (targetNav) {
