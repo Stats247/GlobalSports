@@ -792,57 +792,34 @@ Tuesday 22nd Sep 2026,Super Trend,La Liga,Atletico Madrid,Sevilla,1.75,3.50,4.80
 Monday 21st Sep 2026,High Probability,Serie A,Juventus,Roma,1.90,3.40,4.00,2-1,79%,2-1,Over 2.5`;
 
         function switchTab(tabName) {
-            const matchesTab = document.getElementById('matchesTab');
-            const analyticsTab = document.getElementById('analyticsTab');
-            const roiTab = document.getElementById('roiTab');
-            const bestTipsTab = document.getElementById('bestTipsTab');
-            const soccervitalTab = document.getElementById('soccervitalTab');
-
-            const btnMatches = document.getElementById('btnTabMatches');
-            const btnAnalytics = document.getElementById('btnTabAnalytics');
-            const btnRoi = document.getElementById('btnTabRoi');
-            const btnBestTips = document.getElementById('btnTabBestTips');
-            const btnSoccervital = document.getElementById('btnTabSoccervital');
-
-            matchesTab.classList.add('hidden');
-            analyticsTab.classList.add('hidden');
-            roiTab.classList.add('hidden');
-            bestTipsTab.classList.add('hidden');
-            soccervitalTab.classList.add('hidden');
-            
-            if(tabName === 'matches') matchesTab.classList.remove('hidden');
-
-            const inactiveClass = "px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-xl font-bold text-xs sm:text-sm transition-all duration-200 text-slate-600 hover:text-teal-700 flex items-center gap-2 whitespace-nowrap";
-            btnMatches.className = inactiveClass;
-            btnAnalytics.className = inactiveClass;
-            btnRoi.className = inactiveClass;
-            btnBestTips.className = inactiveClass;
-            btnSoccervital.className = inactiveClass;
-
-            const activeClass = "px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-xl font-bold text-xs sm:text-sm transition-all duration-200 bg-teal-700 text-white shadow-sm flex items-center gap-2 whitespace-nowrap";
-
-            if (tabName === 'matches') {
-                btnMatches.className = activeClass;
-                applyFilters();
-            } else if (tabName === 'analytics') {
-                analyticsTab.classList.remove('hidden');
-                btnAnalytics.className = activeClass;
-                renderAnalytics();
-            } else if (tabName === 'roi') {
-                roiTab.classList.remove('hidden');
-                btnRoi.className = activeClass;
-                renderRoiAnalytics();
-            } else if (tabName === 'best-tips') {
-                bestTipsTab.classList.remove('hidden');
-                btnBestTips.className = activeClass;
-                renderBestTipsTab();
-            } else if (tabName === 'soccervital') {
-                soccervitalTab.classList.remove('hidden');
-                btnSoccervital.className = activeClass;
-            }
+            const panels = {
+                'matches': document.getElementById('matchesTab'),
+                'analytics': document.getElementById('analyticsTab'),
+                'roi': document.getElementById('roiTab'),
+                'best-tips': document.getElementById('bestTipsTab'),
+                'soccervital': document.getElementById('soccervitalTab')
+            };
+            Object.entries(panels).forEach(([name, panel]) => {
+                if (panel) panel.classList.toggle('hidden', name !== tabName);
+            });
+            const buttons = {
+                'matches': document.getElementById('btnTabMatches'),
+                'analytics': document.getElementById('btnTabAnalytics'),
+                'roi': document.getElementById('btnTabRoi'),
+                'best-tips': document.getElementById('btnTabBestTips'),
+                'soccervital': document.getElementById('btnTabSoccervital')
+            };
+            const inactiveClass = 'px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-xl font-bold text-xs sm:text-sm transition-all duration-200 text-slate-600 hover:text-teal-700 flex items-center gap-2 whitespace-nowrap';
+            const activeClass = 'px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-xl font-bold text-xs sm:text-sm transition-all duration-200 bg-teal-700 text-white shadow-sm flex items-center gap-2 whitespace-nowrap';
+            Object.entries(buttons).forEach(([name, button]) => {
+                if (button) button.className = name === tabName ? activeClass : inactiveClass;
+            });
+            if (tabName === 'matches' && typeof applyFilters === 'function') applyFilters();
+            else if (tabName === 'analytics' && typeof renderAnalytics === 'function') renderAnalytics();
+            else if (tabName === 'roi' && typeof renderRoiAnalytics === 'function') renderRoiAnalytics();
+            else if (tabName === 'best-tips' && typeof renderBestTipsTab === 'function') renderBestTipsTab();
         }
 
-        // --- Core Data Fetching ---
         function loadCSVData() {
             const urlInput = document.getElementById('customCsvUrl');
             if (urlInput && urlInput.value) CSV_URL = urlInput.value;
