@@ -139,7 +139,7 @@
                     </select>
                 </div>
                 <div class="w-28">
-                    <select id="filter-month" class="w-full border border-slate-300 rounded px-2 py-1 text-xs bg-white" onchange="applyAllMatchesFilters()">
+                    <select id="filter-month" class="w-full border border-slate-300 rounded px-2 py-1 text-xs bg-white" onchange="updateDateDropdown('all'); applyAllMatchesFilters()">
                         <option value="">All Months</option>
                         <option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option>
                         <option value="4">Apr</option><option value="5">May</option><option value="6">Jun</option>
@@ -239,7 +239,7 @@
                     </select>
                 </div>
                 <div class="w-28">
-                    <select id="bm-filter-month" class="w-full border border-slate-300 rounded px-2 py-1 text-xs bg-white" onchange="applyBestMatchesFilters()">
+                    <select id="bm-filter-month" class="w-full border border-slate-300 rounded px-2 py-1 text-xs bg-white" onchange="updateDateDropdown('best'); applyBestMatchesFilters()">
                         <option value="">All Months</option>
                         <option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option>
                         <option value="4">Apr</option><option value="5">May</option><option value="6">Jun</option>
@@ -307,7 +307,7 @@
                    </select>
                </div>
                <div class="w-28">
-                   <select id="bt-filter-month" class="w-full border border-slate-300 rounded px-2 py-1 text-xs bg-white" onchange="applyBestTipsFilters()">
+                   <select id="bt-filter-month" class="w-full border border-slate-300 rounded px-2 py-1 text-xs bg-white" onchange="updateDateDropdown('tips'); applyBestTipsFilters()">
                        <option value="">All Months</option>
                        <option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option>
                        <option value="4">Apr</option><option value="5">May</option><option value="6">Jun</option>
@@ -640,6 +640,13 @@
             let minAC = document.getElementById('setting-min-away-form');
             if (minAC) minAC.value = appState.settings.minAwayForm;
 
+            // Default month to current month
+            let currentMonth = (new Date().getMonth() + 1).toString();
+            ['filter-month', 'bm-filter-month', 'bt-filter-month'].forEach(id => {
+                let el = document.getElementById(id);
+                if (el) el.value = currentMonth;
+            });
+
             loadCSVData();
         };
 
@@ -847,24 +854,40 @@
         }
 
         function populateDropdowns() {
-            let dates = [...new Set(appState.matches.map(m => m.date))].sort();
+            updateDateDropdown('all');
+            updateDateDropdown('best');
+            updateDateDropdown('tips');
+
             let leagues = [...new Set(appState.matches.map(m => m.league))].sort();
             let targetPicks = [...new Set(appState.matches.map(m => m.targetPick))].sort();
             let scores = [...new Set(appState.matches.map(m => m.score))].sort();
 
-            fillSelect('filter-date', dates, 'All Dates');
             fillSelect('filter-league', leagues, 'All Leagues');
             fillSelect('filter-target-pick', targetPicks, '85% Target Pick (All)');
             fillSelect('filter-correct-score', scores, 'Correct Score');
 
-            fillSelect('bm-filter-date', dates, 'All Dates');
             fillSelect('bm-filter-league', leagues, 'All Leagues');
             fillSelect('bm-filter-target-pick', targetPicks, '85% Target Pick (All)');
             fillSelect('bm-filter-correct-score', scores, 'Correct Score');
 
-            fillSelect('bt-filter-date', dates, 'All Dates');
             fillSelect('bt-filter-league', leagues, 'All Leagues');
             fillSelect('bt-filter-target-pick', targetPicks, '85% Target Pick (All)');
+        }
+
+        function updateDateDropdown(prefix) {
+            let monthElId = prefix === 'all' ? 'filter-month' : (prefix === 'best' ? 'bm-filter-month' : 'bt-filter-month');
+            let dateElId = prefix === 'all' ? 'filter-date' : (prefix === 'best' ? 'bm-filter-date' : 'bt-filter-date');
+            
+            let monthVal = document.getElementById(monthElId).value;
+            let filteredDates = appState.matches;
+            if (monthVal) {
+                filteredDates = appState.matches.filter(m => {
+                    let mDate = new Date(m.date);
+                    return !isNaN(mDate.getTime()) && (mDate.getMonth() + 1) == parseInt(monthVal);
+                });
+            }
+            let dates = [...new Set(filteredDates.map(m => m.date))].sort().reverse();
+            fillSelect(dateElId, dates, 'All Dates');
         }
 
         function fillSelect(elementId, items, defaultText) {
