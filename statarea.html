@@ -122,7 +122,7 @@
             <span id="lastUpdatedLabel" class="text-xs text-slate-500 font-medium hidden sm:inline">
                 <i class="fa-regular fa-clock mr-1 text-emerald-600"></i> Syncing...
             </span>
-            <button onclick="openSourceModal()" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs flex items-center gap-2 border border-slate-200 transition">
+            <button onclick="promptPasswordForSource()" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs flex items-center gap-2 border border-slate-200 transition">
                 <i class="fa-solid fa-database text-emerald-600"></i>
                 <span class="hidden sm:inline">Data Source</span>
             </button>
@@ -135,14 +135,60 @@
     <!-- Main Shell Container -->
     <main class="flex-1 max-w-[1700px] w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
 
-        <!-- Tabs Navigation -->
-        <div class="flex space-x-2 border-b border-slate-200 pb-1">
-            <button id="tabAll" onclick="switchTab('all')" class="px-6 py-2.5 bg-emerald-600 text-white rounded-xl font-extrabold text-xs shadow-md transition flex items-center gap-2">
-                <i class="fa-solid fa-table-list"></i> All Fixtures
-            </button>
-            <button id="tabBetProb" onclick="switchTab('bet-prob')" class="px-6 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs transition flex items-center gap-2">
-                <i class="fa-solid fa-fire text-amber-500"></i> High Value Tips (Home > 58% / Away > 55%)
-            </button>
+        <!-- Tabs & KPI Cards Side-by-Side Header Bar -->
+        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 pb-2 border-b border-slate-200">
+            <!-- Tabs -->
+            <div class="flex items-center space-x-2">
+                <button id="tabAll" onclick="switchTab('all')" class="px-5 py-2.5 bg-emerald-600 text-white rounded-xl font-extrabold text-xs shadow-md transition flex items-center gap-2">
+                    <i class="fa-solid fa-table-list"></i> All Fixtures
+                </button>
+                <button id="tabBetProb" onclick="switchTab('bet-prob')" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs transition flex items-center gap-2">
+                    <i class="fa-solid fa-fire text-amber-500"></i> High Value Tips (Home > 58% / Away > 55%)
+                </button>
+            </div>
+
+            <!-- KPI Metric Summary Cards Next to Tabs -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full lg:w-auto">
+                <div class="bg-white border border-slate-200 px-3.5 py-2 rounded-xl card-shadow flex items-center space-x-2.5 border-l-4 border-l-emerald-600">
+                    <div class="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center text-xs font-bold shrink-0">
+                        <i class="fa-solid fa-futbol"></i>
+                    </div>
+                    <div>
+                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Matches</p>
+                        <h3 id="statTotalMatches" class="text-sm font-black text-slate-900 font-mono">0</h3>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-slate-200 px-3.5 py-2 rounded-xl card-shadow flex items-center space-x-2.5 border-l-4 border-l-emerald-500">
+                    <div class="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center text-xs font-bold shrink-0">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <div>
+                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Won</p>
+                        <h3 id="statTotalWon" class="text-sm font-black text-emerald-700 font-mono">0</h3>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-slate-200 px-3.5 py-2 rounded-xl card-shadow flex items-center space-x-2.5 border-l-4 border-l-amber-500">
+                    <div class="w-7 h-7 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center text-xs font-bold shrink-0">
+                        <i class="fa-solid fa-bullseye"></i>
+                    </div>
+                    <div>
+                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Accuracy</p>
+                        <h3 id="statWinRate" class="text-sm font-black text-amber-700 font-mono">0%</h3>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-slate-200 px-3.5 py-2 rounded-xl card-shadow flex items-center space-x-2.5 border-l-4 border-l-sky-500">
+                    <div class="w-7 h-7 rounded-lg bg-sky-50 text-sky-700 flex items-center justify-center text-xs font-bold shrink-0">
+                        <i class="fa-solid fa-chart-simple"></i>
+                    </div>
+                    <div>
+                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Over 1.5</p>
+                        <h3 id="statAvgOver15" class="text-sm font-black text-sky-700 font-mono">0%</h3>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Loading Spinner State -->
@@ -171,136 +217,25 @@
             </div>
         </div>
 
-        <!-- Main Content Split Grid: Matches on Left (9 cols), Filters on Right (3 cols) -->
-        <div id="matchesTabContent" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <!-- Main Content Area: Single-Row Filters & Full-Width Table -->
+        <div id="matchesTabContent" class="hidden space-y-6">
 
-            <!-- LEFT COLUMN: Primary Table & Stats (Takes Priority) -->
-            <div class="lg:col-span-9 space-y-6">
-
-                <!-- KPI Metric Summary Cards -->
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                    <div class="bg-white border border-slate-200 p-4 rounded-2xl card-shadow flex items-center space-x-3.5 border-l-4 border-l-emerald-600">
-                        <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-lg font-bold border border-emerald-100">
-                            <i class="fa-solid fa-futbol"></i>
-                        </div>
-                        <div>
-                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Total Matches</p>
-                            <h3 id="statTotalMatches" class="text-xl font-black text-slate-900 font-mono">0</h3>
-                        </div>
-                    </div>
-
-                    <div class="bg-white border border-slate-200 p-4 rounded-2xl card-shadow flex items-center space-x-3.5 border-l-4 border-l-emerald-500">
-                        <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-lg font-bold border border-emerald-100">
-                            <i class="fa-solid fa-trophy"></i>
-                        </div>
-                        <div>
-                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Predictions Won</p>
-                            <h3 id="statTotalWon" class="text-xl font-black text-emerald-700 font-mono">0</h3>
-                        </div>
-                    </div>
-
-                    <div class="bg-white border border-slate-200 p-4 rounded-2xl card-shadow flex items-center space-x-3.5 border-l-4 border-l-amber-500">
-                        <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center text-lg font-bold border border-amber-100">
-                            <i class="fa-solid fa-bullseye"></i>
-                        </div>
-                        <div>
-                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Accuracy Rate</p>
-                            <h3 id="statWinRate" class="text-xl font-black text-amber-700 font-mono">0%</h3>
-                        </div>
-                    </div>
-
-                    <div class="bg-white border border-slate-200 p-4 rounded-2xl card-shadow flex items-center space-x-3.5 border-l-4 border-l-sky-500">
-                        <div class="w-10 h-10 rounded-xl bg-sky-50 text-sky-700 flex items-center justify-center text-lg font-bold border border-sky-100">
-                            <i class="fa-solid fa-chart-simple"></i>
-                        </div>
-                        <div>
-                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Avg Over 1.5 %</p>
-                            <h3 id="statAvgOver15" class="text-xl font-black text-sky-700 font-mono">0%</h3>
-                        </div>
-                    </div>
+            <!-- SINGLE ROW FILTERS PANEL -->
+            <div class="bg-white border border-slate-200 p-4 rounded-2xl card-shadow space-y-3">
+                <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                    <h3 class="font-bold text-slate-900 text-xs flex items-center gap-2">
+                        <i class="fa-solid fa-filter text-emerald-600"></i> Match Filters & Control Center
+                    </h3>
+                    <button onclick="resetFilters()" class="text-[11px] text-rose-600 font-bold hover:underline flex items-center gap-1">
+                        <i class="fa-solid fa-rotate-left"></i> Reset All
+                    </button>
                 </div>
 
-                <!-- Match Table Card -->
-                <div class="bg-white border border-slate-200 rounded-2xl card-shadow overflow-hidden">
-                    
-                    <!-- Table Header Bar -->
-                    <div class="p-5 border-b border-slate-100 flex flex-wrap items-center justify-between gap-4 bg-slate-50/60">
-                        <div class="flex items-center space-x-2.5">
-                            <i class="fa-solid fa-list-check text-emerald-600 text-base"></i>
-                            <h3 class="font-extrabold text-slate-900 text-base">Soccer Fixtures & Predictive Intelligence</h3>
-                        </div>
-                        <span id="matchCountLabel" class="text-xs font-semibold text-slate-600 bg-slate-100 px-3 py-1 rounded-lg border border-slate-200">
-                            Tips: 0
-                        </span>
-                    </div>
-
-                    <!-- Responsive Table -->
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-slate-50 text-slate-500 uppercase text-[11px] tracking-wider font-extrabold border-b border-slate-200">
-                                    <th class="py-3.5 px-4 text-center w-12">Rank</th>
-                                    <th class="py-3.5 px-4">Match Date</th>
-                                    <th class="py-3.5 px-4 text-slate-900">Home Team</th>
-                                    <th class="py-3.5 px-4 text-slate-900">Away Team</th>
-                                    <th class="py-3.5 px-4 text-center text-emerald-700">Prediction</th>
-                                    <th class="py-3.5 px-4 text-center text-slate-900">Highest Prob</th>
-                                    <th class="py-3.5 px-4 text-center">Over 1.5 %</th>
-                                    <th class="py-3.5 px-4 text-center">Match Result</th>
-                                    <th class="py-3.5 px-4 text-center">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="matchesTableBody" class="divide-y divide-slate-100 text-xs font-medium text-slate-800">
-                                <!-- Dynamic Rows Injected via JS -->
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Pagination Footer -->
-                    <div class="p-4 border-t border-slate-100 flex items-center justify-between bg-slate-50/50">
-                        <span id="paginationInfo" class="text-xs text-slate-500 font-semibold">Page 1 of 1</span>
-                        <div class="flex space-x-2">
-                            <button onclick="changePage(-1)" id="prevPageBtn" class="px-3.5 py-1.5 bg-white border border-slate-200 hover:bg-slate-50 rounded-lg text-xs font-bold text-slate-700 transition disabled:opacity-40">
-                                <i class="fa-solid fa-chevron-left text-[10px] mr-1"></i> Prev
-                            </button>
-                            <button onclick="changePage(1)" id="nextPageBtn" class="px-3.5 py-1.5 bg-white border border-slate-200 hover:bg-slate-50 rounded-lg text-xs font-bold text-slate-700 transition disabled:opacity-40">
-                                Next <i class="fa-solid fa-chevron-right text-[10px] ml-1"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- RIGHT COLUMN: Filters Side Panel (Strictly Vertical) -->
-            <div class="lg:col-span-3 space-y-6">
-                <div class="bg-white border border-slate-200 p-5 rounded-2xl card-shadow space-y-4 sticky top-24">
-                    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                        <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
-                            <i class="fa-solid fa-filter text-emerald-600"></i> Match Filters
-                        </h3>
-                        <button onclick="resetFilters()" class="text-[11px] text-rose-600 font-bold hover:underline flex items-center gap-1">
-                            <i class="fa-solid fa-rotate-left"></i> Reset
-                        </button>
-                    </div>
-
-                    <!-- Date Quick Presets -->
+                <!-- Single Row Responsive Grid for All Filters -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-3 items-end">
+                    <!-- Search Team Box -->
                     <div>
-                        <label class="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Quick Date</label>
-                        <div class="grid grid-cols-2 gap-2">
-                            <button onclick="setDatePreset('all')" class="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition">
-                                All Dates
-                            </button>
-                            <button onclick="setDatePreset('today')" class="px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200/80 rounded-lg text-xs font-bold transition">
-                                Today
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Search Fixture / Team Box -->
-                    <div>
-                        <label class="block text-[11px] font-bold text-slate-600 mb-1 uppercase tracking-wider">Search Team</label>
+                        <label class="block text-[10px] font-bold text-slate-600 mb-1 uppercase tracking-wider">Search Team</label>
                         <div class="relative">
                             <input type="text" id="filterSearch" oninput="applyFilters()" placeholder="Valencia, PSG..." class="w-full bg-slate-50 border border-slate-200 focus:border-emerald-500 focus:bg-white text-slate-900 text-xs font-medium rounded-xl pl-8 pr-3 py-2 focus:outline-none transition">
                             <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2.5 text-slate-400 text-xs"></i>
@@ -309,26 +244,26 @@
 
                     <!-- Prediction Tip Filter -->
                     <div>
-                        <label class="block text-[11px] font-bold text-slate-600 mb-1 uppercase tracking-wider">Prediction Tip</label>
+                        <label class="block text-[10px] font-bold text-slate-600 mb-1 uppercase tracking-wider">Prediction Tip</label>
                         <select id="filterTip" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 focus:border-emerald-500 focus:bg-white text-slate-900 text-xs font-semibold rounded-xl px-3 py-2 focus:outline-none transition">
-                            <option value="">All Tips (1, X, 2...)</option>
+                            <option value="">All Tips</option>
                         </select>
                     </div>
 
                     <!-- Match Status Filter -->
                     <div>
-                        <label class="block text-[11px] font-bold text-slate-600 mb-1 uppercase tracking-wider">Match Status</label>
+                        <label class="block text-[10px] font-bold text-slate-600 mb-1 uppercase tracking-wider">Match Status</label>
                         <select id="filterStatus" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 focus:border-emerald-500 focus:bg-white text-slate-900 text-xs font-semibold rounded-xl px-3 py-2 focus:outline-none transition">
                             <option value="">All Statuses</option>
                             <option value="won">Won Only</option>
                             <option value="lost">Lost Only</option>
-                            <option value="cancelled">Cancelled / Postponed</option>
+                            <option value="cancelled">Cancelled</option>
                         </select>
                     </div>
 
                     <!-- Match Date Filter -->
                     <div>
-                        <label class="block text-[11px] font-bold text-slate-600 mb-1 uppercase tracking-wider">Match Date</label>
+                        <label class="block text-[10px] font-bold text-slate-600 mb-1 uppercase tracking-wider">Match Date</label>
                         <select id="filterDate" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 focus:border-emerald-500 focus:bg-white text-slate-900 text-xs font-semibold rounded-xl px-3 py-2 focus:outline-none transition">
                             <option value="">All Available Dates</option>
                         </select>
@@ -336,47 +271,79 @@
 
                     <!-- Sort Order Filter -->
                     <div>
-                        <label class="block text-[11px] font-bold text-slate-600 mb-1 uppercase tracking-wider">Sort Order</label>
+                        <label class="block text-[10px] font-bold text-slate-600 mb-1 uppercase tracking-wider">Sort Order</label>
                         <select id="filterSort" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 focus:border-emerald-500 focus:bg-white text-slate-900 text-xs font-semibold rounded-xl px-3 py-2 focus:outline-none transition">
-                            <option value="date-desc">Date (Newest First)</option>
-                            <option value="date-asc">Date (Oldest First)</option>
-                            <option value="prob-over15">Highest Over 1.5 %</option>
-                            <option value="prob-home">Highest Home Win %</option>
-                            <option value="prob-away">Highest Away Win %</option>
+                            <option value="date-desc">Date (Newest)</option>
+                            <option value="date-asc">Date (Oldest)</option>
+                            <option value="prob-over15">Highest Over 1.5</option>
+                            <option value="prob-home">Highest Home %</option>
+                            <option value="prob-away">Highest Away %</option>
                         </select>
                     </div>
 
-                    <!-- Vertical Probability Ranges -->
-                    <div class="border-t border-slate-100 pt-3 space-y-3">
-                        <div>
-                            <label class="block text-[11px] font-bold text-emerald-700 mb-1 uppercase tracking-wider">Home Prob Range (%)</label>
-                            <div class="flex items-center space-x-2">
-                                <input type="number" id="filterHomeMin" oninput="applyFilters()" placeholder="Min %" min="0" max="100" class="w-1/2 bg-slate-50 border border-slate-200 focus:border-emerald-500 text-slate-900 text-xs font-semibold rounded-xl px-2.5 py-1.5 focus:outline-none transition">
-                                <span class="text-slate-400 font-bold">-</span>
-                                <input type="number" id="filterHomeMax" oninput="applyFilters()" placeholder="Max %" min="0" max="100" class="w-1/2 bg-slate-50 border border-slate-200 focus:border-emerald-500 text-slate-900 text-xs font-semibold rounded-xl px-2.5 py-1.5 focus:outline-none transition">
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block text-[11px] font-bold text-slate-600 mb-1 uppercase tracking-wider">Draw Prob Range (%)</label>
-                            <div class="flex items-center space-x-2">
-                                <input type="number" id="filterDrawMin" oninput="applyFilters()" placeholder="Min %" min="0" max="100" class="w-1/2 bg-slate-50 border border-slate-200 focus:border-emerald-500 text-slate-900 text-xs font-semibold rounded-xl px-2.5 py-1.5 focus:outline-none transition">
-                                <span class="text-slate-400 font-bold">-</span>
-                                <input type="number" id="filterDrawMax" oninput="applyFilters()" placeholder="Max %" min="0" max="100" class="w-1/2 bg-slate-50 border border-slate-200 focus:border-emerald-500 text-slate-900 text-xs font-semibold rounded-xl px-2.5 py-1.5 focus:outline-none transition">
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block text-[11px] font-bold text-slate-600 mb-1 uppercase tracking-wider">Away Prob Range (%)</label>
-                            <div class="flex items-center space-x-2">
-                                <input type="number" id="filterAwayMin" oninput="applyFilters()" placeholder="Min %" min="0" max="100" class="w-1/2 bg-slate-50 border border-slate-200 focus:border-emerald-500 text-slate-900 text-xs font-semibold rounded-xl px-2.5 py-1.5 focus:outline-none transition">
-                                <span class="text-slate-400 font-bold">-</span>
-                                <input type="number" id="filterAwayMax" oninput="applyFilters()" placeholder="Max %" min="0" max="100" class="w-1/2 bg-slate-50 border border-slate-200 focus:border-emerald-500 text-slate-900 text-xs font-semibold rounded-xl px-2.5 py-1.5 focus:outline-none transition">
-                            </div>
-                        </div>
+                    <!-- Home Prob Range Min -->
+                    <div>
+                        <label class="block text-[10px] font-bold text-emerald-700 mb-1 uppercase tracking-wider">Home Min %</label>
+                        <input type="number" id="filterHomeMin" oninput="applyFilters()" placeholder="Min %" min="0" max="100" class="w-full bg-slate-50 border border-slate-200 focus:border-emerald-500 text-slate-900 text-xs font-semibold rounded-xl px-3 py-2 focus:outline-none transition">
                     </div>
 
+                    <!-- Home Prob Range Max -->
+                    <div>
+                        <label class="block text-[10px] font-bold text-emerald-700 mb-1 uppercase tracking-wider">Home Max %</label>
+                        <input type="number" id="filterHomeMax" oninput="applyFilters()" placeholder="Max %" min="0" max="100" class="w-full bg-slate-50 border border-slate-200 focus:border-emerald-500 text-slate-900 text-xs font-semibold rounded-xl px-3 py-2 focus:outline-none transition">
+                    </div>
                 </div>
+            </div>
+
+            <!-- Match Table Card (Full Width) -->
+            <div class="bg-white border border-slate-200 rounded-2xl card-shadow overflow-hidden w-full">
+                
+                <!-- Table Header Bar -->
+                <div class="p-5 border-b border-slate-100 flex flex-wrap items-center justify-between gap-4 bg-slate-50/60">
+                    <div class="flex items-center space-x-2.5">
+                        <i class="fa-solid fa-list-check text-emerald-600 text-base"></i>
+                        <h3 class="font-extrabold text-slate-900 text-base">Soccer Fixtures & Predictive Intelligence</h3>
+                    </div>
+                    <span id="matchCountLabel" class="text-xs font-semibold text-slate-600 bg-slate-100 px-3 py-1 rounded-lg border border-slate-200">
+                        Tips: 0
+                    </span>
+                </div>
+
+                <!-- Responsive Table -->
+                <div class="overflow-x-auto w-full">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-500 uppercase text-[11px] tracking-wider font-extrabold border-b border-slate-200">
+                                <th class="py-3.5 px-4 text-center w-12">Rank</th>
+                                <th class="py-3.5 px-4">Match Date</th>
+                                <th class="py-3.5 px-4 text-slate-900">Home Team</th>
+                                <th class="py-3.5 px-4 text-slate-900">Away Team</th>
+                                <th class="py-3.5 px-4 text-center text-emerald-700">Prediction</th>
+                                <th class="py-3.5 px-4 text-center text-slate-900">Highest Prob</th>
+                                <th class="py-3.5 px-4 text-center">Over 1.5 %</th>
+                                <th class="py-3.5 px-4 text-center">Match Result</th>
+                                <th class="py-3.5 px-4 text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="matchesTableBody" class="divide-y divide-slate-100 text-xs font-medium text-slate-800">
+                            <!-- Dynamic Rows Injected via JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination Footer -->
+                <div class="p-4 border-t border-slate-100 flex items-center justify-between bg-slate-50/50">
+                    <span id="paginationInfo" class="text-xs text-slate-500 font-semibold">Page 1 of 1</span>
+                    <div class="flex space-x-2">
+                        <button onclick="changePage(-1)" id="prevPageBtn" class="px-3.5 py-1.5 bg-white border border-slate-200 hover:bg-slate-50 rounded-lg text-xs font-bold text-slate-700 transition disabled:opacity-40">
+                            <i class="fa-solid fa-chevron-left text-[10px] mr-1"></i> Prev
+                        </button>
+                        <button onclick="changePage(1)" id="nextPageBtn" class="px-3.5 py-1.5 bg-white border border-slate-200 hover:bg-slate-50 rounded-lg text-xs font-bold text-slate-700 transition disabled:opacity-40">
+                            Next <i class="fa-solid fa-chevron-right text-[10px] ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+
             </div>
 
         </div>
@@ -409,6 +376,30 @@
                 <button onclick="closeMatchModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-xs font-bold transition">
                     Close
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Prompt Modal for Data Source -->
+    <div id="passwordModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs hidden p-4 transition-all duration-300">
+        <div class="bg-white border border-slate-200 w-full max-w-sm rounded-3xl shadow-2xl overflow-hidden p-6 space-y-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-slate-900 text-sm">Restricted Data Source</h3>
+                    <p class="text-[11px] text-slate-500">Enter password to configure data feed.</p>
+                </div>
+            </div>
+            <div>
+                <label class="block text-[11px] font-bold text-slate-700 mb-1 uppercase tracking-wider">Password</label>
+                <input type="password" id="dataSourcePasswordInput" placeholder="Enter password..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-900 focus:outline-none focus:border-emerald-500">
+                <p id="passwordErrorMsg" class="text-rose-600 text-[11px] font-semibold mt-1 hidden">Incorrect password. Please try again.</p>
+            </div>
+            <div class="flex justify-end space-x-2 pt-2">
+                <button onclick="closePasswordModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold">Cancel</button>
+                <button onclick="verifyPassword()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-xs">Authorize</button>
             </div>
         </div>
     </div>
@@ -455,7 +446,7 @@
         // Fallback Sample Data
         const SAMPLE_CSV_DATA = `DateTime,Over 1.5,Host,Guest,Tip,Result,1X2,H1,Home Probability,Draw Probability,Away Probability,Over 2.5,Over 3.5,HC1,HCX,HC2,Match Key,Match Result
 2026-10-14,94%,PSG,Marseille,1,3:1,1,Half time results: 1:0,94%,4%,2%,85%,60%,70%,20%,10%,2026-10-14_psg-_marseille,3:1
-2026-10-13,93%,Inter,Juventus,X,1:1,X,Half time results: 0:0,35%,93%,22%,40%,20%,25%,50%,25%,2026-10-13_inter-_juventus,1:1
+2026-10-14,93%,Inter,Juventus,X,1:1,X,Half time results: 0:0,35%,93%,22%,40%,20%,25%,50%,25%,2026-10-14_inter-_juventus,1:1
 2026-10-09,87%,Valencia,Athletic Club,X2,1:2,X2,Half time results: 1:1,37%,33%,30%,35%,20%,25%,20%,55%,2026-10-09_valencia-_athleticclub,1:2
 2026-10-09,82%,Deportivo Alaves,Real Sociedad,X2,2:3,X2,Half time results: 2:1,40%,32%,28%,42%,24%,30%,22%,48%,2026-10-09_deportivoalaves-_realsociedad,2:3
 2026-10-09,75%,Taunton Town,Wimborne Town,X2,canc,X2,canc,27%,35%,38%,25%,15%,20%,20%,60%,2026-10-09_tauntontown-_wimbornetown,canc
@@ -550,6 +541,17 @@
 
             populateTipDropdown();
             populateDateDropdown();
+            
+            // Set default date to today if available in dataset
+            let todayStr = formatDateISO(new Date());
+            const dateSelect = document.getElementById('filterDate');
+            let hasToday = Array.from(dateSelect.options).some(opt => opt.value === todayStr);
+            if (hasToday) {
+                dateSelect.value = todayStr;
+            } else {
+                dateSelect.value = ""; // Default to all if today is not in dataset
+            }
+
             applyFilters();
             showLoading(false);
             
@@ -674,7 +676,7 @@
             });
 
             const select = document.getElementById('filterTip');
-            select.innerHTML = '<option value="">All Tips (1, X, 2...)</option>';
+            select.innerHTML = '<option value="">All Tips</option>';
             Array.from(tips).sort().forEach(t => {
                 let opt = document.createElement('option');
                 opt.value = t;
@@ -691,7 +693,7 @@
             });
 
             const select = document.getElementById('filterDate');
-            select.innerHTML = '<option value="">All Dates</option>';
+            select.innerHTML = '<option value="">All Available Dates</option>';
             Array.from(dates).sort((a, b) => b.localeCompare(a)).forEach(d => {
                 let opt = document.createElement('option');
                 opt.value = d;
@@ -700,32 +702,15 @@
             });
         }
 
-        function setDatePreset(preset) {
-            const select = document.getElementById('filterDate');
-            if (preset === 'all') {
-                select.value = '';
-            } else if (preset === 'today') {
-                let todayStr = formatDateISO(new Date());
-                let exists = Array.from(select.options).some(opt => opt.value === todayStr);
-                if (exists) select.value = todayStr;
-                else select.value = '';
-            }
-            applyFilters();
-        }
-
         function resetFilters() {
             document.getElementById('filterSearch').value = '';
             document.getElementById('filterTip').value = '';
             document.getElementById('filterStatus').value = '';
-            document.getElementById('filterDate').value = '';
+            document.getElementById('filterDate').value = formatDateISO(new Date());
             document.getElementById('filterSort').value = 'date-desc';
             
             document.getElementById('filterHomeMin').value = '';
             document.getElementById('filterHomeMax').value = '';
-            document.getElementById('filterDrawMin').value = '';
-            document.getElementById('filterDrawMax').value = '';
-            document.getElementById('filterAwayMin').value = '';
-            document.getElementById('filterAwayMax').value = '';
             applyFilters();
         }
 
@@ -735,11 +720,11 @@
             const tabBetProb = document.getElementById('tabBetProb');
             
             if (tabId === 'all') {
-                tabAll.className = "px-6 py-2.5 bg-emerald-600 text-white rounded-xl font-extrabold text-xs shadow-md transition flex items-center gap-2";
-                tabBetProb.className = "px-6 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs transition flex items-center gap-2";
+                tabAll.className = "px-5 py-2.5 bg-emerald-600 text-white rounded-xl font-extrabold text-xs shadow-md transition flex items-center gap-2";
+                tabBetProb.className = "px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs transition flex items-center gap-2";
             } else {
-                tabBetProb.className = "px-6 py-2.5 bg-emerald-600 text-white rounded-xl font-extrabold text-xs shadow-md transition flex items-center gap-2";
-                tabAll.className = "px-6 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs transition flex items-center gap-2";
+                tabBetProb.className = "px-5 py-2.5 bg-emerald-600 text-white rounded-xl font-extrabold text-xs shadow-md transition flex items-center gap-2";
+                tabAll.className = "px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs transition flex items-center gap-2";
             }
             applyFilters();
         }
@@ -783,10 +768,6 @@
 
             const hMin = parseFloat(document.getElementById('filterHomeMin').value);
             const hMax = parseFloat(document.getElementById('filterHomeMax').value);
-            const dMin = parseFloat(document.getElementById('filterDrawMin').value);
-            const dMax = parseFloat(document.getElementById('filterDrawMax').value);
-            const aMin = parseFloat(document.getElementById('filterAwayMin').value);
-            const aMax = parseFloat(document.getElementById('filterAwayMax').value);
 
             filteredMatchData = rawMatchData.filter(row => {
                 if (searchVal) {
@@ -799,7 +780,6 @@
                 }
 
                 let hp = parseFloat(row['Home Probability']) || 0;
-                let dp = parseFloat(row['Draw Probability']) || 0;
                 let ap = parseFloat(row['Away Probability']) || 0;
 
                 if (activeTab === 'bet-prob') {
@@ -808,10 +788,6 @@
 
                 if (!isNaN(hMin) && hp < hMin) return false;
                 if (!isNaN(hMax) && hp > hMax) return false;
-                if (!isNaN(dMin) && dp < dMin) return false;
-                if (!isNaN(dMax) && dp > dMax) return false;
-                if (!isNaN(aMin) && ap < aMin) return false;
-                if (!isNaN(aMax) && ap > aMax) return false;
 
                 if (tipVal) {
                     let rowTip = row['Tip'] || row['1X2'] || '';
@@ -875,7 +851,7 @@
             let avgOver15 = countOver15 > 0 ? (sumOver15 / countOver15).toFixed(1) : '0.0';
 
             document.getElementById('statTotalMatches').innerText = total;
-            document.getElementById('statTotalWon').innerText = `${wonCount} / ${settledCount}`;
+            document.getElementById('statTotalWon').innerText = `${wonCount}/${settledCount}`;
             document.getElementById('statWinRate').innerText = `${winRate}%`;
             document.getElementById('statAvgOver15').innerText = `${avgOver15}%`;
         }
@@ -907,7 +883,7 @@
             document.getElementById('nextPageBtn').disabled = currentPage >= maxPages;
 
             if (pageRows.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="9" class="text-center py-12 text-slate-400 font-semibold text-xs">No match fixtures match your current filter settings.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="9" class="text-center py-12 text-slate-400 font-semibold text-xs">No match fixtures match your current filter settings. Try clearing filters or selecting 'All Available Dates'.</td></tr>`;
                 return;
             }
 
@@ -1046,6 +1022,26 @@
 
         function closeMatchModal() {
             document.getElementById('matchDetailModal').classList.add('hidden');
+        }
+
+        function promptPasswordForSource() {
+            document.getElementById('dataSourcePasswordInput').value = '';
+            document.getElementById('passwordErrorMsg').classList.add('hidden');
+            document.getElementById('passwordModal').classList.remove('hidden');
+        }
+
+        function closePasswordModal() {
+            document.getElementById('passwordModal').classList.add('hidden');
+        }
+
+        function verifyPassword() {
+            let pwd = document.getElementById('dataSourcePasswordInput').value;
+            if (pwd === 'Dstv@2030') {
+                closePasswordModal();
+                openSourceModal();
+            } else {
+                document.getElementById('passwordErrorMsg').classList.remove('hidden');
+            }
         }
 
         function openSourceModal() {
