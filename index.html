@@ -676,7 +676,7 @@
                         <label class="text-xs font-semibold text-secondaryText">AI prediction history sheet<input id="integrationHistorySheet" class="w-full mt-1 bg-pageBg border border-borderCol p-2.5 rounded-xl text-xs" value="ai_prediction_history"></label>
                         <label class="text-xs font-semibold text-secondaryText">Model performance sheet<input id="integrationPerformanceSheet" class="w-full mt-1 bg-pageBg border border-borderCol p-2.5 rounded-xl text-xs" value="model_performance"></label>
                     </div>
-                    <div class="flex flex-wrap gap-2"><button onclick="saveGoogleSheetsIntegration()" class="bg-tealAccent text-white font-bold text-xs px-4 py-2.5 rounded-xl">Save integration setup</button><button onclick="loadGoogleSheetsIntegration()" class="bg-pageBg border border-borderCol text-mainText font-bold text-xs px-4 py-2.5 rounded-xl">Load integration setup</button><button onclick="testGoogleSheetsIntegration()" class="bg-skyBlue text-darkNavy font-bold text-xs px-4 py-2.5 rounded-xl">Test connection</button><span id="integrationStatus" class="text-xs text-secondaryText self-center" role="status">Configure a deployed Apps Script backend.</span></div>
+                    <div class="flex flex-wrap gap-2"><button onclick="saveGoogleSheetsIntegration()" class="bg-tealAccent text-white font-bold text-xs px-4 py-2.5 rounded-xl">Save integration setup</button><button onclick="loadGoogleSheetsIntegration()" class="bg-pageBg border border-borderCol text-mainText font-bold text-xs px-4 py-2.5 rounded-xl">Load integration setup</button><button onclick="testGoogleSheetsIntegration()" class="bg-skyBlue text-darkNavy font-bold text-xs px-4 py-2.5 rounded-xl">Test connection</button><button onclick="loadStatareaResultOverrides()" class="bg-pageBg border border-borderCol text-mainText font-bold text-xs px-4 py-2.5 rounded-xl">Load Statarea Results</button><span id="integrationStatus" class="text-xs text-secondaryText self-center" role="status">Configure a deployed Apps Script backend.</span></div>
                     <p class="text-xs text-rose-700">Required backend actions: <code>getIntegrationConfig</code>, <code>saveIntegrationConfig</code>, <code>testConnection</code>, <code>savePredictionHistory</code>, <code>readPredictionHistory</code>, and <code>analyzePredictionHistory</code>. This UI does not grant spreadsheet access by itself.</p>
                 </div>
 
@@ -851,7 +851,7 @@
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                         <div>
                             <h3 class="font-bold text-sm text-mainText">Google Apps Script Web App Endpoint</h3>
-                            <p class="text-xs text-secondaryText">Automatically load or save all data source URLs from your Google Sheet Admin tab.</p>
+                            <p class="text-xs text-secondaryText">Configure the Google Apps Script endpoint. Access switches are stored in the System control sheet; Statarea match-result updates write only to the Match Result column.</p>
                         </div>
                         <div class="flex items-center gap-2 w-full sm:w-auto">
                             <button onclick="autoFillDefaultAdminUrls()" class="bg-pageBg hover:bg-borderCol text-mainText font-semibold text-xs px-3.5 py-2.5 rounded-xl border border-borderCol flex items-center gap-1.5">
@@ -861,6 +861,7 @@
                     </div>
                     <div class="flex gap-2">
                         <input type="text" id="gasEndpointUrl" placeholder="https://script.google.com/macros/s/.../exec" class="flex-1 bg-pageBg border border-borderCol p-2.5 rounded-xl text-xs">
+                        <input type="password" id="systemControlAdminKey" placeholder="Admin API key (result updates)" class="flex-1 min-w-[180px] bg-pageBg border border-borderCol p-2.5 rounded-xl text-xs" autocomplete="off" title="Used only for authorized Google Apps Script writes">
                         <button onclick="loadConfigFromGoogleSheet()" class="bg-skyBlue hover:bg-skyBlue/90 text-darkNavy font-bold text-xs px-4 py-2.5 rounded-xl shadow-sm flex items-center gap-1.5 whitespace-nowrap">
                             <i class="fa-solid fa-cloud-arrow-down"></i> Load from Admin Tab
                         </button>
@@ -1587,6 +1588,7 @@ function json_(obj) {
                 if (syncLabel) syncLabel.innerText = 'Synced Live';
                 updateHeaderSyncCount();
                 processEpreferredModel();
+                if (sourceId === 1) await loadStatareaResultOverrides();
                 if (!suppressAiUpdate) sendMatchDataToAiFrame(true);
                 showToast(`Source ${sourceId} synchronized (${count} rows).`);
                 return true;
@@ -2223,6 +2225,98 @@ function json_(obj) {
             renderers[key]();
         }
 
+
+        function canEditStatareaResults() {
+            try {
+                return String(sessionStorage.getItem('gsa_user_role') || '').toLowerCase() === 'admin';
+            } catch (_) { return false; }
+        }
+
+        function statareaMatchKey(f) {
+            return [String(f.date || '').trim(), String(f.home || '').trim().toLowerCase(), String(f.away || '').trim().toLowerCase()].join('|');
+        }
+
+        async function saveStatareaMatchResult(matchId, selectId) {
+            if (!canEditStatareaResults()) {
+                showToast('Only a signed-in administrator can update Statarea match results.');
+                return;
+            }
+            const f = epreferredFixtures1.find(x => x.id === matchId);
+            const input = document.getElementById(selectId);
+            const result = input ? input.value : '';
+            if (!f || !result) return;
+            const endpoint = document.getElementById('gasEndpointUrl')?.value.trim();
+            const adminKey = document.getElementById('systemControlAdminKey')?.value.trim();
+            if (!endpoint || !adminKey) {
+                showToast('Configure the Apps Script endpoint and admin API key in Data Sources & Admin first.');
+                return;
+            }
+            const payload = {
+                action: 'updateStatareaResult',
+                adminKey,
+                date: f.date, home: f.home, away: f.away,
+                matchResult: result
+            };
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'},
+                    body: new URLSearchParams(Object.entries(payload).map(([k,v]) => [k, String(v)])),
+                    cache: 'no-store'
+                });
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                const data = await response.json();
+                if (data.success === false) throw new Error(data.message || 'Backend rejected the update');
+                f.matchresult = result;
+                const sourceRow = (rawFeeds[1] || []).find(row => {
+                    const h = row.host || row.home || row.hometeam || '';
+                    const a = row.guest || row.away || row.awayteam || '';
+                    const d = row.date || row.matchdate || '';
+                    return String(d).trim() === String(f.date).trim() &&
+                        String(h).trim().toLowerCase() === String(f.home).trim().toLowerCase() &&
+                        String(a).trim().toLowerCase() === String(f.away).trim().toLowerCase();
+                });
+                if (sourceRow) sourceRow['match result'] = result;
+                renderEpreferredTips1();
+                renderOverviewPreview();
+                updateModelWinRateCards();
+                showToast('Statarea Match Result saved to Google Sheets.');
+            } catch (error) {
+                showToast('Could not save Match Result: ' + error.message);
+            }
+        }
+
+        async function loadStatareaResultOverrides() {
+            const endpoint = document.getElementById('gasEndpointUrl')?.value.trim();
+            if (!endpoint) return;
+            try {
+                const url = new URL(endpoint);
+                url.searchParams.set('action', 'readStatareaResults');
+                url.searchParams.set('_', Date.now());
+                const response = await fetch(url.toString(), {cache:'no-store'});
+                if (!response.ok) return;
+                const data = await response.json();
+                if (data.success === false || !Array.isArray(data.results)) return;
+                const map = new Map(data.results.map(r => [
+                    [String(r.date || '').trim(), String(r.home || '').trim().toLowerCase(), String(r.away || '').trim().toLowerCase()].join('|'),
+                    r.matchResult || r['Match Result'] || ''
+                ]));
+                epreferredFixtures1.forEach(f => {
+                    const value = map.get(statareaMatchKey(f));
+                    if (value) f.matchresult = value;
+                });
+                (rawFeeds[1] || []).forEach(row => {
+                    const h = row.host || row.home || row.hometeam || '';
+                    const a = row.guest || row.away || row.awayteam || '';
+                    const d = row.date || row.matchdate || '';
+                    const value = map.get([String(d).trim(), String(h).trim().toLowerCase(), String(a).trim().toLowerCase()].join('|'));
+                    if (value) row['match result'] = value;
+                });
+                renderEpreferredTips1();
+                renderOverviewPreview();
+            } catch (_) { /* The portal remains usable if result overrides are not configured yet. */ }
+        }
+
         function renderEpreferredTips1() {
             const tbody = document.getElementById('epreferredTableBody1');
             const countEl = document.getElementById('epreferredCount1');
@@ -2256,7 +2350,7 @@ function json_(obj) {
                         <td class="p-3 font-semibold text-mainText">${f.away}</td>
                         <td class="p-3"><span class="px-2.5 py-1 rounded-lg bg-tealAccent/10 text-tealAccent font-bold">${f.prediction}</span></td>
                         <td class="p-3 font-bold text-emeraldGreen">${f.probability}%</td>
-                        <td class="p-3 font-semibold">${badgeHtml}</td>
+                        <td class="p-3 font-semibold">${canEditStatareaResults() ? `<div class="flex items-center gap-1"><select id="statarea-result-${f.id}" class="max-w-[110px] bg-white border border-borderCol rounded-md p-1 text-xs" aria-label="Match Result for ${String(f.home).replace(/"/g, '&quot;')} versus ${String(f.away).replace(/"/g, '&quot;')}"><option value="Pending" ${String(f.matchresult).toLowerCase()==='pending'?'selected':''}>Pending</option><option value="Won" ${String(f.matchresult).toLowerCase()==='won'?'selected':''}>Won</option><option value="Lost" ${String(f.matchresult).toLowerCase()==='lost'?'selected':''}>Lost</option><option value="Draw" ${String(f.matchresult).toLowerCase()==='draw'?'selected':''}>Draw</option></select><button type="button" onclick="saveStatareaMatchResult('${f.id}', 'statarea-result-${f.id}')" class="px-2 py-1 rounded-md bg-tealAccent text-white text-[10px] font-bold">Save</button></div>` : badgeHtml}</td>
                     </tr>
                 `;
             });
@@ -2531,7 +2625,7 @@ function json_(obj) {
             updateModelWinRateCards();
             const tbody = document.getElementById('overviewPreviewBody');
             if (!tbody) return;
-            const preview = epreferredFixtures.slice(0, 8);
+            const preview = epreferredFixtures.slice(0, 10);
             if (preview.length === 0) return;
 
             let html = '';
@@ -3040,15 +3134,34 @@ function json_(obj) {
     });
 })();
 
+        try {
+            const keyField = document.getElementById('systemControlAdminKey');
+            if (keyField) {
+                keyField.value = sessionStorage.getItem('gsa_system_control_admin_key') || '';
+                keyField.addEventListener('change', () => {
+                    try { sessionStorage.setItem('gsa_system_control_admin_key', keyField.value.trim()); } catch (_) {}
+                });
+            }
+        } catch (_) {}
+
         function getSheetsIntegrationConfig() {
             return { spreadsheetId: document.getElementById('integrationSpreadsheetId')?.value.trim() || '', usersSheet: document.getElementById('integrationUsersSheet')?.value.trim() || 'users', configSheet: document.getElementById('integrationConfigSheet')?.value.trim() || 'Admin', predictionsSheet: document.getElementById('integrationPredictionsSheet')?.value.trim() || 'predictions', historySheet: document.getElementById('integrationHistorySheet')?.value.trim() || 'ai_prediction_history', performanceSheet: document.getElementById('integrationPerformanceSheet')?.value.trim() || 'model_performance' };
         }
         async function googleSheetsIntegrationAction(action, params={}) {
             const endpoint = document.getElementById('gasEndpointUrl')?.value.trim();
             if (!endpoint) throw new Error('Enter the Google Apps Script Web App endpoint above first.');
-            const url = new URL(endpoint); url.searchParams.set('action', action); url.searchParams.set('_', Date.now());
-            Object.entries(params).forEach(([k,v]) => url.searchParams.set(k, typeof v === 'string' ? v : JSON.stringify(v)));
-            const response = await fetch(url.toString(), { method:'GET', cache:'no-store' });
+            const isWrite = ['saveIntegrationConfig','setSystemControl','setAuthSettings'].includes(action);
+            let response;
+            if (isWrite) {
+                const adminKey = document.getElementById('systemControlAdminKey')?.value.trim();
+                if (!adminKey) throw new Error('Enter the admin API key configured in Apps Script.');
+                const body = new URLSearchParams({action, adminKey, ...Object.fromEntries(Object.entries(params).map(([k,v]) => [k, typeof v === 'string' ? v : JSON.stringify(v)]))});
+                response = await fetch(endpoint, {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'}, body:body.toString(), cache:'no-store'});
+            } else {
+                const url = new URL(endpoint); url.searchParams.set('action', action); url.searchParams.set('_', Date.now());
+                Object.entries(params).forEach(([k,v]) => url.searchParams.set(k, typeof v === 'string' ? v : JSON.stringify(v)));
+                response = await fetch(url.toString(), {method:'GET', cache:'no-store'});
+            }
             if (!response.ok) throw new Error('HTTP ' + response.status);
             const data = await response.json(); if (data.success === false) throw new Error(data.message || 'Backend rejected the request.'); return data;
         }
