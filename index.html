@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Sports Analytics — Unified Soccer Intelligence & Open-Source LLM Engine</title>
+    <title>Global Sports Analytics — Prediction Models & AI Intelligence</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -13,19 +13,19 @@
             theme: {
                 extend: {
                     colors: {
-                        pageBg: '#F4F7FB',
+                        pageBg: '#F8FAFC',
                         cardBg: '#FFFFFF',
                         mainText: '#172B4D',
                         secondaryText: '#64748B',
                         emeraldGreen: '#059669',
-                        tealAccent: '#0D9488',
-                        skyBlue: '#38BDF8',
+                        tealAccent: '#0F9F78',
+                        skyBlue: '#0284C7',
                         royalBlue: '#2563EB',
                         goldAccent: '#D4A017',
                         successGreen: '#16A34A',
                         warningYellow: '#F59E0B',
                         errorRed: '#DC2626',
-                        borderCol: '#E2E8F0',
+                        borderCol: '#CBD5E1',
                         darkNavy: '#0F172A',
                         deepPurple: '#7C3AED',
                         crimsonRed: '#E11D48'
@@ -38,7 +38,7 @@
         }
     </script>
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #F4F7FB; color: #172B4D; }
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #172B4D; }
         .custom-shadow { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); }
         .card-hover:hover { transform: translateY(-2px); transition: all 0.2s ease-in-out; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -49,7 +49,18 @@
         .tab-content.active { display: flex; }
         @keyframes pulseGlow { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         .animate-glow { animation: pulseGlow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-    </style>
+    
+        #tab-epreferred table, #tab-preferred table { width:100%; table-layout:fixed; }
+        #tab-epreferred table th, #tab-epreferred table td, #tab-preferred table th, #tab-preferred table td { padding:.45rem .35rem !important; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        #tab-epreferred .epreferred-subcontent > .overflow-x-auto, #tab-preferred .top40-subcontent > .overflow-x-auto { overflow-x:hidden !important; width:100%; }
+        #tab-epreferred table th:nth-child(1), #tab-preferred table th:nth-child(1) { width:7%; }
+        #tab-epreferred table th:nth-child(2), #tab-preferred table th:nth-child(2) { width:13%; }
+        #tab-epreferred table th:nth-child(3), #tab-preferred table th:nth-child(3) { width:17%; }
+        #tab-epreferred table th:nth-child(4), #tab-preferred table th:nth-child(4) { width:14%; }
+        #tab-epreferred table th:nth-child(5), #tab-preferred table th:nth-child(5) { width:14%; }
+        #tab-epreferred table th:nth-child(6), #tab-preferred table th:nth-child(6) { width:20%; }
+        #tab-epreferred table th:nth-child(7), #tab-preferred table th:nth-child(7) { width:15%; }
+</style>
 </head>
 <body class="min-h-screen flex flex-col antialiased">
 
@@ -103,59 +114,54 @@
                 <button onclick="switchTab('overview')" id="nav-overview" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-tealAccent bg-tealAccent/10 font-semibold">
                     <i class="fa-solid fa-chart-pie w-5 text-center"></i> Overview
                 </button>
-
-                <div class="text-[11px] font-bold text-secondaryText uppercase tracking-wider px-3 pt-3 pb-1">ePreferred Intelligence</div>
                 <button onclick="switchTab('epreferred')" id="nav-epreferred" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
-                    <i class="fa-solid fa-star w-5 text-center text-goldAccent"></i> ePreferred Today's Tips
+                    <i class="fa-solid fa-star w-5 text-center text-goldAccent"></i> Todays Best Tips
                 </button>
 
-                <div class="text-[11px] font-bold text-secondaryText uppercase tracking-wider px-3 pt-3 pb-1">Connected Systems</div>
+                <div class="text-[11px] font-bold text-secondaryText uppercase tracking-wider px-3 pt-3 pb-1">Prediction Models</div>
                 <button onclick="switchTab('statarea')" id="nav-statarea" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
-                    <i class="fa-solid fa-chart-line w-5 text-center text-tealAccent"></i> Statarea
+                    <i class="fa-solid fa-chart-line w-5 text-center text-tealAccent"></i> Prediction 1 (Str)
                 </button>
                 <button onclick="switchTab('vital')" id="nav-vital" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
-                    <i class="fa-solid fa-trophy w-5 text-center text-deepPurple"></i> Vital Best Tips
+                    <i class="fa-solid fa-trophy w-5 text-center text-deepPurple"></i> Prediction 2 (SVB)
                 </button>
                 <button onclick="switchTab('matches')" id="nav-matches" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
-                    <i class="fa-solid fa-futbol w-5 text-center text-crimsonRed"></i> Soccervital Matches
-                </button>
-                <button onclick="switchTab('match-controls')" id="nav-match-controls" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
-                    <i class="fa-solid fa-flag w-5 text-center text-rose-600"></i> Match Controls
-                    <span id="blacklistNavCount" class="ml-auto text-[10px] font-bold bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full">0</span>
+                    <i class="fa-solid fa-futbol w-5 text-center text-crimsonRed"></i> Prediction 3 (SVA)
                 </button>
 
                 <div class="text-[11px] font-bold text-secondaryText uppercase tracking-wider px-3 pt-3 pb-1">AI Intelligence</div>
-                <button onclick="switchTab('preferred')" id="nav-preferred" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
-                    <i class="fa-solid fa-brain w-5 text-center text-goldAccent"></i> AI Top 40 Predictions
-                </button>
                 <button onclick="switchTab('predictor')" id="nav-predictor" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
                     <i class="fa-solid fa-wand-magic-sparkles w-5 text-center text-goldAccent"></i> AI Match Predictor
                 </button>
+                <button onclick="switchTab('preferred')" id="nav-preferred" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
+                    <i class="fa-solid fa-brain w-5 text-center text-goldAccent"></i> AI Top 40 Predictions
+                </button>
+
+                <div class="text-[11px] font-bold text-secondaryText uppercase tracking-wider px-3 pt-3 pb-1">Settings</div>
                 <button onclick="switchTab('sources')" id="nav-sources" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
                     <i class="fa-solid fa-database w-5 text-center text-skyBlue"></i> Data Sources & Admin
                 </button>
                 <button onclick="switchTab('analytics')" id="nav-analytics" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
                     <i class="fa-solid fa-chart-column w-5 text-center text-royalBlue"></i> Match Analytics
                 </button>
-
-                <!-- Added standalone modules; existing navigation and logic remain unchanged -->
-                <div class="text-[11px] font-bold text-secondaryText uppercase tracking-wider px-3 pt-3 pb-1">Additional Modules</div>
                 <button onclick="switchTab('ai-analytics')" id="nav-ai-analytics" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
                     <i class="fa-solid fa-brain w-5 text-center text-emeraldGreen"></i> AI Analytics
                 </button>
                 <button onclick="switchTab('admin')" id="nav-admin" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
                     <i class="fa-solid fa-user-shield w-5 text-center text-royalBlue"></i> Admin
                 </button>
-
-                <div class="text-[11px] font-bold text-secondaryText uppercase tracking-wider px-3 pt-3 pb-1">Model & Config</div>
                 <button onclick="switchTab('history')" id="nav-history" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
                     <i class="fa-solid fa-clock-rotate-left w-5 text-center text-secondaryText"></i> Prediction History
                 </button>
                 <button onclick="switchTab('performance')" id="nav-performance" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
                     <i class="fa-solid fa-award w-5 text-center text-successGreen"></i> Model Performance
                 </button>
+                <button onclick="switchTab('match-controls')" id="nav-match-controls" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
+                    <i class="fa-solid fa-flag w-5 text-center text-rose-600"></i> Match Controls
+                    <span id="blacklistNavCount" class="ml-auto text-[10px] font-bold bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full">0</span>
+                </button>
                 <button onclick="switchTab('settings')" id="nav-settings" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
-                    <i class="fa-solid fa-gear w-5 text-center text-secondaryText"></i> Settings & LLM
+                    <i class="fa-solid fa-gear w-5 text-center text-secondaryText"></i> Model Performance Settings & LLM
                 </button>
             </nav>
 
@@ -174,18 +180,31 @@
 
             <!-- Overview Tab -->
             <div id="tab-overview" class="tab-content active flex-col gap-6">
-                <div class="bg-white p-6 rounded-2xl border border-borderCol custom-shadow flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                    <div>
-                        <span class="text-xs font-bold uppercase tracking-wider text-tealAccent bg-tealAccent/10 px-2.5 py-1 rounded-lg border border-tealAccent/25">Open-Source LLM & Google Sheets Synced</span>
-                        <h2 class="text-2xl font-extrabold text-mainText mt-1">Cross-System Soccer Intelligence & ePreferred Hub</h2>
-                        <p class="text-sm text-secondaryText mt-1">Analyzes actual records from Statarea, Vital Best Tips, and Soccervital Matches.</p>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <button onclick="switchTab('preferred')" class="bg-goldAccent hover:bg-goldAccent/90 text-darkNavy font-bold text-xs px-4 py-2.5 rounded-xl shadow-sm transition-all flex items-center gap-2">
-                            <i class="fa-solid fa-brain"></i> Open AI Top 40 Predictions
+                <section class="bg-white p-5 rounded-2xl border border-borderCol custom-shadow">
+                    <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+                        <div>
+                            <h2 class="text-xl font-extrabold text-mainText">Soccer Predictions</h2>
+                            <p class="text-xs text-secondaryText mt-1">Top 10 available records per day, ranked by the source confidence fields.</p>
+                        </div>
+                        <button onclick="switchTab('preferred')" class="bg-tealAccent hover:bg-tealAccent/90 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-sm transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-brain"></i> AI Top 40
                         </button>
                     </div>
-                </div>
+                    <div class="grid grid-cols-1 xl:grid-cols-3 gap-4">
+                        <section class="rounded-xl border border-borderCol overflow-hidden">
+                            <div class="px-4 py-3 bg-teal-50 border-b border-borderCol"><h3 class="font-bold text-sm text-teal-800" id="overviewYesterdayLabel">Yesterday</h3></div>
+                            <div id="overviewYesterday" class="p-3 space-y-2"><p class="text-xs text-secondaryText">Waiting for source records…</p></div>
+                        </section>
+                        <section class="rounded-xl border border-borderCol overflow-hidden">
+                            <div class="px-4 py-3 bg-teal-50 border-b border-borderCol"><h3 class="font-bold text-sm text-teal-800" id="overviewTodayLabel">Today</h3></div>
+                            <div id="overviewToday" class="p-3 space-y-2"><p class="text-xs text-secondaryText">Waiting for source records…</p></div>
+                        </section>
+                        <section class="rounded-xl border border-borderCol overflow-hidden">
+                            <div class="px-4 py-3 bg-teal-50 border-b border-borderCol"><h3 class="font-bold text-sm text-teal-800" id="overviewTomorrowLabel">Tomorrow</h3></div>
+                            <div id="overviewTomorrow" class="p-3 space-y-2"><p class="text-xs text-secondaryText">Waiting for source records…</p></div>
+                        </section>
+                    </div>
+                </section>
 
                 <!-- 3 System Cards Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -331,18 +350,12 @@
             </div>
 
             <div id="tab-epreferred" class="tab-content flex-col gap-6">
-                <div class="bg-white p-6 rounded-2xl border border-borderCol custom-shadow flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                    <div>
-                        <span class="text-xs font-bold uppercase tracking-wider text-goldAccent bg-goldAccent/10 px-2.5 py-1 rounded-lg border border-goldAccent/25"><i class="fa-solid fa-star mr-1"></i> ePreferred Intelligence Model</span>
-                        <h2 class="text-xl font-extrabold text-mainText mt-1">ePreferred Today's Tips (Per Source & Date)</h2>
-                        <p class="text-xs text-secondaryText mt-1">Explore individual top tips tables for Statarea, Vital Best Tips, and Soccervital Matches with sub-navigation and win/loss color-coding.</p>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <button onclick="runEpreferredAnalysis()" class="bg-goldAccent hover:bg-goldAccent/90 text-darkNavy font-bold text-xs px-4 py-2.5 rounded-xl shadow-sm transition-all flex items-center gap-2">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i> Compute All ePreferred Tables
-                        </button>
-                    </div>
-                </div>
+                <section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4" aria-label="Prediction model win rates">
+                    <div class="bg-white p-5 rounded-2xl border border-borderCol custom-shadow"><div class="text-xs text-secondaryText font-semibold">Prediction 1 (Str)</div><div id="winRateStatarea" class="text-3xl font-extrabold text-tealAccent mt-2">—</div><div id="winRateStatareaMeta" class="text-xs text-secondaryText mt-1">Awaiting settled results</div></div>
+                    <div class="bg-white p-5 rounded-2xl border border-borderCol custom-shadow"><div class="text-xs text-secondaryText font-semibold">Prediction 2 (SVB)</div><div id="winRateVital" class="text-3xl font-extrabold text-deepPurple mt-2">—</div><div id="winRateVitalMeta" class="text-xs text-secondaryText mt-1">Awaiting settled results</div></div>
+                    <div class="bg-white p-5 rounded-2xl border border-borderCol custom-shadow"><div class="text-xs text-secondaryText font-semibold">Prediction 3 (SVA)</div><div id="winRateSoccer" class="text-3xl font-extrabold text-crimsonRed mt-2">—</div><div id="winRateSoccerMeta" class="text-xs text-secondaryText mt-1">Awaiting settled results</div></div>
+                    <div class="bg-white p-5 rounded-2xl border border-borderCol custom-shadow"><div class="text-xs text-secondaryText font-semibold">Combined Win Rate</div><div id="winRateCombined" class="text-3xl font-extrabold text-emeraldGreen mt-2">—</div><div id="winRateCombinedMeta" class="text-xs text-secondaryText mt-1">Across settled predictions</div></div>
+                </section>
 
                 <!-- Sub-Navigation Bar for the 3 Tables -->
                 <div class="flex flex-wrap items-center gap-2 bg-white p-2.5 rounded-2xl border border-borderCol custom-shadow">
@@ -392,6 +405,13 @@
                             </tbody>
                         </table>
                     </div>
+                    <div id="page-controls-tips1" class="flex items-center justify-between gap-3 pt-3 border-t border-borderCol text-xs" aria-label="Table pagination">
+                        <span id="page-info-tips1" class="text-secondaryText">Page 1</span>
+                        <div class="flex items-center gap-2">
+                            <button type="button" id="page-prev-tips1" onclick="changeTablePage('tips1', -1)" class="px-3 py-2 rounded-lg border border-borderCol font-semibold disabled:opacity-40 disabled:cursor-not-allowed">Previous</button>
+                            <button type="button" id="page-next-tips1" onclick="changeTablePage('tips1', 1)" class="px-3 py-2 rounded-lg border border-borderCol font-semibold disabled:opacity-40 disabled:cursor-not-allowed">Next</button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Source 2: Vital Best Tips ePreferred Table & Filter Container -->
@@ -428,6 +448,13 @@
                                 <tr><td colspan="7" class="p-6 text-center text-secondaryText">No Vital Best Tips loaded yet.</td></tr>
                             </tbody>
                         </table>
+                    </div>
+                    <div id="page-controls-tips2" class="flex items-center justify-between gap-3 pt-3 border-t border-borderCol text-xs" aria-label="Table pagination">
+                        <span id="page-info-tips2" class="text-secondaryText">Page 1</span>
+                        <div class="flex items-center gap-2">
+                            <button type="button" id="page-prev-tips2" onclick="changeTablePage('tips2', -1)" class="px-3 py-2 rounded-lg border border-borderCol font-semibold disabled:opacity-40 disabled:cursor-not-allowed">Previous</button>
+                            <button type="button" id="page-next-tips2" onclick="changeTablePage('tips2', 1)" class="px-3 py-2 rounded-lg border border-borderCol font-semibold disabled:opacity-40 disabled:cursor-not-allowed">Next</button>
+                        </div>
                     </div>
                 </div>
 
@@ -466,33 +493,34 @@
                             </tbody>
                         </table>
                     </div>
+                    <div id="page-controls-tips3" class="flex items-center justify-between gap-3 pt-3 border-t border-borderCol text-xs" aria-label="Table pagination">
+                        <span id="page-info-tips3" class="text-secondaryText">Page 1</span>
+                        <div class="flex items-center gap-2">
+                            <button type="button" id="page-prev-tips3" onclick="changeTablePage('tips3', -1)" class="px-3 py-2 rounded-lg border border-borderCol font-semibold disabled:opacity-40 disabled:cursor-not-allowed">Previous</button>
+                            <button type="button" id="page-next-tips3" onclick="changeTablePage('tips3', 1)" class="px-3 py-2 rounded-lg border border-borderCol font-semibold disabled:opacity-40 disabled:cursor-not-allowed">Next</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div id="tab-preferred" class="tab-content flex-col gap-6">
-                <div class="bg-white p-6 rounded-2xl border border-borderCol custom-shadow flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                    <div>
-                        <span class="text-xs font-bold uppercase tracking-wider text-goldAccent bg-goldAccent/10 px-2.5 py-1 rounded-lg border border-goldAccent/25"><i class="fa-solid fa-brain mr-1"></i> Open-Source LLM Top 40 Analysis</span>
-                        <h2 class="text-xl font-extrabold text-mainText mt-1">AI Top 40 Predictions (40 Matches per Source & Date Filter)</h2>
-                        <p class="text-xs text-secondaryText mt-1">Explore top 40 predictions for Statarea, Vital Best Tips, and Soccervital Matches with newest-first date dropdowns and seamless sub-navigation.</p>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <button onclick="runLlmTop40Analysis()" class="bg-goldAccent hover:bg-goldAccent/90 text-darkNavy font-bold text-xs px-4 py-2.5 rounded-xl shadow-sm transition-all flex items-center gap-2">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i> Run LLM Analysis on Top 40 Records
-                        </button>
-                    </div>
-                </div>
+
+                <section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4" aria-label="AI prediction model win rates">
+                    <div class="bg-white p-5 rounded-2xl border border-borderCol custom-shadow"><div class="text-xs text-secondaryText font-semibold">Prediction 1 (Str) — Statarea</div><div id="aiWinRateStatarea" class="text-3xl font-extrabold text-tealAccent mt-2">—</div><div id="aiWinRateStatareaMeta" class="text-xs text-secondaryText mt-1">Awaiting settled results</div></div>
+                    <div class="bg-white p-5 rounded-2xl border border-borderCol custom-shadow"><div class="text-xs text-secondaryText font-semibold">Prediction 2 (SVB) — Vital Best Tips</div><div id="aiWinRateVital" class="text-3xl font-extrabold text-deepPurple mt-2">—</div><div id="aiWinRateVitalMeta" class="text-xs text-secondaryText mt-1">Awaiting settled results</div></div>
+                    <div class="bg-white p-5 rounded-2xl border border-borderCol custom-shadow"><div class="text-xs text-secondaryText font-semibold">Prediction 3 (SVA) — Soccervital</div><div id="aiWinRateSoccer" class="text-3xl font-extrabold text-crimsonRed mt-2">—</div><div id="aiWinRateSoccerMeta" class="text-xs text-secondaryText mt-1">Awaiting settled results</div></div>
+                </section>
 
                 <!-- Sub-Navigation Bar for the 3 Top 40 Tables -->
                 <div class="flex flex-wrap items-center gap-2 bg-white p-2.5 rounded-2xl border border-borderCol custom-shadow">
                     <button onclick="switchTop40SubTab(1)" id="top40-nav-1" class="top40-subnav-btn flex-1 min-w-[160px] py-2.5 px-4 rounded-xl text-xs font-bold transition-all bg-tealAccent text-white shadow-sm flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-chart-line"></i> Statarea Top 40
+                        <i class="fa-solid fa-chart-line"></i> Prediction 1 (Str)
                     </button>
                     <button onclick="switchTop40SubTab(2)" id="top40-nav-2" class="top40-subnav-btn flex-1 min-w-[160px] py-2.5 px-4 rounded-xl text-xs font-bold transition-all bg-pageBg text-secondaryText hover:text-mainText flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-trophy"></i> Vital Best Tips Top 40
+                        <i class="fa-solid fa-trophy"></i> Prediction 2 (SVB)
                     </button>
                     <button onclick="switchTop40SubTab(3)" id="top40-nav-3" class="top40-subnav-btn flex-1 min-w-[160px] py-2.5 px-4 rounded-xl text-xs font-bold transition-all bg-pageBg text-secondaryText hover:text-mainText flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-futbol"></i> Soccervital Top 40
+                        <i class="fa-solid fa-futbol"></i> Prediction 3 (SVA)
                     </button>
                 </div>
 
@@ -531,6 +559,13 @@
                             </tbody>
                         </table>
                     </div>
+                    <div id="page-controls-top401" class="flex items-center justify-between gap-3 pt-3 border-t border-borderCol text-xs" aria-label="Table pagination">
+                        <span id="page-info-top401" class="text-secondaryText">Page 1</span>
+                        <div class="flex items-center gap-2">
+                            <button type="button" id="page-prev-top401" onclick="changeTablePage('top401', -1)" class="px-3 py-2 rounded-lg border border-borderCol font-semibold disabled:opacity-40 disabled:cursor-not-allowed">Previous</button>
+                            <button type="button" id="page-next-top401" onclick="changeTablePage('top401', 1)" class="px-3 py-2 rounded-lg border border-borderCol font-semibold disabled:opacity-40 disabled:cursor-not-allowed">Next</button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Top 40 Table 2: Vital Best Tips -->
@@ -567,6 +602,13 @@
                                 <tr><td colspan="7" class="p-6 text-center text-secondaryText">No records processed yet.</td></tr>
                             </tbody>
                         </table>
+                    </div>
+                    <div id="page-controls-top402" class="flex items-center justify-between gap-3 pt-3 border-t border-borderCol text-xs" aria-label="Table pagination">
+                        <span id="page-info-top402" class="text-secondaryText">Page 1</span>
+                        <div class="flex items-center gap-2">
+                            <button type="button" id="page-prev-top402" onclick="changeTablePage('top402', -1)" class="px-3 py-2 rounded-lg border border-borderCol font-semibold disabled:opacity-40 disabled:cursor-not-allowed">Previous</button>
+                            <button type="button" id="page-next-top402" onclick="changeTablePage('top402', 1)" class="px-3 py-2 rounded-lg border border-borderCol font-semibold disabled:opacity-40 disabled:cursor-not-allowed">Next</button>
+                        </div>
                     </div>
                 </div>
 
@@ -605,6 +647,13 @@
                             </tbody>
                         </table>
                     </div>
+                    <div id="page-controls-top403" class="flex items-center justify-between gap-3 pt-3 border-t border-borderCol text-xs" aria-label="Table pagination">
+                        <span id="page-info-top403" class="text-secondaryText">Page 1</span>
+                        <div class="flex items-center gap-2">
+                            <button type="button" id="page-prev-top403" onclick="changeTablePage('top403', -1)" class="px-3 py-2 rounded-lg border border-borderCol font-semibold disabled:opacity-40 disabled:cursor-not-allowed">Previous</button>
+                            <button type="button" id="page-next-top403" onclick="changeTablePage('top403', 1)" class="px-3 py-2 rounded-lg border border-borderCol font-semibold disabled:opacity-40 disabled:cursor-not-allowed">Next</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -612,9 +661,23 @@
                 <div class="bg-white p-6 rounded-2xl border border-borderCol custom-shadow flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                     <div>
                         <span class="text-xs font-bold uppercase tracking-wider text-goldAccent bg-goldAccent/10 px-2.5 py-1 rounded-lg border border-goldAccent/25"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Interactive LLM Match Analyzer</span>
-                        <h2 class="text-xl font-extrabold text-mainText mt-1">AI Match Predictor & Independent 1X2 Engine</h2>
-                        <p class="text-xs text-secondaryText mt-1">Search for any team, filter by data source and date (newest first), and query the open-source LLM for an independent 1X2 prediction and confidence score leveraging available data.</p>
+                        <h2 class="text-xl font-extrabold text-mainText mt-1">AI Match Predictor — Ask About a Match</h2>
+                        <p class="text-xs text-secondaryText mt-1">Enter a match or team question to generate a report below. Live web research requires a configured search/backend service; the current browser-only page can analyze available feed data and the configured LLM.</p>
                     </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-borderCol custom-shadow space-y-4">
+                    <div><h3 class="font-bold text-sm text-mainText">Google Sheets integration setup</h3><p class="text-xs text-secondaryText mt-1">Configure where source configuration, users, match predictions, and AI analysis history are stored. The Apps Script endpoint must implement and authorize these actions.</p></div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+                        <label class="text-xs font-semibold text-secondaryText">Spreadsheet ID<input id="integrationSpreadsheetId" class="w-full mt-1 bg-pageBg border border-borderCol p-2.5 rounded-xl text-xs" placeholder="Google Sheets spreadsheet ID"></label>
+                        <label class="text-xs font-semibold text-secondaryText">Users sheet name<input id="integrationUsersSheet" class="w-full mt-1 bg-pageBg border border-borderCol p-2.5 rounded-xl text-xs" value="users"></label>
+                        <label class="text-xs font-semibold text-secondaryText">Source configuration sheet<input id="integrationConfigSheet" class="w-full mt-1 bg-pageBg border border-borderCol p-2.5 rounded-xl text-xs" value="Admin"></label>
+                        <label class="text-xs font-semibold text-secondaryText">Predictions sheet<input id="integrationPredictionsSheet" class="w-full mt-1 bg-pageBg border border-borderCol p-2.5 rounded-xl text-xs" value="predictions"></label>
+                        <label class="text-xs font-semibold text-secondaryText">AI prediction history sheet<input id="integrationHistorySheet" class="w-full mt-1 bg-pageBg border border-borderCol p-2.5 rounded-xl text-xs" value="ai_prediction_history"></label>
+                        <label class="text-xs font-semibold text-secondaryText">Model performance sheet<input id="integrationPerformanceSheet" class="w-full mt-1 bg-pageBg border border-borderCol p-2.5 rounded-xl text-xs" value="model_performance"></label>
+                    </div>
+                    <div class="flex flex-wrap gap-2"><button onclick="saveGoogleSheetsIntegration()" class="bg-tealAccent text-white font-bold text-xs px-4 py-2.5 rounded-xl">Save integration setup</button><button onclick="loadGoogleSheetsIntegration()" class="bg-pageBg border border-borderCol text-mainText font-bold text-xs px-4 py-2.5 rounded-xl">Load integration setup</button><button onclick="testGoogleSheetsIntegration()" class="bg-skyBlue text-darkNavy font-bold text-xs px-4 py-2.5 rounded-xl">Test connection</button><span id="integrationStatus" class="text-xs text-secondaryText self-center" role="status">Configure a deployed Apps Script backend.</span></div>
+                    <p class="text-xs text-rose-700">Required backend actions: <code>getIntegrationConfig</code>, <code>saveIntegrationConfig</code>, <code>testConnection</code>, <code>savePredictionHistory</code>, <code>readPredictionHistory</code>, and <code>analyzePredictionHistory</code>. This UI does not grant spreadsheet access by itself.</p>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -700,7 +763,7 @@
                         <div>
                             <div class="flex items-center justify-between border-b border-borderCol pb-3 mb-4">
                                 <h3 class="font-bold text-sm text-mainText flex items-center gap-2">
-                                    <i class="fa-solid fa-microchip text-tealAccent"></i> LLM Independent 1X2 & Confidence Report
+                                    <i class="fa-solid fa-microchip text-tealAccent"></i> AI Match Research Report
                                 </h3>
                                 <span id="llmResponseStatus" class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-pageBg text-secondaryText">Waiting for selection...</span>
                             </div>
@@ -881,13 +944,7 @@
 
             <!-- Portals & Analytics Tabs -->
             <div id="tab-statarea" class="tab-content flex-col gap-6">
-                <section class="bg-white p-5 rounded-2xl border border-borderCol custom-shadow">
-                    <div class="flex items-center justify-between gap-3 flex-wrap">
-                        <div><h2 class="text-xl font-extrabold text-mainText">Statarea Match Intelligence</h2><p class="text-sm text-secondaryText">Native module loaded from statarea.html — no iframe.</p></div>
-                        <button onclick="loadStatareaModule(true)" class="bg-tealAccent text-white text-xs font-semibold px-4 py-2.5 rounded-xl"><i class="fa-solid fa-rotate mr-1"></i> Reload module</button>
-                    </div>
-                    <div id="statareaModuleStatus" class="text-sm text-secondaryText mt-3" role="status">Loading Statarea module…</div>
-                </section>
+                <div id="statareaModuleStatus" class="text-sm text-secondaryText" role="status" aria-live="polite"></div>
                 <div id="statareaNativeMount" class="min-w-0"></div>
             </div>
 
@@ -920,14 +977,23 @@
             </div>
 
             <div id="tab-history" class="tab-content flex-col gap-6">
-                <div class="bg-white p-6 rounded-2xl border border-borderCol custom-shadow">
+                <div class="bg-white p-6 rounded-2xl border border-borderCol custom-shadow space-y-4">
                     <h2 class="text-xl font-extrabold text-mainText">Prediction History</h2>
+                    <p class="text-sm text-secondaryText">Connect a Google Apps Script Web App to store and retrieve prediction records for audit, AI analysis, and model-performance reporting.</p>
+                    <div class="flex flex-col md:flex-row gap-2">
+                        <input id="predictionHistoryEndpoint" type="url" placeholder="https://script.google.com/macros/s/.../exec" class="flex-1 min-w-0 bg-pageBg border border-borderCol rounded-xl px-3 py-2.5 text-sm">
+                        <button onclick="savePredictionHistoryEndpoint()" class="bg-pageBg border border-borderCol rounded-xl px-4 py-2.5 text-sm font-semibold">Save endpoint</button>
+                        <button onclick="syncPredictionHistoryFromGoogleSheet()" class="bg-skyBlue text-darkNavy rounded-xl px-4 py-2.5 text-sm font-semibold">Read history</button>
+                        <button onclick="savePredictionHistoryToGoogleSheet()" class="bg-tealAccent text-white rounded-xl px-4 py-2.5 text-sm font-semibold">Save history</button>
+                    </div>
+                    <p id="predictionHistoryStatus" role="status" class="text-xs text-secondaryText">Not connected. The deployed Apps Script must implement the documented getPredictionHistory and savePredictionHistory actions.</p>
+                    <div class="overflow-x-auto"><table class="w-full text-left text-xs"><thead class="bg-pageBg text-secondaryText"><tr><th class="p-3">Date</th><th class="p-3">Source / Model</th><th class="p-3">Match</th><th class="p-3">Prediction</th><th class="p-3">Actual result</th><th class="p-3">Outcome</th></tr></thead><tbody id="predictionHistoryBody"><tr><td colspan="6" class="p-5 text-center text-secondaryText">No prediction history loaded.</td></tr></tbody></table></div>
                 </div>
             </div>
 
             <div id="tab-performance" class="tab-content flex-col gap-6">
                 <div class="bg-white p-6 rounded-2xl border border-borderCol custom-shadow">
-                    <h2 class="text-xl font-extrabold text-mainText">Model Performance & Brier Score</h2>
+                    <h2 class="text-xl font-extrabold text-mainText">Model Performance Settings</h2><p class="text-sm text-secondaryText mt-2">Model performance metrics require persisted prediction records and verified final match results.</p>
                 </div>
             </div>
 
@@ -1045,7 +1111,7 @@ function json_(obj) {
 
             <div id="tab-settings" class="tab-content flex-col gap-6">
                 <div class="bg-white p-6 rounded-2xl border border-borderCol custom-shadow space-y-4">
-                    <h2 class="text-xl font-extrabold text-mainText">Open-Source LLM Configuration</h2>
+                    <h2 class="text-xl font-extrabold text-mainText">Model Performance Settings & LLM</h2>
                     <p class="text-xs text-secondaryText">Connect your application to local or remote open-source LLMs (Ollama, HuggingFace, LM Studio, etc.) to analyze actual records.</p>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
@@ -1215,6 +1281,7 @@ function json_(obj) {
         });
 
         function switchTab(tabId) {
+            // Navigation is synchronous and never waits for network/data requests.
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(el => {
                 el.classList.remove('text-tealAccent', 'bg-tealAccent/10', 'font-semibold');
@@ -1222,7 +1289,7 @@ function json_(obj) {
             });
 
             const targetTab = document.getElementById(`tab-${tabId}`);
-            if (tabId === 'statarea') loadStatareaModule();
+            if (tabId === 'statarea') { void loadStatareaModule().catch(error => console.error('Statarea activation failed:', error)); }
             if (tabId === 'ai-analytics') {
                 const aiFrame = document.getElementById('aiAnalyticsFrame');
                 if (aiFrame && aiFrame.contentWindow) {
@@ -1237,7 +1304,7 @@ function json_(obj) {
             }
 
             const sidebar = document.getElementById('sidebar');
-            if (!sidebar.classList.contains('-translate-x-full') && window.innerWidth < 1024) {
+            if (sidebar && !sidebar.classList.contains('-translate-x-full') && window.innerWidth < 1024) {
                 sidebar.classList.add('-translate-x-full');
             }
         }
@@ -1495,29 +1562,45 @@ function json_(obj) {
             const badgeEl = document.getElementById(`badge-${sourceId === 1 ? 'statarea' : sourceId === 2 ? 'vital' : 'matches'}`);
             const syncLabel = document.getElementById(`sync-${sourceId === 1 ? 'statarea' : sourceId === 2 ? 'vital' : 'matches'}`);
 
-            statusEl.innerText = 'Syncing...';
+            if (!statusEl || !rowsEl) throw new Error(`Feed ${sourceId} controls are missing.`);
+            statusEl.innerText = 'Syncing…';
             statusEl.className = 'text-warningYellow text-xs';
-
+            const previousFeed = Array.isArray(rawFeeds[sourceId]) ? rawFeeds[sourceId] : [];
             try {
-                const response = await fetch(urlInput);
+                if (!urlInput) throw new Error('No CSV URL is configured for this feed.');
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 15000);
+                let response;
+                try { response = await fetch(urlInput, { signal: controller.signal, cache: 'no-store' }); }
+                finally { clearTimeout(timeoutId); }
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
                 const csvText = await response.text();
+                if (!csvText.trim() || /^(<!doctype html|<html)/i.test(csvText.trim())) throw new Error('The source did not return CSV data.');
                 const parsed = parseCSV(csvText);
-                rawFeeds[sourceId] = parsed.length > 0 ? parsed : getMockFeed(sourceId);
+                if (!Array.isArray(parsed) || parsed.length === 0) throw new Error('No valid CSV records were found.');
+                rawFeeds[sourceId] = parsed;
+                const count = parsed.length;
+                rowsEl.innerText = count;
+                statusEl.innerText = 'Synced';
+                statusEl.className = 'text-successGreen text-xs font-semibold';
+                if (badgeEl) badgeEl.className = 'w-2.5 h-2.5 rounded-full bg-successGreen';
+                if (syncLabel) syncLabel.innerText = 'Synced Live';
+                updateHeaderSyncCount();
+                processEpreferredModel();
+                if (!suppressAiUpdate) sendMatchDataToAiFrame(true);
+                showToast(`Source ${sourceId} synchronized (${count} rows).`);
+                return true;
             } catch (e) {
-                rawFeeds[sourceId] = getMockFeed(sourceId);
+                rawFeeds[sourceId] = previousFeed;
+                const message = e.name === 'AbortError' ? 'Request timed out' : e.message;
+                statusEl.innerText = `Failed: ${message}`;
+                statusEl.className = 'text-errorRed text-xs';
+                if (syncLabel) syncLabel.innerText = previousFeed.length ? 'Using last loaded data' : 'Unavailable';
+                if (badgeEl && previousFeed.length === 0) badgeEl.className = 'w-2.5 h-2.5 rounded-full bg-errorRed';
+                updateHeaderSyncCount();
+                showToast(`Source ${sourceId} failed to sync. Check the CSV URL and access permissions.`);
+                return false;
             }
-
-            const count = rawFeeds[sourceId].length;
-            rowsEl.innerText = count;
-            statusEl.innerText = 'Synced';
-            statusEl.className = 'text-successGreen text-xs font-semibold';
-            if (badgeEl) badgeEl.className = 'w-2.5 h-2.5 rounded-full bg-successGreen';
-            if (syncLabel) syncLabel.innerText = 'Synced Live';
-
-            updateHeaderSyncCount();
-            showToast(`Source ${sourceId} synchronized (${count} rows).`);
-            processEpreferredModel();
-            if (!suppressAiUpdate) sendMatchDataToAiFrame(true);
         }
 
         function getMockFeed(sourceId) {
@@ -1556,11 +1639,17 @@ function json_(obj) {
             const spinner = document.getElementById('syncSpinner');
             if (spinner) spinner.classList.add('fa-spin');
             try {
-                await syncSingleDataSource(1, true);
-                await syncSingleDataSource(2, true);
-                await syncSingleDataSource(3, true);
-                sendMatchDataToAiFrame(true);
-                showToast('All 3 data feeds synchronized successfully!');
+                const outcomes = await Promise.allSettled([
+                    syncSingleDataSource(1, true),
+                    syncSingleDataSource(2, true),
+                    syncSingleDataSource(3, true)
+                ]);
+                try { sendMatchDataToAiFrame(true); } catch (error) { console.warn('AI feed update skipped:', error); }
+                const successful = outcomes.filter(item => item.status === 'fulfilled' && item.value === true).length;
+                showToast(`${successful}/3 data feeds synchronized. Failed sources remain marked unavailable.`);
+            } catch (error) {
+                console.error('Global sync failed:', error);
+                showToast('Feed synchronization encountered an error. Other tabs remain available.');
             } finally {
                 if (spinner) spinner.classList.remove('fa-spin');
             }
@@ -1986,7 +2075,8 @@ function json_(obj) {
             renderEpreferredTips2();
             renderEpreferredTips3();
             renderOverviewPreview();
-            showToast('ePreferred tables updated successfully!');
+            updateModelWinRateCards();
+            showToast('Prediction model tables updated successfully!');
         }
 
         function runLlmTop40Analysis() {
@@ -1998,7 +2088,139 @@ function json_(obj) {
             renderAiTop40Table2();
             renderAiTop40Table3();
             updateOverviewStats();
+            updateModelWinRateCards();
             showToast('AI Top 40 Predictions tables computed successfully!');
+        }
+
+
+        function updateModelWinRateCards() {
+            const groups = [
+                { key: 'statarea', rows: (typeof epreferredFixtures1 !== 'undefined' ? epreferredFixtures1 : []), valueId: 'winRateStatarea', metaId: 'winRateStatareaMeta' },
+                { key: 'vital', rows: (typeof epreferredFixtures2 !== 'undefined' ? epreferredFixtures2 : []), valueId: 'winRateVital', metaId: 'winRateVitalMeta' },
+                { key: 'soccer', rows: (typeof epreferredFixtures3 !== 'undefined' ? epreferredFixtures3 : []), valueId: 'winRateSoccer', metaId: 'winRateSoccerMeta' }
+            ];
+            let wins = 0, settled = 0;
+            groups.forEach(group => {
+                let groupWins = 0, groupSettled = 0;
+                group.rows.forEach(f => {
+                    const raw = String(f.matchresult ?? f.result ?? f.outcome ?? f.status ?? '').trim().toLowerCase();
+                    if (!raw || /pending|scheduled|not played|n\/a|^-$/.test(raw)) return;
+                    let won = null;
+                    if (['win','won','correct','w','success'].includes(raw)) won = true;
+                    else if (['loss','lost','incorrect','l','failed'].includes(raw)) won = false;
+                    else if (raw.includes('won') || raw.includes('correct')) won = true;
+                    else if (raw.includes('lost') || raw.includes('incorrect')) won = false;
+                    else {
+                        const score = raw.match(/(?:^|\b)(\d+)\s*[-:–]\s*(\d+)(?:\b|$)/);
+                        const tip = String(f.prediction || '').trim().toLowerCase();
+                        if (score) {
+                            const homeScore = Number(score[1]), awayScore = Number(score[2]);
+                            const actual = homeScore > awayScore ? '1' : homeScore < awayScore ? '2' : 'x';
+                            const tipScore = tip.match(/^(\d+)\s*[-:]\s*(\d+)$/);
+                            if (tipScore) won = Number(tipScore[1]) === homeScore && Number(tipScore[2]) === awayScore;
+                            else if (/^(1|home|home win)$/.test(tip)) won = actual === '1';
+                            else if (/^(x|draw|tie)$/.test(tip)) won = actual === 'x';
+                            else if (/^(2|away|away win)$/.test(tip)) won = actual === '2';
+                        }
+                    }
+                    if (won === null) return;
+                    groupSettled++; settled++; if (won) { groupWins++; wins++; }
+                });
+                const value = document.getElementById(group.valueId);
+                const meta = document.getElementById(group.metaId);
+                if (value) value.textContent = groupSettled ? `${(100 * groupWins / groupSettled).toFixed(1)}%` : '—';
+                if (meta) meta.textContent = groupSettled ? `${groupWins} wins / ${groupSettled} settled` : 'Awaiting settled results';
+                const aiValue = document.getElementById(group.key === 'statarea' ? 'aiWinRateStatarea' : group.key === 'vital' ? 'aiWinRateVital' : 'aiWinRateSoccer');
+                const aiMeta = document.getElementById(group.key === 'statarea' ? 'aiWinRateStatareaMeta' : group.key === 'vital' ? 'aiWinRateVitalMeta' : 'aiWinRateSoccerMeta');
+                if (aiValue) aiValue.textContent = groupSettled ? `${(100 * groupWins / groupSettled).toFixed(1)}%` : '—';
+                if (aiMeta) aiMeta.textContent = groupSettled ? `${groupWins} wins / ${groupSettled} settled` : 'Awaiting settled results';
+            });
+            const combined = document.getElementById('winRateCombined');
+            const combinedMeta = document.getElementById('winRateCombinedMeta');
+            if (combined) combined.textContent = settled ? `${(100 * wins / settled).toFixed(1)}%` : '—';
+            if (combinedMeta) combinedMeta.textContent = settled ? `${wins} wins / ${settled} settled predictions` : 'Across settled predictions';
+        }
+
+
+        let predictionHistoryRecords = [];
+        function savePredictionHistoryEndpoint() {
+            const input = document.getElementById('predictionHistoryEndpoint');
+            const url = input ? input.value.trim() : '';
+            if (url && !/^https:\/\/.+\/exec(?:[?#].*)?$/i.test(url)) {
+                setPredictionHistoryStatus('Enter a valid HTTPS Google Apps Script Web App URL ending in /exec.', true); return;
+            }
+            try { localStorage.setItem('gsaPredictionHistoryEndpoint', url); } catch (_) {}
+            setPredictionHistoryStatus(url ? 'History endpoint saved in this browser.' : 'History endpoint cleared.', false);
+        }
+        function setPredictionHistoryStatus(message, isError) {
+            const el = document.getElementById('predictionHistoryStatus');
+            if (el) { el.textContent = message; el.className = 'text-xs ' + (isError ? 'text-rose-700' : 'text-secondaryText'); }
+        }
+        function renderPredictionHistory() {
+            const tbody = document.getElementById('predictionHistoryBody');
+            if (!tbody) return;
+            if (!predictionHistoryRecords.length) {
+                tbody.innerHTML = '<tr><td colspan="6" class="p-5 text-center text-secondaryText">No prediction history loaded.</td></tr>'; return;
+            }
+            tbody.replaceChildren();
+            predictionHistoryRecords.forEach(record => {
+                const tr = document.createElement('tr'); tr.className = 'border-t border-borderCol';
+                const values = [record.date || record.timestamp || '', record.source || record.model || '', `${record.home || record.host || ''} vs ${record.away || record.guest || ''}`, record.prediction || record.tip || '', record.actualResult || record.matchresult || record.result || '', record.outcome || record.status || ''];
+                values.forEach((value, i) => { const td = document.createElement('td'); td.className = 'p-3'; td.textContent = String(value); if (i === 5) td.classList.add(/win|correct/i.test(String(value)) ? 'text-emeraldGreen' : /loss|incorrect/i.test(String(value)) ? 'text-rose-700' : 'text-secondaryText'); tr.appendChild(td); });
+                tbody.appendChild(tr);
+            });
+        }
+        async function predictionHistoryRequest(action, records) {
+            const input = document.getElementById('predictionHistoryEndpoint');
+            const url = (input && input.value.trim()) || (localStorage.getItem('gsaPredictionHistoryEndpoint') || '');
+            if (!url) throw new Error('Save a Google Apps Script /exec URL first.');
+            const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action, records: records || [] }) });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            if (data.ok === false || data.error) throw new Error(data.error || 'Apps Script rejected the request.');
+            return data;
+        }
+        async function syncPredictionHistoryFromGoogleSheet() {
+            setPredictionHistoryStatus('Reading prediction history from Google Sheets…', false);
+            try {
+                const data = await predictionHistoryRequest('getPredictionHistory');
+                predictionHistoryRecords = Array.isArray(data.records) ? data.records : Array.isArray(data.data) ? data.data : [];
+                renderPredictionHistory();
+                setPredictionHistoryStatus(`Loaded ${predictionHistoryRecords.length} history record(s).`, false);
+            } catch (error) { setPredictionHistoryStatus(`Could not read history: ${error.message}. Confirm the Apps Script supports getPredictionHistory and permits this request.`, true); }
+        }
+        async function savePredictionHistoryToGoogleSheet() {
+            const merged = [...epreferredFixtures1, ...epreferredFixtures2, ...epreferredFixtures3].map(f => ({ date: f.date, source: f.source, home: f.home, away: f.away, prediction: f.prediction, probability: f.probability, actualResult: f.matchresult || 'Pending', outcome: f.matchresult || 'Pending', id: f.id }));
+            setPredictionHistoryStatus(`Saving ${merged.length} prediction record(s)…`, false);
+            try {
+                const data = await predictionHistoryRequest('savePredictionHistory', merged);
+                setPredictionHistoryStatus(data.message || `Sent ${merged.length} prediction record(s) to Google Sheets.`, false);
+            } catch (error) { setPredictionHistoryStatus(`Could not save history: ${error.message}. Confirm the Apps Script supports savePredictionHistory.`, true); }
+        }
+        try {
+            const savedHistoryEndpoint = localStorage.getItem('gsaPredictionHistoryEndpoint');
+            if (savedHistoryEndpoint && document.getElementById('predictionHistoryEndpoint')) document.getElementById('predictionHistoryEndpoint').value = savedHistoryEndpoint;
+        } catch (_) {}
+
+        const TABLE_PAGE_SIZE = 10;
+        const tablePages = { tips1: 0, tips2: 0, tips3: 0, top401: 0, top402: 0, top403: 0 };
+        const tablePageFilters = {};
+        function updateTablePageControls(key, totalRows) {
+            const totalPages = Math.max(1, Math.ceil(totalRows / TABLE_PAGE_SIZE));
+            const page = Math.min(tablePages[key] || 0, totalPages - 1);
+            const info = document.getElementById(`page-info-${key}`);
+            const prev = document.getElementById(`page-prev-${key}`);
+            const next = document.getElementById(`page-next-${key}`);
+            if (info) info.textContent = `Page ${page + 1} of ${totalPages} · ${totalRows} matches`;
+            if (prev) prev.disabled = page <= 0;
+            if (next) next.disabled = page >= totalPages - 1;
+        }
+        function changeTablePage(key, delta) {
+            const validKeys = ['tips1','tips2','tips3','top401','top402','top403'];
+            if (!validKeys.includes(key)) return;
+            tablePages[key] = Math.max(0, (tablePages[key] || 0) + delta);
+            const renderers = { tips1:renderEpreferredTips1, tips2:renderEpreferredTips2, tips3:renderEpreferredTips3, top401:renderAiTop40Table1, top402:renderAiTop40Table2, top403:renderAiTop40Table3 };
+            renderers[key]();
         }
 
         function renderEpreferredTips1() {
@@ -2009,8 +2231,12 @@ function json_(obj) {
 
             const selectedDate = dateFilter ? dateFilter.value : 'ALL';
             let filtered = selectedDate === 'ALL' ? epreferredFixtures1 : epreferredFixtures1.filter(f => f.date === selectedDate);
-            const top20 = filtered.slice(0, 20);
-            countEl.innerText = top20.length;
+            if (tablePageFilters.tips1 !== selectedDate) { tablePageFilters.tips1 = selectedDate; tablePages.tips1 = 0; }
+            countEl.innerText = filtered.length;
+            const pageCount = Math.max(1, Math.ceil(filtered.length / TABLE_PAGE_SIZE));
+            tablePages.tips1 = Math.min(tablePages.tips1, pageCount - 1);
+            const top20 = filtered.slice(tablePages.tips1 * TABLE_PAGE_SIZE, (tablePages.tips1 + 1) * TABLE_PAGE_SIZE);
+            updateTablePageControls('tips1', filtered.length);
 
             if (top20.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-secondaryText">No tips found for this date.</td></tr>`;
@@ -2019,6 +2245,7 @@ function json_(obj) {
 
             let html = '';
             top20.forEach((f, index) => {
+                index += tablePages.tips1 * TABLE_PAGE_SIZE;
                 const rowStyling = getResultRowStyling(f.matchresult, f.prediction);
                 const badgeHtml = getResultBadge(f.matchresult, f.prediction);
                 html += `
@@ -2044,8 +2271,12 @@ function json_(obj) {
 
             const selectedDate = dateFilter ? dateFilter.value : 'ALL';
             let filtered = selectedDate === 'ALL' ? epreferredFixtures2 : epreferredFixtures2.filter(f => f.date === selectedDate);
-            const top20 = filtered.slice(0, 20);
-            countEl.innerText = top20.length;
+            if (tablePageFilters.tips2 !== selectedDate) { tablePageFilters.tips2 = selectedDate; tablePages.tips2 = 0; }
+            countEl.innerText = filtered.length;
+            const pageCount = Math.max(1, Math.ceil(filtered.length / TABLE_PAGE_SIZE));
+            tablePages.tips2 = Math.min(tablePages.tips2, pageCount - 1);
+            const top20 = filtered.slice(tablePages.tips2 * TABLE_PAGE_SIZE, (tablePages.tips2 + 1) * TABLE_PAGE_SIZE);
+            updateTablePageControls('tips2', filtered.length);
 
             if (top20.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-secondaryText">No tips found for this date.</td></tr>`;
@@ -2054,6 +2285,7 @@ function json_(obj) {
 
             let html = '';
             top20.forEach((f, index) => {
+                index += tablePages.tips2 * TABLE_PAGE_SIZE;
                 const rowStyling = getResultRowStyling(f.matchresult, f.prediction);
                 const badgeHtml = getResultBadge(f.matchresult, f.prediction);
                 html += `
@@ -2079,8 +2311,12 @@ function json_(obj) {
 
             const selectedDate = dateFilter ? dateFilter.value : 'ALL';
             let filtered = selectedDate === 'ALL' ? epreferredFixtures3 : epreferredFixtures3.filter(f => f.date === selectedDate);
-            const top20 = filtered.slice(0, 20);
-            countEl.innerText = top20.length;
+            if (tablePageFilters.tips3 !== selectedDate) { tablePageFilters.tips3 = selectedDate; tablePages.tips3 = 0; }
+            countEl.innerText = filtered.length;
+            const pageCount = Math.max(1, Math.ceil(filtered.length / TABLE_PAGE_SIZE));
+            tablePages.tips3 = Math.min(tablePages.tips3, pageCount - 1);
+            const top20 = filtered.slice(tablePages.tips3 * TABLE_PAGE_SIZE, (tablePages.tips3 + 1) * TABLE_PAGE_SIZE);
+            updateTablePageControls('tips3', filtered.length);
 
             if (top20.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-secondaryText">No tips found for this date.</td></tr>`;
@@ -2089,6 +2325,7 @@ function json_(obj) {
 
             let html = '';
             top20.forEach((f, index) => {
+                index += tablePages.tips3 * TABLE_PAGE_SIZE;
                 const rowStyling = getResultRowStyling(f.matchresult, f.prediction);
                 const badgeHtml = getResultBadge(f.matchresult, f.prediction);
                 html += `
@@ -2115,8 +2352,12 @@ function json_(obj) {
 
             const selectedDate = dateFilter ? dateFilter.value : 'ALL';
             let filtered = selectedDate === 'ALL' ? top40Fixtures1 : top40Fixtures1.filter(f => f.date === selectedDate);
-            const top40 = filtered.slice(0, 40);
-            countEl.innerText = top40.length;
+            if (tablePageFilters.top401 !== selectedDate) { tablePageFilters.top401 = selectedDate; tablePages.top401 = 0; }
+            countEl.innerText = filtered.length;
+            const pageCount = Math.max(1, Math.ceil(filtered.length / TABLE_PAGE_SIZE));
+            tablePages.top401 = Math.min(tablePages.top401, pageCount - 1);
+            const top40 = filtered.slice(tablePages.top401 * TABLE_PAGE_SIZE, (tablePages.top401 + 1) * TABLE_PAGE_SIZE);
+            updateTablePageControls('top401', filtered.length);
 
             if (top40.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-secondaryText">No records found for this date.</td></tr>`;
@@ -2125,6 +2366,7 @@ function json_(obj) {
 
             let html = '';
             top40.forEach((f, index) => {
+                index += tablePages.top401 * TABLE_PAGE_SIZE;
                 const rowStyling = getResultRowStyling(f.matchresult, f.prediction);
                 const badgeHtml = getResultBadge(f.matchresult, f.prediction);
                 html += `
@@ -2151,8 +2393,12 @@ function json_(obj) {
 
             const selectedDate = dateFilter ? dateFilter.value : 'ALL';
             let filtered = selectedDate === 'ALL' ? top40Fixtures2 : top40Fixtures2.filter(f => f.date === selectedDate);
-            const top40 = filtered.slice(0, 40);
-            countEl.innerText = top40.length;
+            if (tablePageFilters.top402 !== selectedDate) { tablePageFilters.top402 = selectedDate; tablePages.top402 = 0; }
+            countEl.innerText = filtered.length;
+            const pageCount = Math.max(1, Math.ceil(filtered.length / TABLE_PAGE_SIZE));
+            tablePages.top402 = Math.min(tablePages.top402, pageCount - 1);
+            const top40 = filtered.slice(tablePages.top402 * TABLE_PAGE_SIZE, (tablePages.top402 + 1) * TABLE_PAGE_SIZE);
+            updateTablePageControls('top402', filtered.length);
 
             if (top40.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-secondaryText">No records found for this date.</td></tr>`;
@@ -2161,6 +2407,7 @@ function json_(obj) {
 
             let html = '';
             top40.forEach((f, index) => {
+                index += tablePages.top402 * TABLE_PAGE_SIZE;
                 const rowStyling = getResultRowStyling(f.matchresult, f.prediction);
                 const badgeHtml = getResultBadge(f.matchresult, f.prediction);
                 html += `
@@ -2187,8 +2434,12 @@ function json_(obj) {
 
             const selectedDate = dateFilter ? dateFilter.value : 'ALL';
             let filtered = selectedDate === 'ALL' ? top40Fixtures3 : top40Fixtures3.filter(f => f.date === selectedDate);
-            const top40 = filtered.slice(0, 40);
-            countEl.innerText = top40.length;
+            if (tablePageFilters.top403 !== selectedDate) { tablePageFilters.top403 = selectedDate; tablePages.top403 = 0; }
+            countEl.innerText = filtered.length;
+            const pageCount = Math.max(1, Math.ceil(filtered.length / TABLE_PAGE_SIZE));
+            tablePages.top403 = Math.min(tablePages.top403, pageCount - 1);
+            const top40 = filtered.slice(tablePages.top403 * TABLE_PAGE_SIZE, (tablePages.top403 + 1) * TABLE_PAGE_SIZE);
+            updateTablePageControls('top403', filtered.length);
 
             if (top40.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-secondaryText">No records found for this date.</td></tr>`;
@@ -2197,6 +2448,7 @@ function json_(obj) {
 
             let html = '';
             top40.forEach((f, index) => {
+                index += tablePages.top403 * TABLE_PAGE_SIZE;
                 const rowStyling = getResultRowStyling(f.matchresult, f.prediction);
                 const badgeHtml = getResultBadge(f.matchresult, f.prediction);
                 html += `
@@ -2214,7 +2466,69 @@ function json_(obj) {
             tbody.innerHTML = html;
         }
 
+        function renderOverviewDateCards() {
+            const dateKey = (value) => {
+                if (!value) return '';
+                const s = String(value).trim();
+                const iso = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+                if (iso) return `${iso[1]}-${String(iso[2]).padStart(2,'0')}-${String(iso[3]).padStart(2,'0')}`;
+                const d = new Date(s);
+                if (Number.isNaN(d.getTime())) return '';
+                return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+            };
+            const localDay = new Date();
+            localDay.setHours(0,0,0,0);
+            const dayKey = (offset) => {
+                const d = new Date(localDay);
+                d.setDate(d.getDate()+offset);
+                return dateKey(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`);
+            };
+            const dateLabel = (offset) => {
+                const d = new Date(localDay); d.setDate(d.getDate()+offset);
+                return d.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});
+            };
+            const targets = [
+                {offset:-1, id:'overviewYesterday', label:'overviewYesterdayLabel'},
+                {offset:0, id:'overviewToday', label:'overviewTodayLabel'},
+                {offset:1, id:'overviewTomorrow', label:'overviewTomorrowLabel'}
+            ];
+            const fixtures = Array.isArray(epreferredFixtures) ? epreferredFixtures : [];
+            const esc = (v) => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+            targets.forEach(target => {
+                const container = document.getElementById(target.id);
+                const heading = document.getElementById(target.label);
+                if (heading) heading.textContent = `${target.offset === -1 ? 'Yesterday' : target.offset === 0 ? 'Today' : 'Tomorrow'} · ${dateLabel(target.offset)}`;
+                if (!container) return;
+                const wanted = dayKey(target.offset);
+                const rows = fixtures.filter(f => dateKey(f.date || f.matchDate || f.match_date) === wanted)
+                    .sort((a,b) => (Number(b.probability)||0) - (Number(a.probability)||0))
+                    .filter((f,i,arr) => {
+                        const key = [dateKey(f.date),String(f.home||f.host||'').toLowerCase().trim(),String(f.away||f.guest||'').toLowerCase().trim()].join('|');
+                        return arr.findIndex(x => [dateKey(x.date),String(x.home||x.host||'').toLowerCase().trim(),String(x.away||x.guest||'').toLowerCase().trim()].join('|') === key) === i;
+                    }).slice(0,10);
+                if (!rows.length) {
+                    container.innerHTML = '<p class="text-xs text-secondaryText py-2">No verified source records available for this date.</p>';
+                    return;
+                }
+                container.innerHTML = rows.map(f => {
+                    const home = f.home || f.host || 'Home team';
+                    const away = f.away || f.guest || 'Away team';
+                    const pred = f.prediction || f.tip || f.scoretip || 'Prediction unavailable';
+                    const probability = f.probability !== undefined && f.probability !== '' ? `${esc(f.probability)}%` : '—';
+                    const result = f.matchresult || f.result || '';
+                    const source = f.source || '';
+                    return `<article class="rounded-lg border border-slate-100 p-3">
+                        <div class="flex items-start justify-between gap-2"><span class="text-xs font-bold text-mainText">${esc(home)} <span class="text-secondaryText">vs</span> ${esc(away)}</span><span class="text-[10px] font-bold text-teal-700 whitespace-nowrap">${probability}</span></div>
+                        <div class="flex flex-wrap items-center justify-between gap-2 mt-2"><span class="text-xs text-teal-800 font-semibold">${esc(pred)}</span><span class="text-[10px] text-secondaryText">${esc(source)}</span></div>
+                        ${target.offset === -1 && result ? `<div class="mt-2 text-[11px] text-secondaryText">Recorded result: <strong>${esc(result)}</strong></div>` : ''}
+                    </article>`;
+                }).join('');
+            });
+        }
+
         function renderOverviewPreview() {
+            renderOverviewDateCards();
+            updateModelWinRateCards();
             const tbody = document.getElementById('overviewPreviewBody');
             if (!tbody) return;
             const preview = epreferredFixtures.slice(0, 8);
@@ -2285,51 +2599,79 @@ function json_(obj) {
             }
         }
     
-        // Native standalone module loader: fetches the sibling HTML and executes its own
-        // inline application script in this document (no iframe). Module markup remains separately maintained.
+        // Native Statarea module lifecycle: initialize once; navigation never waits on this request.
         let statareaModuleLoaded = false;
-        let statareaModuleLoading = false;
+        let statareaModuleLoading = null;
         async function loadStatareaModule(forceReload = false) {
             const mount = document.getElementById('statareaNativeMount');
             const status = document.getElementById('statareaModuleStatus');
-            if (!mount || statareaModuleLoading || (statareaModuleLoaded && !forceReload)) return;
-            statareaModuleLoading = true;
-            status.textContent = 'Loading standalone statarea.html…';
-            try {
-                const response = await fetch(new URL('statarea.html', window.location.href), { cache: forceReload ? 'reload' : 'default' });
-                if (!response.ok) throw new Error(`HTTP ${response.status} loading statarea.html`);
-                const html = await response.text();
-                const parsed = new DOMParser().parseFromString(html, 'text/html');
-                const sourceMain = parsed.querySelector('main');
-                if (!sourceMain) throw new Error('The standalone Statarea file has no main content.');
-                mount.replaceChildren();
-                const moduleWrap = document.createElement('div');
-                moduleWrap.id = 'statareaModuleRoot';
-                moduleWrap.innerHTML = sourceMain.innerHTML;
-                mount.appendChild(moduleWrap);
-                // Preserve module dialogs located outside its main element.
-                parsed.querySelectorAll('body > div[id$="Modal"], body > div[id*="Modal"]').forEach(node => {
-                    if (node.id && !document.getElementById(node.id)) mount.appendChild(document.importNode(node, true));
-                });
-                // Execute only inline application scripts; the shared Tailwind CDN is already loaded.
-                parsed.querySelectorAll('body script:not([src])').forEach(oldScript => {
-                    if (!oldScript.textContent.trim()) return;
-                    const newScript = document.createElement('script');
-                    newScript.textContent = oldScript.textContent;
-                    mount.appendChild(newScript);
-                });
-                // window.onload does not fire for a module injected after the portal loaded.
-                if (typeof loadCSVData === 'function') {
-                    const csvInput = document.getElementById('customCsvUrl');
-                    if (csvInput && typeof CSV_URL !== 'undefined') csvInput.value = CSV_URL;
-                    loadCSVData();
+            if (!mount) {
+                console.warn('[Statarea] Mount element is missing; module activation skipped.');
+                return;
+            }
+            if (statareaModuleLoaded && !forceReload) return;
+            if (statareaModuleLoading) return statareaModuleLoading;
+            statareaModuleLoading = (async () => {
+                if (status) { status.textContent = 'Loading match data…'; status.className = 'text-sm text-secondaryText'; }
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 12000);
+                try {
+                    const response = await fetch(new URL('statarea.html', window.location.href), {
+                        cache: forceReload ? 'reload' : 'default',
+                        signal: controller.signal
+                    });
+                    if (!response.ok) throw new Error(`HTTP ${response.status} loading statarea.html`);
+                    const html = await response.text();
+                    const parsed = new DOMParser().parseFromString(html, 'text/html');
+                    const sourceMain = parsed.querySelector('main');
+                    if (!sourceMain) throw new Error('The standalone Statarea file has no main content.');
+                    // Build markup once and avoid re-registering its scripts on normal tab changes.
+                    if (forceReload) {
+                        mount.replaceChildren();
+                        statareaModuleLoaded = false;
+                    }
+                    if (!statareaModuleLoaded) {
+                        mount.replaceChildren();
+                        const moduleWrap = document.createElement('div');
+                        moduleWrap.id = 'statareaModuleRoot';
+                        moduleWrap.innerHTML = sourceMain.innerHTML;
+                        mount.appendChild(moduleWrap);
+                        parsed.querySelectorAll('body > div[id$="Modal"], body > div[id*="Modal"]').forEach(node => {
+                            if (node.id && !document.getElementById(node.id)) mount.appendChild(document.importNode(node, true));
+                        });
+                        parsed.querySelectorAll('body script:not([src])').forEach(oldScript => {
+                            if (!oldScript.textContent.trim()) return;
+                            const newScript = document.createElement('script');
+                            newScript.textContent = oldScript.textContent;
+                            mount.appendChild(newScript);
+                        });
+                        statareaModuleLoaded = true;
+                    }
+                    // Loading data is isolated from navigation and failures are contained.
+                    if (typeof window.loadCSVData === 'function') {
+                        try {
+                            const csvInput = document.getElementById('customCsvUrl');
+                            if (csvInput && typeof window.CSV_URL !== 'undefined') csvInput.value = window.CSV_URL;
+                            Promise.resolve(window.loadCSVData()).catch(error => {
+                                console.error('[Statarea] CSV load failed:', error);
+                                if (status) { status.textContent = 'Statarea data could not be loaded. Use the module retry control if available.'; status.className = 'text-sm text-rose-700'; }
+                            });
+                        } catch (error) { console.error('[Statarea] CSV initialization failed:', error); }
+                    }
+                    if (status) status.textContent = '';
+                } catch (error) {
+                    const message = error.name === 'AbortError' ? 'Request timed out' : error.message;
+                    console.error('[Statarea] Module load failed:', error);
+                    if (status) {
+                        status.textContent = `Statarea could not be loaded (${message}). Check that statarea.html is deployed beside index.html, then retry.`;
+                        status.className = 'text-sm text-rose-700';
+                    }
+                } finally {
+                    clearTimeout(timeoutId);
+                    statareaModuleLoading = null;
                 }
-                statareaModuleLoaded = true;
-                status.textContent = 'Statarea module loaded. Its Google Sheet/CSV feed will load using the configured source.';
-            } catch (error) {
-                status.textContent = `Unable to load Statarea module: ${error.message}. Ensure statarea.html is in the same GitHub Pages directory and reload.`;
-                status.className = 'text-sm text-rose-700';
-            } finally { statareaModuleLoading = false; }
+            })();
+            return statareaModuleLoading;
         }
 
         // Optional external data source connection used as grounded context by the AI/web-search endpoint.
@@ -2697,6 +3039,22 @@ function json_(obj) {
         setTimeout(() => { updateKnownTeamsList(); applyBlacklistFlags(); }, 1200);
     });
 })();
+
+        function getSheetsIntegrationConfig() {
+            return { spreadsheetId: document.getElementById('integrationSpreadsheetId')?.value.trim() || '', usersSheet: document.getElementById('integrationUsersSheet')?.value.trim() || 'users', configSheet: document.getElementById('integrationConfigSheet')?.value.trim() || 'Admin', predictionsSheet: document.getElementById('integrationPredictionsSheet')?.value.trim() || 'predictions', historySheet: document.getElementById('integrationHistorySheet')?.value.trim() || 'ai_prediction_history', performanceSheet: document.getElementById('integrationPerformanceSheet')?.value.trim() || 'model_performance' };
+        }
+        async function googleSheetsIntegrationAction(action, params={}) {
+            const endpoint = document.getElementById('gasEndpointUrl')?.value.trim();
+            if (!endpoint) throw new Error('Enter the Google Apps Script Web App endpoint above first.');
+            const url = new URL(endpoint); url.searchParams.set('action', action); url.searchParams.set('_', Date.now());
+            Object.entries(params).forEach(([k,v]) => url.searchParams.set(k, typeof v === 'string' ? v : JSON.stringify(v)));
+            const response = await fetch(url.toString(), { method:'GET', cache:'no-store' });
+            if (!response.ok) throw new Error('HTTP ' + response.status);
+            const data = await response.json(); if (data.success === false) throw new Error(data.message || 'Backend rejected the request.'); return data;
+        }
+        async function saveGoogleSheetsIntegration() { const status=document.getElementById('integrationStatus'); try { status.textContent='Saving integration configuration…'; const d=await googleSheetsIntegrationAction('saveIntegrationConfig',getSheetsIntegrationConfig()); status.textContent=d.message||'Configuration saved by backend.'; } catch(e) { status.textContent='Save failed: '+e.message; } }
+        async function loadGoogleSheetsIntegration() { const status=document.getElementById('integrationStatus'); try { status.textContent='Loading integration configuration…'; const d=await googleSheetsIntegrationAction('getIntegrationConfig'); const c=d.config||d; const ids={spreadsheetId:'integrationSpreadsheetId',usersSheet:'integrationUsersSheet',configSheet:'integrationConfigSheet',predictionsSheet:'integrationPredictionsSheet',historySheet:'integrationHistorySheet',performanceSheet:'integrationPerformanceSheet'}; Object.entries(ids).forEach(([k,id])=>{const el=document.getElementById(id);if(el&&c[k]!==undefined)el.value=c[k]}); status.textContent='Integration configuration loaded.'; } catch(e) { status.textContent='Load failed: '+e.message; } }
+        async function testGoogleSheetsIntegration() { const status=document.getElementById('integrationStatus'); try { status.textContent='Testing connection…'; const d=await googleSheetsIntegrationAction('testConnection',getSheetsIntegrationConfig()); status.textContent=d.message||'Connection test succeeded.'; } catch(e) { status.textContent='Connection test failed: '+e.message; } }
 </script>
 
 </body>
