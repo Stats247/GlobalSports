@@ -837,13 +837,19 @@
                 </section>
 </div>
 
-            <!-- Added standalone AI Analytics module. Existing tabs and logic are not replaced. -->
             <div id="tab-ai-analytics" class="tab-content flex-col gap-6">
-                <div class="bg-white p-4 rounded-2xl border border-borderCol custom-shadow">
-                    <h2 class="text-lg font-extrabold text-mainText">AI Analytics</h2>
-                    <p class="text-xs text-secondaryText mt-1">Standalone AI module. It receives the three source feeds after they are loaded by this original portal.</p>
+              <section class="rounded-2xl bg-gradient-to-r from-slate-950 via-blue-950 to-teal-900 p-6 text-white shadow-lg">
+                <div class="flex flex-wrap items-center justify-between gap-4">
+                  <div><p class="text-xs uppercase tracking-widest text-teal-200 font-bold">Cross-source intelligence</p><h2 class="mt-2 text-2xl font-black">AI Analytics — Best 25 Predictions</h2><p class="mt-2 text-sm text-slate-200">Compares all three published Google Sheets, then ranks up to 25 fixtures using the configured Gemini model and source agreement.</p></div>
+                  <button id="gsaAiAnalyzeBtn" onclick="runGsaAiAnalytics()" class="rounded-xl bg-emerald-500 px-5 py-3 text-sm font-extrabold text-white hover:bg-emerald-600">Analyze 3 Sources</button>
                 </div>
-                <iframe id="aiAnalyticsFrame" src="ai.html" title="AI Analytics" class="w-full rounded-2xl border border-borderCol bg-white" style="height: calc(100vh - 190px); min-height: 650px;"></iframe>
+                <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3"><div class="rounded-xl border border-white/15 bg-white/10 p-3"><div class="text-xs text-slate-300">Source 1 · Statarea</div><strong id="gsaAiSourceCount1" class="text-2xl">0</strong></div><div class="rounded-xl border border-white/15 bg-white/10 p-3"><div class="text-xs text-slate-300">Source 2 · Vital Best Tips</div><strong id="gsaAiSourceCount2" class="text-2xl">0</strong></div><div class="rounded-xl border border-white/15 bg-white/10 p-3"><div class="text-xs text-slate-300">Source 3 · Soccervital Matches</div><strong id="gsaAiSourceCount3" class="text-2xl">0</strong></div></div>
+              </section>
+              <section class="rounded-2xl border border-borderCol bg-white p-5 custom-shadow">
+                <div class="flex flex-wrap items-end justify-between gap-3"><div><h3 class="font-extrabold text-mainText">AI-ranked fixtures</h3><p class="mt-1 text-xs text-secondaryText">Date filter defaults to all available dates. Results remain blank until a real model response is returned.</p></div><label class="text-xs font-bold text-secondaryText">Filter by date<select id="gsaAiDateFilter" onchange="renderGsaAiAnalyticsTable()" class="mt-1 block min-w-44 rounded-lg border border-borderCol bg-pageBg p-2"><option value="ALL">All dates</option></select></label></div>
+                <p id="gsaAiAnalyticsStatus" class="my-3 rounded-xl bg-slate-50 p-3 text-xs text-slate-600" role="status">Click Analyze 3 Sources to load and compare all published feeds.</p>
+                <div class="overflow-x-auto"><table class="w-full min-w-[1100px] border-collapse text-left text-xs"><thead><tr class="border-b bg-pageBg text-secondaryText"><th class="p-3">Rank</th><th class="p-3">Date</th><th class="p-3">Home Team</th><th class="p-3">Away Team</th><th class="p-3">AI Prediction</th><th class="p-3">Statarea</th><th class="p-3">Vital Best Tips</th><th class="p-3">Soccervital</th><th class="p-3">Match Result</th><th class="p-3">AI confidence</th></tr></thead><tbody id="gsaAiAnalyticsBody"><tr><td colspan="10" class="p-8 text-center text-secondaryText">No AI analysis has been run yet.</td></tr></tbody></table></div>
+              </section>
             </div>
 
             <!-- Added standalone Admin module. Existing Data Sources & Admin tab is preserved. -->
@@ -1203,6 +1209,8 @@ function json_(obj) {
             srcCsv3: "https://docs.google.com/spreadsheets/d/e/2PACX-1vS4skYgtxtfHuZElx4Mrx2n4NC0keZGjsKxgZNHOpPGrkVy2j_5GQWmyNlQu1y5TAjQKfDHAiBVknfi/pub?gid=1663545554&single=true&output=csv"
         };
 
+        const GSA_SOURC3_CANONICAL_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS4skYgtxtfHuZElx4Mrx2n4NC0keZGjsKxgZNHOpPGrkVy2j_5GQWmyNlQu1y5TAjQKfDHAiBVknfi/pub?gid=1663545554&single=true&output=csv";
+        let gsaAiAnalyticsRows = [];
         let gsaCoreInitialized = false;
         function initializeGsaCore() {
             if (gsaCoreInitialized) return;
@@ -1465,7 +1473,7 @@ function json_(obj) {
                 gasEndpointUrl: document.getElementById('gasEndpointUrl').value,
                 srcCsv1: document.getElementById('srcCsv1').value,
                 srcCsv2: document.getElementById('srcCsv2').value,
-                srcCsv3: document.getElementById('srcCsv3').value
+                srcCsv3: GSA_SOURC3_CANONICAL_URL
             };
             localStorage.setItem('gsa_admin_config', JSON.stringify(config));
         }
@@ -1478,7 +1486,7 @@ function json_(obj) {
                     if (cfg.gasEndpointUrl) document.getElementById('gasEndpointUrl').value = cfg.gasEndpointUrl;
                     if (cfg.srcCsv1) document.getElementById('srcCsv1').value = cfg.srcCsv1;
                     if (cfg.srcCsv2) document.getElementById('srcCsv2').value = cfg.srcCsv2;
-                    if (cfg.srcCsv3) document.getElementById('srcCsv3').value = cfg.srcCsv3;
+                    if (cfg.srcCsv3) document.getElementById('srcCsv3').value = GSA_SOURC3_CANONICAL_URL;
                 } catch(e) {}
             } else {
                 autoFillDefaultAdminUrls();
@@ -1547,7 +1555,7 @@ function json_(obj) {
                 const payload = {
                     srcCsv1: document.getElementById('srcCsv1').value,
                     srcCsv2: document.getElementById('srcCsv2').value,
-                    srcCsv3: document.getElementById('srcCsv3').value
+                    srcCsv3: GSA_SOURC3_CANONICAL_URL
                 };
                 await fetch(endpoint, {
                     method: 'POST',
@@ -1632,13 +1640,27 @@ function json_(obj) {
             try {
                 if (!urlInput) throw new Error('No CSV URL is configured for this feed.');
                 let csvText='';
-                // Use Apps Script server-side fetch so browser CORS rules do not block Google Sheets.
-                if(typeof window.gsaAuthRequest==='function'){
-                    const result=await window.gsaAuthRequest('fetchSource',{url:urlInput},true);csvText=String(result.text||'');
-                } else {
-                    const controller = new AbortController();const timeoutId=setTimeout(()=>controller.abort(),15000);let response;
-                    try{response=await fetch(urlInput,{signal:controller.signal,cache:'no-store'})}finally{clearTimeout(timeoutId)}
-                    if(!response.ok)throw new Error(`HTTP ${response.status}`);csvText=await response.text();
+                // Source 3 is pinned to the supplied published CSV. Try the public CSV endpoint first,
+                // then the authenticated Apps Script fetch action if the browser blocks cross-origin access.
+                const sourceUrl = sourceId === 3 ? GSA_SOURC3_CANONICAL_URL : urlInput;
+                if (sourceId === 3) document.getElementById('srcCsv3').value = sourceUrl;
+                let directError = null;
+                if (sourceId === 3) {
+                    try {
+                        const response = await fetch(sourceUrl + (sourceUrl.includes('?') ? '&' : '?') + '_ts=' + Date.now(), {cache:'no-store'});
+                        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                        csvText = await response.text();
+                    } catch (err) { directError = err; }
+                }
+                if (!csvText && typeof window.gsaAuthRequest === 'function') {
+                    try {
+                        const result = await window.gsaAuthRequest('fetchSource', {url:sourceUrl}, true);
+                        csvText = String(result.text || '');
+                    } catch (err) { if (sourceId !== 3 || !directError) throw err; throw new Error(`Public CSV fetch blocked (${directError.message}); Apps Script fallback failed (${err.message}). Check that the published sheet is public and the backend supports fetchSource.`); }
+                } else if (!csvText) {
+                    const response = await fetch(sourceUrl, {cache:'no-store'});
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    csvText = await response.text();
                 }
                 if (!csvText.trim() || /^(<!doctype html|<html)/i.test(csvText.trim())) throw new Error('The source did not return CSV data.');
                 const parsed = parseCSV(csvText);
@@ -3144,6 +3166,74 @@ function json_(obj) {
         async function runAiConsensusAnalysis(){const status=document.getElementById('integrationStatus');try{status.textContent='Comparing all source feeds with AI…';const matches=typeof gsaConsensusTips==='function'?gsaConsensusTips():[];const payload=matches.map(f=>({date:f.date,home:f.home,away:f.away,prediction:f.consensusPrediction,confidence:f.avgConfidence,sources:f.sources.map(s=>({name:s.name,confidence:s.confidence,prediction:s.prediction})),agreement:f.agreement+'/'+f.sources.length,result:f.result}));const d=await googleSheetsIntegrationAction('analyzeMatches',{matches:payload});status.textContent=d.message||'AI analysis saved.';if(d.analysis&&Array.isArray(d.analysis.tips)){gsaAiTopTips=d.analysis.tips;renderTopTips();}}catch(e){status.textContent='AI analysis failed: '+e.message}}
         async function runGoogleSheetsBackup(){const el=document.getElementById('backupStatus');try{el.textContent='Creating backup…';const d=await googleSheetsIntegrationAction('backupNow');el.innerHTML=d.url?'Backup created: <a class="underline text-teal-700" target="_blank" rel="noopener" href="'+d.url+'">Open backup</a>':(d.message||'Backup created.')}catch(e){el.textContent='Backup failed: '+e.message}}
         async function enableGoogleSheetsAutoBackup(){const el=document.getElementById('backupStatus');try{el.textContent='Enabling daily backup…';const d=await googleSheetsIntegrationAction('installAutomaticBackup');el.textContent=d.message||'Daily backup enabled.'}catch(e){el.textContent='Could not enable backup: '+e.message}}
+
+        // AI Analytics: use all three live feeds and return exactly the requested table shape.
+        function gsaAiValue(row, aliases) { return gsaPick(row, aliases) || ''; }
+        function gsaAiBuildFixtures() {
+            const map = new Map();
+            const specs = {
+                1: {name:'Statarea', home:['host','home','home team','hometeam'], away:['guest','away','away team','awayteam'], pred:['1x2','tip','prediction','match prediction','match forecast'], result:['match result','result','ft result']},
+                2: {name:'Vital Best Tips', home:['home team','home','hometeam','host'], away:['away team','away','awayteam','guest'], pred:['score tip','prediction','tip','match prediction','match forecast'], result:['match result','result','ft result']},
+                3: {name:'Soccervital', home:['home team','home','hometeam','host'], away:['away team','away','awayteam','guest'], pred:['match forecast','match prediction','prediction','tip','correct score','match forecast goals'], result:['match result','result','ft result','home ft'] }
+            };
+            [1,2,3].forEach(id => {
+                (rawFeedsAll[id] && rawFeedsAll[id].length ? rawFeedsAll[id] : rawFeeds[id] || []).forEach(row => {
+                    const spec=specs[id], home=gsaAiValue(row,spec.home), away=gsaAiValue(row,spec.away);
+                    if(!home||!away) return;
+                    const date=gsaNormDate(gsaAiValue(row,['date','match date','matchdate','datetime']));
+                    const key=(date+'|'+home+'|'+away).toLowerCase();
+                    if(!map.has(key)) map.set(key,{date,home,away,sourcePredictions:{},result:''});
+                    const f=map.get(key), pred=gsaAiValue(row,spec.pred), result=gsaAiValue(row,spec.result);
+                    if(pred) f.sourcePredictions[id]=pred;
+                    if(result && !f.result) f.result=result;
+                });
+            });
+            return [...map.values()];
+        }
+        function renderGsaAiAnalyticsTable() {
+            const body=document.getElementById('gsaAiAnalyticsBody'), filter=document.getElementById('gsaAiDateFilter')?.value||'ALL';
+            if(!body)return;
+            const rows=gsaAiAnalyticsRows.filter(r=>filter==='ALL'||r.date===filter);
+            if(!rows.length){body.innerHTML='<tr><td colspan="10" class="p-8 text-center text-secondaryText">No analyzed fixtures for this date. Run AI analysis or choose another date.</td></tr>';return;}
+            body.innerHTML=rows.map((r,i)=>`<tr class="border-b hover:bg-slate-50"><td class="p-3 font-extrabold">${i+1}</td><td class="p-3">${gsaEsc(r.date||'—')}</td><td class="p-3 font-semibold">${gsaEsc(r.home)}</td><td class="p-3 font-semibold">${gsaEsc(r.away)}</td><td class="p-3 font-extrabold text-emerald-700">${gsaEsc(r.aiPrediction||'—')}</td><td class="p-3">${gsaEsc(r.sourcePredictions?.[1]||'—')}</td><td class="p-3">${gsaEsc(r.sourcePredictions?.[2]||'—')}</td><td class="p-3">${gsaEsc(r.sourcePredictions?.[3]||'—')}</td><td class="p-3">${gsaEsc(r.result||'Pending / not supplied')}</td><td class="p-3 font-bold">${r.confidence!=null?gsaEsc(String(r.confidence))+'%':'—'}</td></tr>`).join('');
+        }
+        async function runGsaAiAnalytics() {
+            const status=document.getElementById('gsaAiAnalyticsStatus'), button=document.getElementById('gsaAiAnalyzeBtn');
+            const setStatus=m=>{if(status)status.textContent=m;};
+            if(button){button.disabled=true;button.textContent='Analyzing…';}
+            try {
+                // Always use the exact published source URL supplied for Soccervital.
+                const src3=document.getElementById('srcCsv3'); if(src3)src3.value=GSA_SOURC3_CANONICAL_URL;
+                // Refresh any missing feeds before building the cross-source comparison.
+                const missing=[1,2,3].filter(id=>!(rawFeedsAll[id]||[]).length);
+                for(const id of missing) await syncSingleDataSource(id,true);
+                [1,2,3].forEach(id=>{const el=document.getElementById('gsaAiSourceCount'+id);if(el)el.textContent=(rawFeedsAll[id]||rawFeeds[id]||[]).length;});
+                const fixtures=gsaAiBuildFixtures();
+                if(!fixtures.length) throw new Error('No fixtures with recognizable home/away team columns were loaded. Check the published CSV headers and access permissions.');
+                const settings=JSON.parse(localStorage.getItem('gsa_llm_settings')||'{}');
+                const apiKey=String(settings.apiKey||'').trim();
+                if(String(settings.provider||'').toLowerCase()!=='gemini' && !apiKey) throw new Error('Open Model Performance Settings & LLM, choose Gemini, and enter a valid API key.');
+                if(!apiKey) throw new Error('Gemini API key is missing from Model Performance Settings & LLM.');
+                const model=(String(settings.model||'').trim() && /gemini/i.test(settings.model))?String(settings.model).trim():'gemini-3.8-flash';
+                const compact=fixtures.slice(0,220).map((f,i)=>({id:i,date:f.date,home:f.home,away:f.away,statarea:f.sourcePredictions[1]||'',vitalBestTips:f.sourcePredictions[2]||'',soccervital:f.sourcePredictions[3]||'',result:f.result||''}));
+                setStatus(`Loaded ${fixtures.length} unique fixtures. Sending up to ${compact.length} fixtures to ${model} for ranking…`);
+                const prompt=`You are analyzing football match predictions. Rank the 25 most promising fixtures from the supplied data. Use only the supplied match/source data; do not invent statistics, results, or source tips. Prefer agreement between independent source predictions and complete records. For each selected fixture return id, aiPrediction (a concise market/result or score prediction consistent with the evidence), confidence (integer 1-100, estimated not guaranteed), and short rationale. Preserve exact fixture ids. Return JSON only in this shape: {"tips":[{"id":0,"aiPrediction":"...","confidence":70,"rationale":"..."}]}. Return at most 25 tips. Data: ${JSON.stringify(compact)}`;
+                const response=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model.replace(/^models\//,''))}:generateContent?key=${encodeURIComponent(apiKey)}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{role:'user',parts:[{text:prompt}]}],generationConfig:{temperature:0.2,responseMimeType:'application/json'}})});
+                const data=await response.json().catch(()=>({}));
+                if(!response.ok) throw new Error(`Gemini API HTTP ${response.status}: ${data.error?.message||response.statusText}. Verify model availability and API key permissions.`);
+                const raw=data.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('')||'';
+                let parsed; try{parsed=JSON.parse(raw.replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,''));}catch(_){throw new Error('Gemini returned a response that was not valid JSON. Try again.');}
+                const byId=new Map(compact.map((f,i)=>[String(i),fixtures.find(x=>x.date===f.date&&x.home===f.home&&x.away===f.away)||f]));
+                gsaAiAnalyticsRows=(Array.isArray(parsed.tips)?parsed.tips:[]).slice(0,25).map(t=>{const f=byId.get(String(t.id));return f?{...f,aiPrediction:String(t.aiPrediction||t.prediction||''),confidence:Number.isFinite(Number(t.confidence))?Math.max(1,Math.min(100,Math.round(Number(t.confidence)))):null,rationale:String(t.rationale||'')}:null;}).filter(Boolean);
+                if(!gsaAiAnalyticsRows.length) throw new Error('The AI returned no usable ranked fixtures.');
+                const dates=[...new Set(gsaAiAnalyticsRows.map(r=>r.date).filter(Boolean))].sort((a,b)=>b.localeCompare(a));
+                const select=document.getElementById('gsaAiDateFilter');if(select){const old=select.value;select.innerHTML='<option value="ALL">All dates</option>'+dates.map(d=>`<option value="${gsaEsc(d)}">${gsaEsc(d)}</option>`).join('');select.value=dates.includes(old)?old:'ALL';}
+                renderGsaAiAnalyticsTable();
+                setStatus(`Analysis complete: ${gsaAiAnalyticsRows.length} ranked predictions from ${fixtures.length} unique fixtures. Confidence is an AI estimate, not a guarantee.`);
+            } catch(err) {setStatus('AI analysis failed: '+err.message);}
+            finally {if(button){button.disabled=false;button.textContent='Analyze 3 Sources';}}
+        }
+
 </script>
 
 </body>
