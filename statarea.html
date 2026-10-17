@@ -453,33 +453,58 @@
 2026-10-10,79%,Gosport Borough,Gloucester City,1,0:2,1,Half time results: 0:0,43%,27%,30%,38%,20%,50%,25%,25%,2026-10-10_gosportborough-_gloucestercity,0:2
 2026-10-10,88%,Manchester City,Newcastle,1,3:1,1,Half time results: 3:0,56%,26%,18%,62%,40%,65%,20%,15%,2026-10-10_manchestercity-_newcastle,3:1`;
 
-        window.onload = function() {
-            document.getElementById('customCsvUrl').value = CSV_URL;
+        // Do not overwrite window.onload: this module may run inside the main GSA page.
+        function initStatareaModule() {
+            const urlInput = document.getElementById('customCsvUrl');
+            if (urlInput) urlInput.value = CSV_URL;
             loadCSVData();
-        };
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initStatareaModule, { once: true });
+        } else {
+            initStatareaModule();
+        }
 
         async function loadCSVData() {
             showLoading(true);
             hideError();
+            let lastError = null;
 
+            // When embedded in Global Sports Analytics, use its authenticated Apps Script
+            // proxy so the browser does not make a cross-origin request to Google Sheets.
             try {
-                let response = await fetch(CSV_URL, { cache: 'no-cache' });
-                if (!response.ok) throw new Error(`HTTP Status ${response.status}`);
-                let csvText = await response.text();
-                parseAndProcessCSV(csvText);
-            } catch (err) {
-                console.warn("Direct fetch failed, trying proxy...", err);
-                try {
-                    let proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(CSV_URL)}`;
-                    let response = await fetch(proxyUrl);
-                    if (!response.ok) throw new Error("Proxy failed");
-                    let csvText = await response.text();
-                    parseAndProcessCSV(csvText);
-                } catch (proxyErr) {
-                    showError(`Unable to connect to Google Sheet feed. ${err.message}`);
-                    useFallbackSampleData();
+                if (typeof window.gsaAuthRequest === 'function') {
+                    const result = await window.gsaAuthRequest('fetchSource', { url: CSV_URL }, true);
+                    const csvText = typeof result === 'string' ? result :
+                        (result && (result.csv || result.data || result.content || result.text));
+                    if (typeof csvText === 'string' && csvText.trim()) {
+                        parseAndProcessCSV(csvText);
+                        return;
+                    }
+                    throw new Error((result && result.message) || 'Apps Script proxy returned no CSV text.');
                 }
+            } catch (err) {
+                lastError = err;
+                console.warn('Authenticated Google Sheets proxy failed:', err);
             }
+
+            // Standalone mode may work if the published CSV feed allows browser access.
+            try {
+                const response = await fetch(CSV_URL, { cache: 'no-cache' });
+                if (!response.ok) throw new Error(`HTTP status ${response.status}`);
+                const csvText = await response.text();
+                if (!csvText.trim() || /<html[\s>]/i.test(csvText.slice(0, 500))) {
+                    throw new Error('The feed did not return CSV data. Check that the sheet is published to the web.');
+                }
+                parseAndProcessCSV(csvText);
+                return;
+            } catch (err) {
+                lastError = err;
+                console.warn('Direct CSV fetch failed:', err);
+            }
+
+            showError(`Unable to load the Google Sheet CSV. ${lastError ? lastError.message : 'Check the published CSV URL and permissions.'} Showing sample data instead.`);
+            useFallbackSampleData();
         }
 
         function useFallbackSampleData() {
@@ -545,19 +570,18 @@
             // Set default date to today if available in dataset
             let todayStr = formatDateISO(new Date());
             const dateSelect = document.getElementById('filterDate');
-            let hasToday = Array.from(dateSelect.options).some(opt => opt.value === todayStr);
-            if (hasToday) {
-                dateSelect.value = todayStr;
-            } else {
-                dateSelect.value = ""; // Default to all if today is not in dataset
+            if (dateSelect) {
+                let hasToday = Array.from(dateSelect.options || []).some(opt => opt.value === todayStr);
+                dateSelect.value = hasToday ? todayStr : ''; // Show all dates when today is absent
             }
 
             applyFilters();
             showLoading(false);
-            
-            document.getElementById('matchesTabContent').classList.remove('hidden');
-            let now = new Date();
-            document.getElementById('lastUpdatedLabel').innerHTML = `<i class="fa-regular fa-clock mr-1 text-emerald-600"></i> Updated ${now.toLocaleTimeString()}`;
+
+            const matchesTabContent = document.getElementById('matchesTabContent');
+            if (matchesTabContent) matchesTabContent.classList.remove('hidden');
+            const lastUpdatedLabel = document.getElementById('lastUpdatedLabel');
+            if (lastUpdatedLabel) lastUpdatedLabel.textContent = `Updated ${new Date().toLocaleTimeString()}`;
         }
 
         function parseCSVLines(csvText) {
@@ -1073,18 +1097,21 @@
         }
 
         function showLoading(show) {
-            let spinner = document.getElementById('loadingState');
-            if (show) spinner.classList.remove('hidden');
-            else spinner.classList.add('hidden');
+            const spinner = document.getElementById('loadingState');
+            if (!spinner) return;
+            spinner.classList.toggle('hidden', !show);
         }
 
         function showError(msg) {
-            document.getElementById('errorMessage').innerText = msg;
-            document.getElementById('errorState').classList.remove('hidden');
+            const message = document.getElementById('errorMessage');
+            const state = document.getElementById('errorState');
+            if (message) message.textContent = msg;
+            if (state) state.classList.remove('hidden');
         }
 
         function hideError() {
-            document.getElementById('errorState').classList.add('hidden');
+            const state = document.getElementById('errorState');
+            if (state) state.classList.add('hidden');
         }
     </script>
 </body>
