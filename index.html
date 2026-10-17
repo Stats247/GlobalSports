@@ -1215,7 +1215,7 @@ function json_(obj) {
 
         window.gsaAuthenticated=false; let gsaCurrentUser=null; let gsaProfilePermissions={user:['overview','epreferred','top-tips','statarea','vital','matches','predictor','preferred','analytics','ai-analytics','history','performance'],admin:['*']}; const GSA_AUTH_TOKEN_KEY='gsa_session_token', GSA_AUTH_ENDPOINT_KEY='gsa_auth_endpoint';
         // Configure the deployed Apps Script URL once here before publishing. Users never need to enter it.
-        const GSA_DEFAULT_AUTH_ENDPOINT='https://script.google.com/macros/s/AKfycbwfdE7BHK-uwE3klLVaGrMswWFLgkfbYbxbHvTNpUQLotTeMF_GKqWqNgVYWjbyQrIC/exec';
+        const GSA_DEFAULT_AUTH_ENDPOINT='https://script.google.com/macros/s/AKfycbybXyK7QO-A1KRvcV_j9acQkco6H7jAM00pZ6jtaS7E9LKGqJHk8afv0sMijWJo8io2/exec';
         function gsaEndpoint(){const saved=(()=>{try{return localStorage.getItem(GSA_AUTH_ENDPOINT_KEY)||localStorage.getItem('gsa_admin_users_endpoint')||''}catch(_){return ''}})();const configured=GSA_DEFAULT_AUTH_ENDPOINT.startsWith('https://script.google.com/macros/s/')?GSA_DEFAULT_AUTH_ENDPOINT:'';return (configured||saved).trim();}
         function showAuthGate(msg){document.getElementById('gsaAuthGate')?.classList.remove('hidden');if(msg)document.getElementById('gsaAuthMessage').textContent=msg;}
         function hideAuthGate(){document.getElementById('gsaAuthGate')?.classList.add('hidden');document.getElementById('gsaSignOutButton')?.classList.remove('hidden');}
