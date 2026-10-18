@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PredictX AI — Sports Intelligence Platform</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFC; color: #172B4D; }
+        body { min-height:100vh; margin:0; font-family: 'Poppins', sans-serif; background-color: #F8FAFC; color: #172B4D; }
         .custom-shadow { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); }
         .card-hover:hover { transform: translateY(-2px); transition: all 0.2s ease-in-out; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -36,6 +36,34 @@
 html,body,button,input,select,textarea{font-family:'Plus Jakarta Sans',sans-serif!important}
 button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid rgba(37,99,235,.28);outline-offset:2px}
 .custom-shadow{box-shadow:0 10px 28px rgba(30,64,175,.08)}
+/* Full-screen PredictX polish */
+#gsaAuthGate{position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;min-height:100vh!important;margin:0!important;padding:0!important;background:#fff!important;z-index:99999!important;overflow:auto!important}
+#gsaAuthGate>div{min-height:100vh!important;width:100%!important;max-width:none!important;margin:0!important;border-radius:0!important}
+#gsaAuthGate .bg-slate-950,#gsaAuthGate .bg-gray-950,#gsaAuthGate .bg-black{background:#1d4ed8!important}
+
+html,body{width:100%;min-height:100%;background:#fff!important;color:#111827;overflow-x:hidden}
+body>div.flex.min-h-screen,body>div.min-h-screen{width:100%;max-width:none!important}
+header{position:sticky!important;top:0;z-index:60;background:#fff!important;border-bottom:1px solid #dbeafe!important}
+header .max-w-7xl{max-width:none!important;width:100%!important;padding-left:clamp(12px,2vw,30px)!important;padding-right:clamp(12px,2vw,30px)!important}
+body .max-w-7xl{max-width:none!important}
+#sidebar{top:var(--px-header-height,76px)!important;align-self:stretch!important;height:calc(100vh - var(--px-header-height,76px))!important;overflow-y:auto;border-radius:0!important;margin:0!important;flex-shrink:0}
+#sidebar nav .px-secondary-nav{display:none}
+.px-topnav{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-left:auto}
+.px-topnav button{border:1px solid #dbeafe;background:#eff6ff;color:#1d4ed8;border-radius:10px;padding:8px 11px;font-size:11px;font-weight:800;white-space:nowrap;transition:.2s}
+.px-topnav button:hover{background:#2563eb;color:#fff}
+#gsaSignOutButton{position:static!important;z-index:auto!important;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;box-shadow:none!important;border:1px solid #1d4ed8!important;background:#111827!important;color:#fff!important}
+#app-shell,main{min-width:0}
+#tab-preferred .top40-subnav-btn{background:#0f9d9a!important;color:#fff!important}
+#tab-preferred .top40-subnav-btn:hover{background:#087f8c!important}
+.predictor-subtab{background:#0f9d9a!important;color:#fff!important;border:1px solid #0d9488!important}
+.predictor-subtab.active{background:#0f766e!important;color:#fff!important}
+.px-explain-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.px-explain-card{padding:14px;border:1px solid #bfdbfe;border-radius:14px;background:linear-gradient(135deg,#fff,#eff6ff)}
+.px-explain-card h4{font-weight:800;color:#1d4ed8;margin-bottom:5px}
+.px-loadbar{height:5px;background:#dbeafe;overflow:hidden;border-radius:99px;width:100%;margin-top:8px}
+.px-loadbar:after{content:'';display:block;height:100%;width:35%;border-radius:99px;background:linear-gradient(90deg,#2563eb,#14b8a6);animation:px-load 1.25s ease-in-out infinite}
+@keyframes px-load{0%{transform:translateX(-110%)}100%{transform:translateX(320%)}}
+@media(max-width:1023px){#sidebar{height:100vh!important;top:0!important}.px-topnav{order:3;width:100%;overflow-x:auto;flex-wrap:nowrap}}
 /* Make shared system controls match the PredictX login prototype */
 .bg-teal-600,.bg-teal-700,.bg-emerald-600{background-color:#2563eb!important}
 .text-teal-700,.text-emerald-700{color:#2563eb!important}
@@ -52,6 +80,74 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 #gsaLoadProgress #gsaLoadProgressPercent{font-size:28px;font-weight:800;letter-spacing:-1px;color:#1d4ed8}
 #gsaLoadProgress #gsaLoadProgressLabel{display:block;font-size:12px;line-height:1.6;font-weight:700;color:#475569;margin-top:5px}
 #gsaLoadProgress .px-loading-brand{font-size:10px;text-transform:uppercase;letter-spacing:.2em;font-weight:800;color:#2563eb;margin-bottom:14px}
+
+
+/* PredictX AI refreshed login experience + Poppins typography */
+body, input, button, select, textarea { font-family:'Poppins',sans-serif!important; }
+#gsaAuthGate{padding:0!important;align-items:stretch!important;justify-content:stretch!important;background:#f8fbff!important;overflow:auto!important}
+#gsaAuthGate>.absolute{opacity:.5;background:radial-gradient(circle at 15% 20%,rgba(20,184,166,.22),transparent 32%),radial-gradient(circle at 85% 80%,rgba(37,99,235,.20),transparent 35%)!important}
+#gsaAuthGate>.relative.w-full.max-w-5xl{width:100%!important;max-width:none!important;min-height:100vh!important;height:100vh!important;grid-template-columns:minmax(0,1.05fr) minmax(420px,.95fr)!important;border:0!important;border-radius:0!important;box-shadow:none!important;overflow:auto!important}
+#gsaAuthGate>.relative.w-full.max-w-5xl>section:first-child{padding:clamp(28px,5vw,84px)!important;background:linear-gradient(135deg,#102c78 0%,#155eef 48%,#0f9f9a 100%)!important;min-height:100vh}
+#gsaAuthGate>.relative.w-full.max-w-5xl>section:last-child{display:flex;flex-direction:column;justify-content:center;padding:clamp(26px,6vw,100px)!important;background:rgba(255,255,255,.98)!important;min-height:100vh;max-width:none}
+#gsaAuthGate #gsaAuthTitle{font-size:clamp(2rem,3.2vw,3.25rem)!important;letter-spacing:-.045em!important}
+#gsaAuthGate input{min-height:54px!important;border-radius:14px!important;background:#f4f7ff!important;border-color:#dbe6f8!important;font-size:14px!important}
+#gsaAuthGate form button[type=submit]{min-height:54px!important;border-radius:14px!important;letter-spacing:.01em}
+#gsaAuthGate #gsaAuthMessage{border:1px solid #e6edf8;background:#f7faff!important;border-radius:14px!important}
+.px-topnav{gap:5px!important}
+.px-topnav button{background:#eff6ff!important;border-color:#dbeafe!important;color:#1d4ed8!important}
+.px-topnav button:hover{background:#2563eb!important;color:#fff!important}
+@media(max-width:900px){#gsaAuthGate>.relative.w-full.max-w-5xl{height:auto!important;min-height:100vh!important;grid-template-columns:1fr!important}#gsaAuthGate>.relative.w-full.max-w-5xl>section:first-child{display:none!important}#gsaAuthGate>.relative.w-full.max-w-5xl>section:last-child{min-height:100vh!important;padding:26px!important}}
+
+
+/* Final linear loading indicator override */
+#gsaLoadProgress{position:fixed!important;inset:0!important;display:flex;align-items:center;justify-content:center;background:rgba(239,246,255,.78)!important;backdrop-filter:blur(7px);border:0!important;padding:20px!important}
+#gsaLoadProgress.hidden{display:none!important}
+#gsaLoadProgress>.mx-auto{width:min(440px,calc(100vw - 32px));max-width:440px!important;margin:0!important;padding:30px;border:1px solid #dbeafe;border-radius:24px;background:#fff;box-shadow:0 25px 80px rgba(30,64,175,.20);text-align:left}
+#gsaLoadProgress .px-progress-head{display:flex;align-items:center;justify-content:space-between;gap:16px;font-size:12px;font-weight:600;color:#334155;margin-bottom:12px}
+#gsaLoadProgress #gsaLoadProgressPercent{font-size:20px;font-weight:800;color:#1d4ed8;min-width:52px;text-align:right}
+#gsaLoadProgress .px-linear-track{height:10px;border-radius:999px;background:#e7efff;overflow:hidden}
+#gsaLoadProgress .px-linear-fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,#2563eb,#0d9488);transition:width .35s ease;position:relative}
+#gsaLoadProgress .px-linear-fill:after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);animation:pxShimmer 1.6s linear infinite}
+#gsaLoadProgress .px-progress-note{font-size:11px;color:#64748b;margin:14px 0 0}
+@keyframes pxShimmer{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+
+
+
+/* === PREDICT X AI premium login-only redesign (scoped to #gsaAuthGate) === */
+#gsaAuthGate{isolation:isolate!important;background:radial-gradient(ellipse at 12% 12%,#e9fbf6 0,transparent 35%),radial-gradient(ellipse at 90% 82%,#f0edff 0,transparent 34%),linear-gradient(135deg,#f7fbff 0%,#eef7ff 52%,#f8fffc 100%)!important;color:#18334b!important}
+#gsaAuthGate>.absolute{opacity:1!important;background:radial-gradient(circle at 12% 18%,rgba(16,185,129,.14),transparent 28%),radial-gradient(circle at 82% 78%,rgba(139,92,246,.12),transparent 31%),radial-gradient(circle at 70% 15%,rgba(96,165,250,.16),transparent 28%)!important}
+#gsaAuthGate>.relative.w-full.max-w-5xl{position:relative!important;width:min(1180px,calc(100% - 48px))!important;max-width:1180px!important;height:auto!important;min-height:min(760px,calc(100vh - 64px))!important;margin:auto!important;grid-template-columns:minmax(0,1.02fr) minmax(390px,.98fr)!important;overflow:hidden!important;border:1px solid rgba(255,255,255,.88)!important;border-radius:30px!important;background:rgba(255,255,255,.76)!important;box-shadow:0 28px 90px rgba(63,103,142,.15),0 4px 18px rgba(65,115,149,.06)!important;backdrop-filter:blur(18px)!important}
+#gsaAuthGate>.relative.w-full.max-w-5xl>section:first-child{position:relative!important;isolation:isolate!important;display:flex!important;justify-content:space-between!important;min-height:100%!important;padding:clamp(30px,4vw,58px)!important;color:#17445a!important;background:linear-gradient(145deg,rgba(237,253,248,.98),rgba(232,243,255,.96) 55%,rgba(245,241,255,.98))!important;overflow:hidden!important}
+/* Decorative digital pitch, network points and lighting stay behind content. */
+#gsaAuthGate>.relative.w-full.max-w-5xl>section:first-child:before{content:"";position:absolute;z-index:-2;inset:20% -10% -8% 4%;border:1.5px solid rgba(16,185,129,.24);border-radius:42% 42% 20% 20%/28% 28% 12% 12%;transform:perspective(650px) rotateX(52deg) rotate(-8deg);background:repeating-linear-gradient(90deg,transparent 0 12.2%,rgba(16,185,129,.09) 12.3% 12.5%,transparent 12.6% 24.8%),repeating-linear-gradient(0deg,transparent 0 17%,rgba(59,130,246,.08) 17.1% 17.3%,transparent 17.4% 34%);box-shadow:inset 0 0 60px rgba(16,185,129,.07)}
+#gsaAuthGate>.relative.w-full.max-w-5xl>section:first-child:after{content:"";position:absolute;z-index:-1;inset:0;pointer-events:none;background-image:radial-gradient(circle at 17% 36%,rgba(16,185,129,.7) 0 2px,transparent 3px),radial-gradient(circle at 73% 24%,rgba(99,102,241,.55) 0 2px,transparent 3px),radial-gradient(circle at 83% 59%,rgba(16,185,129,.65) 0 2px,transparent 3px),radial-gradient(circle at 31% 75%,rgba(59,130,246,.6) 0 2px,transparent 3px),linear-gradient(32deg,transparent 48.8%,rgba(59,130,246,.12) 49%,transparent 49.3%),linear-gradient(145deg,transparent 57%,rgba(16,185,129,.14) 57.2%,transparent 57.5%);opacity:.9}
+#gsaAuthGate>.relative.w-full.max-w-5xl>section:first-child .border-white\/20{border-color:rgba(16,185,129,.2)!important;background:rgba(255,255,255,.66)!important;box-shadow:0 10px 32px rgba(74,123,146,.06)}
+#gsaAuthGate>.relative.w-full.max-w-5xl>section:first-child .text-white,#gsaAuthGate>.relative.w-full.max-w-5xl>section:first-child .text-blue-50,#gsaAuthGate>.relative.w-full.max-w-5xl>section:first-child .text-blue-100{color:#385f73!important}
+#gsaAuthGate>.relative.w-full.max-w-5xl>section:first-child .text-emerald-200,#gsaAuthGate>.relative.w-full.max-w-5xl>section:first-child .text-emerald-100,#gsaAuthGate>.relative.w-full.max-w-5xl>section:first-child .text-cyan-200{color:#07866b!important}
+#gsaAuthGate>.relative.w-full.max-w-5xl>section:first-child .bg-slate-950\/20{background:rgba(255,255,255,.66)!important}
+#gsaAuthGate>.relative.w-full.max-w-5xl>section:first-child a.bg-white{background:linear-gradient(100deg,#078b6b,#0b9f87)!important;color:white!important;box-shadow:0 8px 20px rgba(5,150,105,.18)}
+#gsaAuthGate>.relative.w-full.max-w-5xl>section:first-child a.bg-white:hover{filter:brightness(1.04)}
+#gsaAuthGate>.relative.w-full.max-w-5xl>section:first-child .bg-white\/10{background:rgba(255,255,255,.74)!important;color:#087c69!important}
+#gsaAuthGate>.relative.w-full.max-w-5xl>section:first-child .border-white\/15{border-color:rgba(16,185,129,.18)!important}
+#gsaAuthGate>.relative.w-full.max-w-5xl>section:last-child{position:relative!important;z-index:1;display:flex!important;flex-direction:column;justify-content:center!important;min-height:100%!important;padding:clamp(28px,4vw,64px)!important;background:rgba(255,255,255,.82)!important;border-left:1px solid rgba(210,231,241,.8);backdrop-filter:blur(16px)}
+#gsaAuthGate #gsaAuthTitle{font-size:clamp(2rem,3vw,2.7rem)!important;letter-spacing:-.045em!important;color:#17374c!important}
+#gsaAuthGate #gsaAuthSubtitle{color:#58758a!important}
+#gsaAuthGate input{min-height:52px!important;border-radius:13px!important;background:rgba(246,251,255,.96)!important;border:1px solid #d6e6ef!important;color:#17374c!important;font-size:14px!important;transition:border-color .18s,box-shadow .18s,background .18s!important}
+#gsaAuthGate input:focus{border-color:#10a37f!important;background:#fff!important;box-shadow:0 0 0 4px rgba(16,163,127,.13)!important;outline:none!important}
+#gsaAuthGate label{color:#36556a!important}
+#gsaAuthGate #gsaShowSignIn,#gsaAuthGate #gsaShowSignUp{min-height:44px;border-radius:11px!important}
+#gsaAuthGate #gsaShowSignIn.bg-white,#gsaAuthGate #gsaShowSignUp.bg-white{color:#087e69!important;box-shadow:0 3px 10px rgba(38,87,105,.08)!important}
+#gsaAuthGate form button[type=submit]{min-height:52px!important;border-radius:13px!important;background:linear-gradient(105deg,#07976f,#10a98c 62%,#6475d9)!important;box-shadow:0 10px 22px rgba(16,163,127,.2)!important;transition:transform .18s,box-shadow .18s,filter .18s!important}
+#gsaAuthGate form button[type=submit]:hover{transform:translateY(-1px);box-shadow:0 13px 26px rgba(16,163,127,.24)!important;filter:saturate(1.05)}
+#gsaAuthGate #gsaShowForgot,#gsaAuthGate #gsaBackToSignIn,#gsaAuthGate #gsaBackFromReset{color:#07866b!important}
+#gsaAuthGate #gsaAuthMessage{background:#f3fafb!important;border:1px solid #dceef0!important;color:#426579!important}
+#gsaAuthGate .text-slate-400{color:#6b8799!important}
+#gsaAuthGate .bg-gradient-to-br.from-blue-700.to-teal-500{background:linear-gradient(135deg,#0b9b79,#6c79df)!important}
+@media(max-width:900px){#gsaAuthGate{padding:18px!important}#gsaAuthGate>.relative.w-full.max-w-5xl{width:min(680px,100%)!important;min-height:0!important;height:auto!important;grid-template-columns:1fr!important;border-radius:25px!important}#gsaAuthGate>.relative.w-full.max-w-5xl>section:first-child{display:flex!important;min-height:245px!important;padding:26px 28px!important}#gsaAuthGate>.relative.w-full.max-w-5xl>section:first-child>div:nth-child(2){display:none!important}#gsaAuthGate>.relative.w-full.max-w-5xl>section:first-child>div:first-child{margin:0!important}#gsaAuthGate>.relative.w-full.max-w-5xl>section:first-child .mt-12{margin-top:18px!important}#gsaAuthGate>.relative.w-full.max-w-5xl>section:last-child{min-height:0!important;padding:30px clamp(22px,6vw,48px)!important;border-left:0;border-top:1px solid #dcecf1!important}}
+@media(max-width:480px){#gsaAuthGate{padding:10px!important;align-items:flex-start!important}#gsaAuthGate>.relative.w-full.max-w-5xl{border-radius:20px!important}#gsaAuthGate>.relative.w-full.max-w-5xl>section:first-child{min-height:150px!important;padding:18px 20px!important}#gsaAuthGate>.relative.w-full.max-w-5xl>section:first-child .mt-12{display:none!important}#gsaAuthGate>.relative.w-full.max-w-5xl>section:last-child{padding:22px 20px!important}#gsaAuthGate #gsaAuthTitle{font-size:1.8rem!important}}
+@media(prefers-reduced-motion:reduce){#gsaAuthGate *,#gsaAuthGate *:before,#gsaAuthGate *:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+/* === end login-only redesign === */
+
 </style>
 <style id="tailwind-production-css">
 /*! tailwindcss v4.1.10 | MIT License | https://tailwindcss.com */
@@ -2426,7 +2522,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
       <div class="absolute -bottom-20 -right-4 h-64 w-64 rounded-full border-[36px] border-emerald-300/15 pointer-events-none"></div>
       <div class="relative">
         <div class="inline-flex items-center gap-3 rounded-2xl border border-white/20 bg-white/10 px-4 py-3 backdrop-blur">
-          <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-blue-700"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v9h9A9 9 0 1 1 12 3Z"/><path d="M14 3.2A9 9 0 0 1 20.8 10H14Z"/></svg></span>
+          <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-blue-700"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="m12 7 3 2 0 4-3 2-3-2V9zM12 7l0-4M15 9l5-2M15 13l4 4M9 9 4 7M9 13l-4 4"/></svg></span>
           <div><div class="text-xs font-bold uppercase tracking-[.2em] text-cyan-200">Predict</div><div class="text-lg font-black leading-tight">Predict<span class="text-cyan-300">X</span> AI</div></div>
         </div>
         <div class="mt-12">
@@ -2453,7 +2549,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
         <span class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-emerald-300"></span>Secure member portal</span><span>Data • Insight • Performance</span>
       </div>
     </section>
-    <section class="p-6 sm:p-10 md:p-12"><div class="mb-7 flex items-center gap-3 md:hidden"><span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-700 to-teal-500 text-white"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v9h9A9 9 0 1 1 12 3Z"/><path d="M14 3.2A9 9 0 0 1 20.8 10H14Z"/></svg></span><div><div class="text-xs font-bold uppercase tracking-widest text-cyan-700">Predict</div><div class="text-xl font-black text-slate-900">Predict<span class="text-blue-600">X</span> AI</div></div></div>
+    <section class="p-6 sm:p-10 md:p-12"><div class="mb-7 flex items-center gap-3 md:hidden"><span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-700 to-teal-500 text-white"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="m12 7 3 2 0 4-3 2-3-2V9zM12 7l0-4M15 9l5-2M15 13l4 4M9 9 4 7M9 13l-4 4"/></svg></span><div><div class="text-xs font-bold uppercase tracking-widest text-cyan-700">Predict</div><div class="text-xl font-black text-slate-900">Predict<span class="text-blue-600">X</span> AI</div></div></div>
       <div class="mb-6"><p class="text-xs font-extrabold uppercase tracking-[.2em] text-teal-700">Welcome to your workspace</p><h2 id="gsaAuthTitle" class="mt-2 text-3xl font-black tracking-tight text-slate-900">Welcome back</h2><p id="gsaAuthSubtitle" class="mt-2 text-sm leading-6 text-slate-500">Sign in to continue to PredictX AI.</p></div>
       <div class="mb-6 grid grid-cols-2 rounded-xl bg-slate-100 p-1"><button id="gsaShowSignIn" class="rounded-lg bg-white px-3 py-2.5 text-sm font-extrabold text-blue-800 shadow-sm">Sign in</button><button id="gsaShowSignUp" class="rounded-lg px-3 py-2.5 text-sm font-bold text-slate-500">Create account</button></div>
       <form id="gsaSignInForm" class="space-y-4"><label class="block text-xs font-bold text-slate-700">Email address<input id="gsaLoginEmail" type="email" required autocomplete="username" placeholder="you@example.com" class="w-full mt-1.5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-sm outline-none transition focus:border-teal-500 focus:bg-white focus:ring-4 focus:ring-teal-500/10"></label><label class="block text-xs font-bold text-slate-700">Password<input id="gsaLoginPassword" type="password" required autocomplete="current-password" placeholder="Enter your password" class="w-full mt-1.5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-sm outline-none transition focus:border-teal-500 focus:bg-white focus:ring-4 focus:ring-teal-500/10"></label><div class="flex justify-end"><button type="button" id="gsaShowForgot" class="text-sm font-bold text-teal-700 hover:text-blue-800">Forgot password?</button></div><button class="w-full rounded-xl bg-gradient-to-r from-blue-700 to-teal-600 py-3.5 text-sm font-extrabold text-white shadow-lg shadow-teal-700/20 transition hover:brightness-105">Sign in securely <span aria-hidden="true">→</span></button></form>
@@ -2464,8 +2560,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
     </section>
   </div>
 </div>
-<div id="gsaLoadProgress" class="hidden fixed inset-0 z-[100000]" role="status" aria-live="polite"><div class="mx-auto"><div class="px-loading-brand">PredictX AI · Data Engine</div><div class="px-progress-circle"><svg viewBox="0 0 120 120" aria-hidden="true"><defs><linearGradient id="pxProgressGradient" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2563eb"/><stop offset="100%" stop-color="#4f46e5"/></linearGradient></defs><circle class="px-progress-track" cx="60" cy="60" r="52"/><circle id="gsaLoadProgressCircle" class="px-progress-value" cx="60" cy="60" r="52"/></svg><div class="px-progress-center"><span id="gsaLoadProgressPercent">0%</span><span class="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Loaded</span></div></div><span id="gsaLoadProgressLabel">Loading recent match data…</span></div></div>
-<button id="gsaSignOutButton" onclick="gsaSignOut()" class="hidden fixed top-3 left-3 z-[1000] rounded-full bg-slate-900 text-white px-4 py-2 text-xs font-bold shadow-lg">Sign out</button>
+<div id="gsaLoadProgress" class="hidden fixed inset-0 z-[100000]" role="status" aria-live="polite"><div class="mx-auto"><div class="px-loading-brand">PredictX AI · Data Engine</div><div class="px-progress-head"><span id="gsaLoadProgressLabel">Loading recent match data…</span><strong id="gsaLoadProgressPercent">0%</strong></div><div class="px-linear-track" role="progressbar" aria-label="Data loading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="gsaLinearProgressFill" class="px-linear-fill"></div></div><p class="px-progress-note">Syncing match feeds and preparing predictions</p></div></div>
+
 
     <header class="sticky top-0 z-50 bg-white border-b border-borderCol px-4 lg:px-8 py-3.5 shadow-sm">
         <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
@@ -2474,33 +2570,31 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
                     <i class="fa-solid fa-bars text-xl"></i>
                 </button>
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-tealAccent to-emeraldGreen flex items-center justify-center text-white shadow-md">
-                    <i class="fa-solid fa-brain text-lg"></i>
+                    <i class="fa-solid fa-futbol text-lg"></i>
                 </div>
                 <div>
                     <h1 class="font-extrabold text-lg text-mainText tracking-tight flex items-center gap-2">
                         PredictX AI
-                        <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-goldAccent/10 text-goldAccent border border-goldAccent/20">Open-Source LLM v5.4</span>
+
                     </h1>
-                    <p class="text-xs text-secondaryText">Unified Soccer Intelligence & LLM Record Analyzer</p>
+
                 </div>
             </div>
 
             <div class="flex items-center space-x-3">
-                <div class="hidden md:flex items-center space-x-2 bg-pageBg px-3 py-1.5 rounded-xl border border-borderCol text-xs text-secondaryText">
-                    <span class="w-2 h-2 rounded-full bg-successGreen animate-pulse"></span>
-                    <span>Feeds: <strong id="headerSyncCount" class="text-mainText">0/3 Synced</strong></span>
-                </div>
-                <button onclick="runGlobalSync()" class="bg-tealAccent hover:bg-tealAccent/90 text-white text-xs font-semibold px-3.5 py-2 rounded-xl shadow-sm transition-all flex items-center gap-2">
+<button onclick="runGlobalSync()" class="bg-tealAccent hover:bg-tealAccent/90 text-white text-xs font-semibold px-3.5 py-2 rounded-xl shadow-sm transition-all flex items-center gap-2">
                     <i class="fa-solid fa-rotate" id="syncSpinner"></i>
                     <span class="hidden sm:inline">Sync Recent Feeds</span>
-                </button><button id="gsaLoadAllDataButton" onclick="toggleDataWindow()" class="bg-blue-700 hover:bg-blue-800 text-white text-xs font-semibold px-3.5 py-2 rounded-xl shadow-sm">Show recent window</button>
+                </button>
+                <nav class="px-topnav" aria-label="System navigation"><button onclick="switchTab('performance')">Model Performance</button><button onclick="switchTab('settings')">Settings &amp; LLM</button><button onclick="switchTab('admin')" data-admin-only="true">Admin</button><button onclick="switchTab('match-controls')" data-admin-only="true">Match Controls</button></nav>
+                <button id="gsaSignOutButton" onclick="gsaSignOut()" class="hidden rounded-full px-4 py-2 text-xs font-bold">Sign out <i class="fa-solid fa-right-from-bracket"></i></button>
             </div>
         </div>
     </header>
 
-    <div class="flex-1 max-w-7xl w-full mx-auto px-4 lg:px-8 py-6 flex flex-col lg:flex-row gap-6">
+    <div id="app-shell" class="flex-1 w-full mx-0 px-0 py-0 flex flex-col lg:flex-row gap-0">
 
-        <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-borderCol p-4 flex flex-col transform -translate-x-full lg:translate-x-0 lg:static lg:w-64 transition-transform duration-200 shadow-sm rounded-2xl lg:shadow-none h-fit">
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-borderCol p-4 flex flex-col transform -translate-x-full lg:translate-x-0 lg:static lg:w-64 transition-transform duration-200 shadow-sm rounded-none lg:shadow-none h-full">
             <div class="flex items-center justify-between pb-4 mb-3 border-b border-borderCol lg:hidden">
                 <span class="font-bold text-sm text-mainText">Navigation Menu</span>
                 <button onclick="toggleMobileMenu()" class="text-secondaryText hover:text-mainText">
@@ -2530,12 +2624,10 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
                 </button>
 
                 <div class="text-[11px] font-bold text-secondaryText uppercase tracking-wider px-3 pt-3 pb-1">AI Intelligence</div>
-                <button onclick="switchTab('predictor')" id="nav-predictor" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
-                    <i class="fa-solid fa-wand-magic-sparkles w-5 text-center text-goldAccent"></i> AI Match Predictor
-                </button>
                 <button onclick="switchTab('preferred')" id="nav-preferred" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
-                    <i class="fa-solid fa-brain w-5 text-center text-goldAccent"></i> AI Top 40 Predictions
+                    <i class="fa-solid fa-brain w-5 text-center text-goldAccent"></i> AI to 40 Predictions
                 </button>
+                <button onclick="switchTab('predictor')" id="nav-predictor" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText"><i class="fa-solid fa-wand-magic-sparkles w-5 text-center text-goldAccent"></i> AI Match Predictor</button>
 
                 <div class="text-[11px] font-bold text-secondaryText uppercase tracking-wider px-3 pt-3 pb-1">Settings</div>
                 <button onclick="switchTab('sources')" id="nav-sources" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
@@ -2547,20 +2639,20 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
                 <button onclick="switchTab('ai-analytics')" id="nav-ai-analytics" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
                     <i class="fa-solid fa-brain w-5 text-center text-emeraldGreen"></i> AI Analytics
                 </button>
-                <button onclick="switchTab('admin')" id="nav-admin" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
+                <button style="display:none" onclick="switchTab('admin')" id="nav-admin" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
                     <i class="fa-solid fa-user-shield w-5 text-center text-royalBlue"></i> Admin
                 </button>
                 <button onclick="switchTab('history')" id="nav-history" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
                     <i class="fa-solid fa-clock-rotate-left w-5 text-center text-secondaryText"></i> Prediction History
                 </button>
-                <button onclick="switchTab('performance')" id="nav-performance" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
+                <button style="display:none" onclick="switchTab('performance')" id="nav-performance" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
                     <i class="fa-solid fa-award w-5 text-center text-successGreen"></i> Model Performance
                 </button>
-                <button onclick="switchTab('match-controls')" id="nav-match-controls" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
+                <button style="display:none" onclick="switchTab('match-controls')" id="nav-match-controls" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
                     <i class="fa-solid fa-flag w-5 text-center text-rose-600"></i> Match Controls
                     <span id="blacklistNavCount" class="ml-auto text-[10px] font-bold bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full">0</span>
                 </button>
-                <button onclick="switchTab('settings')" id="nav-settings" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
+                <button style="display:none" onclick="switchTab('settings')" id="nav-settings" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-secondaryText hover:bg-pageBg hover:text-mainText">
                     <i class="fa-solid fa-gear w-5 text-center text-secondaryText"></i> Model Performance Settings & LLM
                 </button>
             </nav>
@@ -2576,7 +2668,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
             </div>
         </aside>
 
-        <main class="flex-1 flex flex-col min-w-0">
+        <main class="flex-1 flex flex-col min-w-0 p-4 lg:p-6">
 
             <!-- Overview Tab -->
             <div id="tab-overview" class="tab-content active flex-col gap-6">
@@ -2586,7 +2678,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
                             <h2 class="text-xl font-extrabold text-mainText">Soccer Predictions</h2>
                             <p class="text-xs text-secondaryText mt-1">Top 10 available records per day, ranked by the source confidence fields.</p>
                         </div>
-                        <div class="flex flex-wrap items-center gap-2"><label class="text-xs font-semibold text-secondaryText">Filter date <input id="overviewSoccerDateFilter" type="date" class="ml-1 border border-borderCol rounded-lg px-2 py-2 text-xs" onchange="renderOverviewDateFilter()"></label><button onclick="switchTab('preferred')" class="bg-tealAccent hover:bg-tealAccent/90 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-sm transition-all flex items-center gap-2"><i class="fa-solid fa-brain"></i> AI Top 40</button></div>
+                        <div class="flex flex-wrap items-center gap-2"><label class="text-xs font-semibold text-secondaryText">Filter date <input id="overviewSoccerDateFilter" type="date" class="ml-1 border border-borderCol rounded-lg px-2 py-2 text-xs" onchange="renderOverviewDateFilter()"></label><button onclick="switchTab('preferred')" class="bg-tealAccent hover:bg-tealAccent/90 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-sm transition-all flex items-center gap-2"><i class="fa-solid fa-brain"></i> AI to 40 Predictions</button></div>
                     </div>
                     <div class="grid grid-cols-1 xl:grid-cols-3 gap-4">
                         <section class="rounded-xl border border-borderCol overflow-hidden">
@@ -2608,11 +2700,11 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
                 <section class="grid grid-cols-1 xl:grid-cols-2 gap-4" id="dailyBestBets">
                   <div class="bg-white p-4 rounded-2xl border border-borderCol custom-shadow">
                     <div class="flex flex-wrap items-center justify-between gap-2 mb-3"><div><h3 class="font-extrabold text-mainText">Top 5 Home-Team Tips</h3><p class="text-xs text-secondaryText">Ranked from connected source feeds</p></div><select id="homeBetsDay" onchange="renderDailyBestBets()" class="border border-borderCol rounded-lg p-2 text-xs"><option value="-1">Yesterday</option><option value="0" selected>Today</option><option value="1">Tomorrow</option></select></div>
-                    <div class="overflow-x-auto"><table class="w-full text-left text-xs"><thead><tr class="border-b bg-pageBg text-secondaryText"><th class="p-2">Home Team</th><th class="p-2">Away Team</th><th class="p-2">Prediction</th><th class="p-2">Confidence</th><th class="p-2">Match Result</th></tr></thead><tbody id="homeBetsBody"><tr><td colspan="5" class="p-4 text-center text-secondaryText">Loading source matches…</td></tr></tbody></table></div>
+                    <div class="overflow-x-auto"><table class="w-full text-left text-xs"><thead><tr class="border-b bg-pageBg text-secondaryText"><th class="p-2">Home Team</th><th class="p-2">Away Team</th><th class="p-2">Prediction</th><th class="p-2">Confidence</th><th class="p-2">Match Result</th></tr></thead><tbody id="homeBetsBody"><tr><td colspan="5" class="p-4 text-center text-secondaryText">Loading source matches…<div class="px-loadbar"></div></td></tr></tbody></table></div>
                   </div>
                   <div class="bg-white p-4 rounded-2xl border border-borderCol custom-shadow">
                     <div class="flex flex-wrap items-center justify-between gap-2 mb-3"><div><h3 class="font-extrabold text-mainText">Top 5 Away-Team Tips</h3><p class="text-xs text-secondaryText">Ranked from connected source feeds</p></div><select id="awayBetsDay" onchange="renderDailyBestBets()" class="border border-borderCol rounded-lg p-2 text-xs"><option value="-1">Yesterday</option><option value="0" selected>Today</option><option value="1">Tomorrow</option></select></div>
-                    <div class="overflow-x-auto"><table class="w-full text-left text-xs"><thead><tr class="border-b bg-pageBg text-secondaryText"><th class="p-2">Home Team</th><th class="p-2">Away Team</th><th class="p-2">Prediction</th><th class="p-2">Confidence</th><th class="p-2">Match Result</th></tr></thead><tbody id="awayBetsBody"><tr><td colspan="5" class="p-4 text-center text-secondaryText">Loading source matches…</td></tr></tbody></table></div>
+                    <div class="overflow-x-auto"><table class="w-full text-left text-xs"><thead><tr class="border-b bg-pageBg text-secondaryText"><th class="p-2">Home Team</th><th class="p-2">Away Team</th><th class="p-2">Prediction</th><th class="p-2">Confidence</th><th class="p-2">Match Result</th></tr></thead><tbody id="awayBetsBody"><tr><td colspan="5" class="p-4 text-center text-secondaryText">Loading source matches…<div class="px-loadbar"></div></td></tr></tbody></table></div>
                   </div>
                 </section>
 
@@ -2623,7 +2715,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
                         <div class="text-[11px] text-emeraldGreen mt-1"><i class="fa-solid fa-database"></i> Source Records Ready</div>
                     </div>
                     <div class="bg-white p-4 rounded-xl border border-borderCol custom-shadow">
-                        <div class="text-xs font-semibold text-secondaryText">AI Top 40 Shortlist</div>
+                        <div class="text-xs font-semibold text-secondaryText">AI to 40 Predictions Shortlist</div>
                         <div class="text-2xl font-extrabold text-mainText mt-1" id="statEligibleFixtures">0</div>
                         <div class="text-[11px] text-goldAccent mt-1"><i class="fa-solid fa-star"></i> LLM Analyzed</div>
                     </div>
@@ -2648,11 +2740,11 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
                 <div class="bg-white p-6 rounded-2xl border border-borderCol custom-shadow">
                     <div class="flex items-center justify-between mb-4">
                         <div>
-                            <h3 class="font-bold text-lg text-mainText">AI Top Tips Preview</h3>
+                            <h3 class="font-bold text-lg text-mainText">AI to 40 Predictions Preview</h3>
                             <p class="text-xs text-secondaryText">Ranked shortlist analyzed from active source feeds</p>
                         </div>
                         <button onclick="switchTab('preferred')" class="text-xs font-semibold text-goldAccent hover:underline flex items-center gap-1">
-                            View Full AI Top 40 Predictions <i class="fa-solid fa-arrow-right"></i>
+                            View Full AI to 40 Predictions <i class="fa-solid fa-arrow-right"></i>
                         </button>
                     </div>
                     <div class="overflow-x-auto">
@@ -2683,7 +2775,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 
             <div id="tab-top-tips" class="tab-content flex-col gap-6">
                 <section class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-950 via-indigo-950 to-teal-900 p-6 md:p-8 text-white shadow-xl"><div class="absolute -right-8 -top-12 h-48 w-48 rounded-full bg-teal-400/10 blur-2xl"></div><div class="relative flex flex-col md:flex-row md:items-end md:justify-between gap-5"><div><div class="text-xs uppercase tracking-[.22em] text-teal-200 font-bold mb-2">Cross-source intelligence</div><h2 class="text-3xl font-black">Top 15 Tips</h2><p class="text-sm text-slate-200 mt-2 max-w-2xl">Ranks fixtures by source agreement, reported confidence and data completeness. Matches appearing in multiple feeds receive an agreement boost.</p></div><div class="grid grid-cols-2 gap-3"><div class="rounded-2xl border border-white/15 bg-white/10 px-4 py-3"><div class="text-xs text-slate-300">Fixtures compared</div><div id="topTipsCompared" class="text-2xl font-black">0</div></div><div class="rounded-2xl border border-white/15 bg-white/10 px-4 py-3"><div class="text-xs text-slate-300">Sources online</div><div id="topTipsSources" class="text-2xl font-black">0/3</div></div></div></div></section>
-                <section class="bg-white rounded-2xl border border-borderCol custom-shadow p-4 md:p-5"><div class="flex flex-wrap items-end justify-between gap-3 mb-4"><div><h3 class="font-extrabold text-lg">Consensus shortlist</h3><p class="text-xs text-secondaryText mt-1">Confidence uses the source-reported values and agreement; it is not a guarantee of outcome.</p></div><div class="flex flex-wrap gap-2 items-end"><label class="text-xs font-semibold text-secondaryText">From<input id="topTipsDateFrom" type="date" class="block mt-1 border border-borderCol rounded-lg px-3 py-2" onchange="renderTopTips()"></label><label class="text-xs font-semibold text-secondaryText">To<input id="topTipsDateTo" type="date" class="block mt-1 border border-borderCol rounded-lg px-3 py-2" onchange="renderTopTips()"></label><button onclick="renderTopTips()" class="bg-tealAccent text-white rounded-lg px-4 py-2 text-xs font-bold">Refresh ranking</button></div></div><div id="topTipsCards" class="grid grid-cols-1 xl:grid-cols-2 gap-4"><div class="p-6 rounded-xl bg-pageBg text-sm text-secondaryText">Loading source feeds…</div></div></section>
+                <section class="px-explain-grid" aria-label="Prediction source guide"><article class="px-explain-card"><h4><i class="fa-solid fa-chart-line mr-1"></i> Statarea</h4><p class="text-xs text-slate-600">Use as a statistical baseline: review its tip, confidence and match context. Treat it as one signal, not a guarantee.</p></article><article class="px-explain-card"><h4><i class="fa-solid fa-trophy mr-1"></i> Vital Best Tips</h4><p class="text-xs text-slate-600">Use its best-tip recommendation and source-reported confidence to identify value candidates; verify team and date alignment.</p></article><article class="px-explain-card"><h4><i class="fa-solid fa-futbol mr-1"></i> Soccervital Matches</h4><p class="text-xs text-slate-600">Compare its match prediction with the other feeds. Stronger agreement can raise shortlist priority, but outcomes remain uncertain.</p></article><article class="px-explain-card"><h4><i class="fa-solid fa-brain mr-1"></i> How to read consensus</h4><p class="text-xs text-slate-600">Prioritize clear source agreement and usable confidence data. Conflicting tips or missing values should be reviewed manually.</p></article></section>
+                <section class="bg-white rounded-2xl border border-borderCol custom-shadow p-4 md:p-5"><div class="flex flex-wrap items-end justify-between gap-3 mb-4"><div><h3 class="font-extrabold text-lg">Consensus shortlist</h3><p class="text-xs text-secondaryText mt-1">Confidence uses the source-reported values and agreement; it is not a guarantee of outcome.</p></div><div class="flex flex-wrap gap-2 items-end"><label class="text-xs font-semibold text-secondaryText">From<input id="topTipsDateFrom" type="date" class="block mt-1 border border-borderCol rounded-lg px-3 py-2" onchange="renderTopTips()"></label><label class="text-xs font-semibold text-secondaryText">To<input id="topTipsDateTo" type="date" class="block mt-1 border border-borderCol rounded-lg px-3 py-2" onchange="renderTopTips()"></label><button onclick="renderTopTips()" class="bg-tealAccent text-white rounded-lg px-4 py-2 text-xs font-bold">Refresh ranking</button></div></div><div id="topTipsCards" class="grid grid-cols-1 xl:grid-cols-2 gap-4"><div class="p-6 rounded-xl bg-pageBg text-sm text-secondaryText">Loading source feeds…<div class="px-loadbar"></div></div></div></section>
             </div>
             <div id="tab-epreferred" class="tab-content flex-col gap-6">
                 <section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4" aria-label="Prediction model win rates">
@@ -2847,25 +2940,25 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
                     <div class="bg-white p-5 rounded-2xl border border-borderCol custom-shadow"><div class="text-xs text-secondaryText font-semibold">Prediction 3 (SVA) — Soccervital</div><div id="aiWinRateSoccer" class="text-3xl font-extrabold text-crimsonRed mt-2">—</div><div id="aiWinRateSoccerMeta" class="text-xs text-secondaryText mt-1">Awaiting settled results</div></div>
                 </section>
 
-                <!-- Sub-Navigation Bar for the 3 Top 40 Tables -->
+                <!-- Sub-Navigation Bar for the 3 Top 45 Tables -->
                 <div class="flex flex-wrap items-center gap-2 bg-white p-2.5 rounded-2xl border border-borderCol custom-shadow">
                     <button onclick="switchTop40SubTab(1)" id="top40-nav-1" class="top40-subnav-btn flex-1 min-w-[160px] py-2.5 px-4 rounded-xl text-xs font-bold transition-all bg-tealAccent text-white shadow-sm flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-chart-line"></i> Prediction 1 (Str)
+                        <i class="fa-solid fa-shield-heart"></i> Best Tips
                     </button>
                     <button onclick="switchTop40SubTab(2)" id="top40-nav-2" class="top40-subnav-btn flex-1 min-w-[160px] py-2.5 px-4 rounded-xl text-xs font-bold transition-all bg-pageBg text-secondaryText hover:text-mainText flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-trophy"></i> Prediction 2 (SVB)
+                        <i class="fa-solid fa-scale-balanced"></i> Medium Risk
                     </button>
                     <button onclick="switchTop40SubTab(3)" id="top40-nav-3" class="top40-subnav-btn flex-1 min-w-[160px] py-2.5 px-4 rounded-xl text-xs font-bold transition-all bg-pageBg text-secondaryText hover:text-mainText flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-futbol"></i> Prediction 3 (SVA)
+                        <i class="fa-solid fa-bolt"></i> High Risk
                     </button>
                 </div>
 
-                <!-- Top 40 Table 1: Statarea -->
+                <!-- Top 45 Table 1: Statarea -->
                 <div id="top40-subcontent-1" class="top40-subcontent bg-white p-6 rounded-2xl border border-borderCol custom-shadow flex flex-col gap-4">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-borderCol">
                         <div>
                             <span class="text-[11px] font-bold uppercase tracking-wider text-tealAccent bg-tealAccent/10 px-2.5 py-1 rounded-lg">System 01</span>
-                            <h3 class="font-bold text-base text-mainText mt-1">Statarea Top 40 Predictions & Tactical Analysis</h3>
+                            <h3 class="font-bold text-base text-mainText mt-1">Best Tips — Statarea Source</h3>
                         </div>
                         <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
                             <div class="flex items-center gap-2">
@@ -2886,7 +2979,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
                                     <th class="p-3">Match</th>
                                     <th class="p-3">Tip / Pred</th>
                                     <th class="p-3">Probability</th>
-                                    <th class="p-3">LLM Tactical Rationale</th>
+                                    <th class="p-3">Predicted Correct Score</th>
                                     <th class="p-3">Result</th>
                                 </tr>
                             </thead>
@@ -2904,12 +2997,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
                     </div>
                 </div>
 
-                <!-- Top 40 Table 2: Vital Best Tips -->
+                <!-- Top 45 Table 2: Vital Best Tips -->
                 <div id="top40-subcontent-2" class="top40-subcontent bg-white p-6 rounded-2xl border border-borderCol custom-shadow flex flex-col gap-4" style="display: none;">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-borderCol">
                         <div>
                             <span class="text-[11px] font-bold uppercase tracking-wider text-deepPurple bg-deepPurple/10 px-2.5 py-1 rounded-lg">System 02</span>
-                            <h3 class="font-bold text-base text-mainText mt-1">Vital Best Tips Top 40 Predictions & Tactical Analysis</h3>
+                            <h3 class="font-bold text-base text-mainText mt-1">Medium Risk — Vital Best Tips Source</h3>
                         </div>
                         <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
                             <div class="flex items-center gap-2">
@@ -2930,7 +3023,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
                                     <th class="p-3">Match</th>
                                     <th class="p-3">Tip / Pred</th>
                                     <th class="p-3">Probability</th>
-                                    <th class="p-3">LLM Tactical Rationale</th>
+                                    <th class="p-3">Predicted Correct Score</th>
                                     <th class="p-3">Result</th>
                                 </tr>
                             </thead>
@@ -2948,12 +3041,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
                     </div>
                 </div>
 
-                <!-- Top 40 Table 3: Soccervital Matches -->
+                <!-- Top 45 Table 3: Soccervital Matches -->
                 <div id="top40-subcontent-3" class="top40-subcontent bg-white p-6 rounded-2xl border border-borderCol custom-shadow flex flex-col gap-4" style="display: none;">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-borderCol">
                         <div>
                             <span class="text-[11px] font-bold uppercase tracking-wider text-crimsonRed bg-crimsonRed/10 px-2.5 py-1 rounded-lg">System 03</span>
-                            <h3 class="font-bold text-base text-mainText mt-1">Soccervital Matches Top 40 Predictions & Tactical Analysis</h3>
+                            <h3 class="font-bold text-base text-mainText mt-1">High Risk — Soccervital Source</h3>
                         </div>
                         <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
                             <div class="flex items-center gap-2">
@@ -2974,7 +3067,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
                                     <th class="p-3">Match</th>
                                     <th class="p-3">Tip / Pred</th>
                                     <th class="p-3">Probability</th>
-                                    <th class="p-3">LLM Tactical Rationale</th>
+                                    <th class="p-3">Predicted Correct Score</th>
                                     <th class="p-3">Result</th>
                                 </tr>
                             </thead>
@@ -2994,7 +3087,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
             </div>
 
             <div id="tab-predictor" class="tab-content flex-col gap-6">
-                <div class="flex flex-wrap gap-2 rounded-xl border border-borderCol bg-white p-2"><button type="button" class="predictor-subtab px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-bold" onclick="showPredictorSubtab('predictor-config',this)">AI Configuration</button><button type="button" class="predictor-subtab px-4 py-2 rounded-lg bg-pageBg text-mainText text-sm font-bold" onclick="showPredictorSubtab('predictor-workspace',this)">Predictor</button></div>
+                <div class="flex flex-wrap gap-2 rounded-xl border border-borderCol bg-white p-2"><button type="button" id="predictorConfigTabButton" data-admin-only="true" class="predictor-subtab px-4 py-2 rounded-lg text-sm font-bold" onclick="showPredictorSubtab('predictor-config',this)">AI Configuration</button><button type="button" class="predictor-subtab active px-4 py-2 rounded-lg text-sm font-bold" onclick="showPredictorSubtab('predictor-workspace',this)">Predictor</button></div>
                 <div class="bg-white p-6 rounded-2xl border border-borderCol custom-shadow flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                     <div>
                         <span class="text-xs font-bold uppercase tracking-wider text-goldAccent bg-goldAccent/10 px-2.5 py-1 rounded-lg border border-goldAccent/25"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Interactive LLM Match Analyzer</span>
@@ -3559,11 +3652,13 @@ function json_(obj) {
         const GSA_DEFAULT_AUTH_ENDPOINT='https://script.google.com/macros/s/AKfycbyiBC7JjKUg-6RnWHholWF72gwxbwsi8g1WM0KDYOAGgCs9kTIchAd-A-gnUZtLt6yD/exec';
         function gsaEndpoint(){const saved=(()=>{try{return localStorage.getItem(GSA_AUTH_ENDPOINT_KEY)||localStorage.getItem('gsa_admin_users_endpoint')||''}catch(_){return ''}})();const configured=GSA_DEFAULT_AUTH_ENDPOINT.startsWith('https://script.google.com/macros/s/')?GSA_DEFAULT_AUTH_ENDPOINT:'';return (configured||saved).trim();}
         function showAuthGate(msg){document.getElementById('gsaAuthGate')?.classList.remove('hidden');if(msg)document.getElementById('gsaAuthMessage').textContent=msg;}
-        function hideAuthGate(){document.getElementById('gsaAuthGate')?.classList.add('hidden');document.getElementById('gsaSignOutButton')?.classList.remove('hidden');}
+        function hideAuthGate(){document.getElementById('gsaAuthGate')?.classList.add('hidden');document.getElementById('gsaSignOutButton')?.classList.remove('hidden');pxApplyRoleVisibility();showPredictorSubtab('predictor-workspace',document.querySelector('#tab-predictor .predictor-subtab[onclick*=workspace]'));}
+        function pxApplyRoleVisibility(){const role=String(sessionStorage.getItem('gsa_user_role')||gsaCurrentUser?.role||gsaCurrentUser?.Role||'user').toLowerCase();const admin=role==='admin'||role==='owner'||role==='superadmin';document.querySelectorAll('[data-admin-only="true"]').forEach(el=>el.classList.toggle('hidden',!admin));const cfg=document.getElementById('predictor-config');if(cfg&&!admin)cfg.classList.add('hidden');if(!admin){const ws=document.getElementById('predictor-workspace');if(ws)ws.classList.remove('hidden');}}
+
         async function gsaAuthRequest(action,params={},withToken=false){const endpoint=gsaEndpoint();if(!endpoint)throw Error('PredictX AI sign-in is not configured. Ask the administrator to configure the Apps Script endpoint once in the website code.');if(endpoint.endsWith('/exec'))localStorage.setItem(GSA_AUTH_ENDPOINT_KEY,endpoint);const body=new URLSearchParams({action,...Object.fromEntries(Object.entries(params).map(([k,v])=>[k,typeof v==='string'?v:JSON.stringify(v)]))});if(withToken&&sessionStorage.getItem(GSA_AUTH_TOKEN_KEY))body.set('token',sessionStorage.getItem(GSA_AUTH_TOKEN_KEY));const r=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},body:body.toString(),cache:'no-store'});if(!r.ok)throw Error('Backend HTTP '+r.status);const d=await r.json();if(d.success===false||d.ok===false||d.valid===false)throw Error(d.message||d.error||'Request rejected');return d;}
         window.gsaAuthRequest=gsaAuthRequest; window.gsaGetAuthEndpoint=gsaEndpoint;
         function canProfileSeeTab(id){const role=String(gsaCurrentUser?.role||sessionStorage.getItem('gsa_user_role')||'user').toLowerCase();if(role==='admin'||role==='administrator')return true;if(id==='admin')return false;const own=Array.isArray(gsaCurrentUser?.permissions)?gsaCurrentUser.permissions:null;const allowed=own||gsaProfilePermissions[role]||gsaProfilePermissions.user||[];return allowed.includes('*')||allowed.includes(id);}
-        const GSA_PROFILE_TABS=[['overview','Overview'],['epreferred','Todays Best Tips'],['top-tips','Top Tips'],['statarea','Prediction 1 (Statarea)'],['vital','Prediction 2 (Vital)'],['matches','Prediction 3 (Soccervital)'],['predictor','AI Match Predictor'],['preferred','AI Top 40'],['sources','Data Sources & Admin'],['analytics','Match Analytics'],['ai-analytics','AI Analytics'],['admin','Admin'],['history','Prediction History'],['performance','Model Performance'],['match-controls','Match Controls'],['settings','LLM Settings']];
+        const GSA_PROFILE_TABS=[['overview','Overview'],['epreferred','Todays Best Tips'],['top-tips','Top Tips'],['statarea','Prediction 1 (Statarea)'],['vital','Prediction 2 (Vital)'],['matches','Prediction 3 (Soccervital)'],['predictor','AI Match Predictor'],['preferred','AI to 40 Predictions'],['sources','Data Sources & Admin'],['analytics','Match Analytics'],['ai-analytics','AI Analytics'],['admin','Admin'],['history','Prediction History'],['performance','Model Performance'],['match-controls','Match Controls'],['settings','LLM Settings']];
         function renderProfilePermissionControls(){const box=document.getElementById('profilePermissionsGrid');if(!box)return;const selected=new Set(gsaProfilePermissions.user||[]);box.innerHTML=GSA_PROFILE_TABS.map(([id,label])=>`<label class="flex items-center gap-2 rounded-xl border border-borderCol p-3 text-xs font-semibold"><input type="checkbox" class="profile-permission-checkbox accent-teal-600" value="${id}" ${selected.has(id)?'checked':''}>${label}</label>`).join('');}
         let gsaAdminUsers=[];
         async function loadAdminProfiles(){const st=document.getElementById('adminProfilesStatus');try{st.textContent='Loading profiles…';const d=await gsaAuthRequest('listUsers',{},true);gsaAdminUsers=d.users||[];const sel=document.getElementById('adminProfileSelect');sel.innerHTML='<option value="">Choose a profile</option>'+gsaAdminUsers.map(u=>{const email=u.Email||u.email||'',name=u.DisplayName||u.displayName||email,role=u.Role||u.role||'user';return '<option value="'+String(email).replace(/&/g,'&amp;').replace(/"/g,'&quot;')+'">'+String(name)+' — '+String(role)+'</option>'}).join('');st.textContent='Loaded '+gsaAdminUsers.length+' profiles.';}catch(e){st.textContent='Could not load profiles: '+e.message}}
@@ -3588,7 +3683,7 @@ function json_(obj) {
         async function gsaSignOut(){try{await gsaAuthRequest('signOut',{token:sessionStorage.getItem(GSA_AUTH_TOKEN_KEY)||''});}catch(_){}sessionStorage.removeItem(GSA_AUTH_TOKEN_KEY);sessionStorage.removeItem('gsa_user_role');window.gsaAuthenticated=false;gsaCurrentUser=null;document.getElementById('gsaSignOutButton').classList.add('hidden');showAuthGate('You have signed out. Sign in again to continue.');}
         function gsaNormDate(v){const m=String(v||'').match(/(20\d{2})[-/.](\d{1,2})[-/.](\d{1,2})/);if(m)return `${m[1]}-${String(m[2]).padStart(2,'0')}-${String(m[3]).padStart(2,'0')}`;const d=new Date(v);return Number.isNaN(d.getTime())?'':`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
         function gsaPick(row,keys){for(const k of keys){const found=Object.keys(row||{}).find(x=>x.toLowerCase()===k.toLowerCase());if(found&&String(row[found]??'').trim())return String(row[found]).trim();}return '';}
-        function showPredictorSubtab(id, btn){
+        function showPredictorSubtab(id, btn){ if(id==='predictor-config' && !['admin','owner','superadmin'].includes(String(sessionStorage.getItem('gsa_user_role')||gsaCurrentUser?.role||gsaCurrentUser?.Role||'user').toLowerCase())){id='predictor-workspace';btn=document.querySelector('#tab-predictor .predictor-subtab[onclick*=workspace]');} 
           document.querySelectorAll('.predictor-subpanel').forEach(el=>el.classList.add('hidden'));
           const target=document.getElementById(id); if(target) target.classList.remove('hidden');
           document.querySelectorAll('.predictor-subtab').forEach(el=>{el.classList.remove('bg-blue-600','text-white');el.classList.add('bg-pageBg','text-mainText');});
@@ -3700,6 +3795,8 @@ function json_(obj) {
         });
 
         function switchTab(tabId) {
+            if((tabId==='admin'||tabId==='match-controls'||tabId==='settings'||tabId==='performance') && !['admin','owner','superadmin'].includes(String(sessionStorage.getItem('gsa_user_role')||gsaCurrentUser?.role||gsaCurrentUser?.Role||'user').toLowerCase())){if(tabId==='admin'||tabId==='match-controls') { alert('This section is available to administrators only.'); return; }}
+
             if (!window.gsaAuthenticated) { showAuthGate(); return; }
             if (!canProfileSeeTab(tabId)) { showToast('Your profile does not have access to this section.'); return; }
             // Navigation is synchronous and never waits for network/data requests.
@@ -4082,9 +4179,10 @@ function json_(obj) {
             return mock;
         }
 
-        function gsaProgress(p,label){const box=document.getElementById('gsaLoadProgress');if(!box)return;box.classList.toggle('hidden',p>=100||p<0);const n=Math.max(0,Math.min(100,Math.round(p)));const pct=document.getElementById('gsaLoadProgressPercent');if(pct)pct.textContent=n+'%';const circle=document.getElementById('gsaLoadProgressCircle');if(circle)circle.style.strokeDashoffset=String(326.726*(1-n/100));const msg=document.getElementById('gsaLoadProgressLabel');if(msg)msg.textContent=label||'Loading match data…';}
+        function gsaProgress(p,label){const box=document.getElementById('gsaLoadProgress');if(!box)return;box.classList.toggle('hidden',p>=100||p<0);const n=Math.max(0,Math.min(100,Math.round(p)));const pct=document.getElementById('gsaLoadProgressPercent');if(pct)pct.textContent=n+'%';const fill=document.getElementById('gsaLinearProgressFill');if(fill)fill.style.width=n+'%';const track=box.querySelector('[role=progressbar]');if(track)track.setAttribute('aria-valuenow',String(n));const msg=document.getElementById('gsaLoadProgressLabel');if(msg)msg.textContent=label||'Loading match data…';}
         async function runGlobalSync() {
-            const spinner = document.getElementById('syncSpinner'); gsaProgress(5,'Connecting to data sources…');
+            let pxProgressValue=5;gsaProgress(pxProgressValue,'Connecting to data sources…');const pxProgressTicker=setInterval(()=>{if(pxProgressValue<94){pxProgressValue+=pxProgressValue<60?2:1;gsaProgress(pxProgressValue,'Loading and processing match data…');}},450);
+            const spinner = document.getElementById('syncSpinner');
             if (spinner) spinner.classList.add('fa-spin');
             try {
                 gsaLoadAllData=true;
@@ -4106,7 +4204,7 @@ function json_(obj) {
                 console.error('Global sync failed:', error);
                 showToast('Feed synchronization encountered an error. Other tabs remain available.');
             } finally {
-                if (spinner) spinner.classList.remove('fa-spin'); gsaProgress(100,'Ready'); setTimeout(()=>gsaProgress(-1,''),350);
+                if (spinner) spinner.classList.remove('fa-spin');clearInterval(pxProgressTicker); gsaProgress(100,'Ready'); setTimeout(()=>gsaProgress(-1,''),350);
             }
         }
 
@@ -4134,7 +4232,7 @@ function json_(obj) {
             document.getElementById('csvPreviewModal').classList.add('hidden');
         }
 
-        // Process and map data sources into unified fixtures and Top 40 / Predictor lists
+        // Process and map data sources into unified fixtures and Top 45 / Predictor lists
         function processEpreferredModel() {
             epreferredFixtures1 = [];
             epreferredFixtures2 = [];
@@ -4533,7 +4631,7 @@ function json_(obj) {
             renderAiTop40Table3();
             updateOverviewStats();
             updateModelWinRateCards();
-            showToast('AI Top 40 Predictions tables computed successfully!');
+            showToast('AI to 40 Predictions tables computed successfully!');
         }
 
 
@@ -4827,7 +4925,7 @@ function json_(obj) {
             tbody.innerHTML = html;
         }
 
-        // Render AI Top 40 Table 1 (Statarea)
+        // Render AI to 40 Predictions Table 1 (Statarea)
         function renderAiTop40Table1() {
             const tbody = document.getElementById('aiTop40TableBody1');
             const countEl = document.getElementById('top40Count1');
@@ -4835,7 +4933,7 @@ function json_(obj) {
             if (!tbody) return;
 
             const selectedDate = dateFilter ? dateFilter.value : 'ALL';
-            let filtered = selectedDate === 'ALL' ? top40Fixtures1 : top40Fixtures1.filter(f => f.date === selectedDate);
+            let filtered = (selectedDate === 'ALL' ? top40Fixtures1 : top40Fixtures1.filter(f => f.date === selectedDate)).slice(0,45);
             if (tablePageFilters.top401 !== selectedDate) { tablePageFilters.top401 = selectedDate; tablePages.top401 = 0; }
             countEl.innerText = filtered.length;
             const pageCount = Math.max(1, Math.ceil(filtered.length / TABLE_PAGE_SIZE));
@@ -4860,7 +4958,7 @@ function json_(obj) {
                         <td class="p-3 font-semibold text-mainText">${f.home} vs ${f.away}</td>
                         <td class="p-3"><span class="px-2.5 py-1 rounded-lg bg-tealAccent/10 text-tealAccent font-bold">${f.prediction}</span></td>
                         <td class="p-3 font-bold text-emeraldGreen">${f.probability}%</td>
-                        <td class="p-3 text-secondaryText max-w-xs truncate" title="${f.rationale}">${f.rationale}</td>
+                        <td class="p-3 text-secondaryText max-w-xs truncate" title="Predicted correct score">${f.predictedCorrectScore || f.correctScore || f.scorePrediction || "—"}</td>
                         <td class="p-3 font-semibold">${badgeHtml}</td>
                     </tr>
                 `;
@@ -4868,7 +4966,7 @@ function json_(obj) {
             tbody.innerHTML = html;
         }
 
-        // Render AI Top 40 Table 2 (Vital)
+        // Render AI to 40 Predictions Table 2 (Vital)
         function renderAiTop40Table2() {
             const tbody = document.getElementById('aiTop40TableBody2');
             const countEl = document.getElementById('top40Count2');
@@ -4876,7 +4974,7 @@ function json_(obj) {
             if (!tbody) return;
 
             const selectedDate = dateFilter ? dateFilter.value : 'ALL';
-            let filtered = selectedDate === 'ALL' ? top40Fixtures2 : top40Fixtures2.filter(f => f.date === selectedDate);
+            let filtered = (selectedDate === 'ALL' ? top40Fixtures2 : top40Fixtures2.filter(f => f.date === selectedDate)).slice(0,45);
             if (tablePageFilters.top402 !== selectedDate) { tablePageFilters.top402 = selectedDate; tablePages.top402 = 0; }
             countEl.innerText = filtered.length;
             const pageCount = Math.max(1, Math.ceil(filtered.length / TABLE_PAGE_SIZE));
@@ -4901,7 +4999,7 @@ function json_(obj) {
                         <td class="p-3 font-semibold text-mainText">${f.home} vs ${f.away}</td>
                         <td class="p-3"><span class="px-2.5 py-1 rounded-lg bg-deepPurple/10 text-deepPurple font-bold">${f.prediction}</span></td>
                         <td class="p-3 font-bold text-emeraldGreen">${f.probability}%</td>
-                        <td class="p-3 text-secondaryText max-w-xs truncate" title="${f.rationale}">${f.rationale}</td>
+                        <td class="p-3 text-secondaryText max-w-xs truncate" title="Predicted correct score">${f.predictedCorrectScore || f.correctScore || f.scorePrediction || "—"}</td>
                         <td class="p-3 font-semibold">${badgeHtml}</td>
                     </tr>
                 `;
@@ -4909,7 +5007,7 @@ function json_(obj) {
             tbody.innerHTML = html;
         }
 
-        // Render AI Top 40 Table 3 (Soccervital)
+        // Render AI to 40 Predictions Table 3 (Soccervital)
         function renderAiTop40Table3() {
             const tbody = document.getElementById('aiTop40TableBody3');
             const countEl = document.getElementById('top40Count3');
@@ -4917,7 +5015,7 @@ function json_(obj) {
             if (!tbody) return;
 
             const selectedDate = dateFilter ? dateFilter.value : 'ALL';
-            let filtered = selectedDate === 'ALL' ? top40Fixtures3 : top40Fixtures3.filter(f => f.date === selectedDate);
+            let filtered = (selectedDate === 'ALL' ? top40Fixtures3 : top40Fixtures3.filter(f => f.date === selectedDate)).slice(0,45);
             if (tablePageFilters.top403 !== selectedDate) { tablePageFilters.top403 = selectedDate; tablePages.top403 = 0; }
             countEl.innerText = filtered.length;
             const pageCount = Math.max(1, Math.ceil(filtered.length / TABLE_PAGE_SIZE));
@@ -4942,7 +5040,7 @@ function json_(obj) {
                         <td class="p-3 font-semibold text-mainText">${f.home} vs ${f.away}</td>
                         <td class="p-3"><span class="px-2.5 py-1 rounded-lg bg-crimsonRed/10 text-crimsonRed font-bold">${f.prediction}</span></td>
                         <td class="p-3 font-bold text-emeraldGreen">${f.probability}%</td>
-                        <td class="p-3 text-secondaryText max-w-xs truncate" title="${f.rationale}">${f.rationale}</td>
+                        <td class="p-3 text-secondaryText max-w-xs truncate" title="Predicted correct score">${f.predictedCorrectScore || f.correctScore || f.scorePrediction || "—"}</td>
                         <td class="p-3 font-semibold">${badgeHtml}</td>
                     </tr>
                 `;
